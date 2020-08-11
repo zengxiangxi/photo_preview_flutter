@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:photo_preview/photo_preview.dart';
+import 'package:photo_preview/src/photo_preview.dart';
 
 void main() {
   test('adds one to input values', () {
