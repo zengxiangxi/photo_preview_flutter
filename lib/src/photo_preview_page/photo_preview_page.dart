@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/photo_preview_page/photo_preview_state.dart';
 import 'package:photo_preview/src/utils/photo_callback.dart';
+import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 
 ///图片浏览器页面
 class PhotoPreviewPage extends StatefulWidget {
@@ -14,11 +15,14 @@ class PhotoPreviewPage extends StatefulWidget {
   ///初始页url (优先级大于initialPage)
   final String initialUrl;
 
-  ///hero标志
+  ///hero标志（默认各自url为tag）
   final String heroTag;
 
+  ///预加载图质量类型 （默认中等级）
+  final PhotoPreviewQualityType qualityType;
+
   const PhotoPreviewPage(
-      {Key key, this.dataSourceList, this.initialPage, this.heroTag, this.initialUrl})
+      {Key key, this.dataSourceList, this.initialPage, this.heroTag, this.initialUrl, this.qualityType = PhotoPreviewQualityType.MIDDLE})
       : super(key: key);
 
   @override

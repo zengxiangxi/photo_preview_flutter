@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
+import 'package:photo_preview/src/constant/photo_preview_quality_type_constant.dart';
 import 'package:photo_preview/src/vo/photo_preview_list_item_vo.dart';
+import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
 
 ///图片工具类
@@ -124,5 +126,18 @@ class PhotoPreviewToolUtils {
     }
     return typeList.indexOf(suffix) != -1 ||
         typeList.indexOf(suffix.toLowerCase()) != -1;
+  }
+
+  ///拼接质量类型路径
+  static String getAppendQualityTypeUrl(String url,PhotoPreviewQualityType qualityType){
+    if(url == null || url.isEmpty){
+      return null;
+    }
+    if(qualityType == null){
+      return url;
+    }
+    StringBuffer buffer = StringBuffer(url);
+    buffer.write(PhotoPreviewQualityTypeConstant.getQualityTypeStr(qualityType) ?? "");
+    return buffer.toString();
   }
 }

@@ -2,11 +2,13 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 import 'package:photo_preview/src/vo/photo_preview_list_item_vo.dart';
+import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
 
 class PhotoPreviewImageWidget extends StatefulWidget {
@@ -16,7 +18,14 @@ class PhotoPreviewImageWidget extends StatefulWidget {
   ///飞行标记
   final String heroTag;
 
-  const PhotoPreviewImageWidget({Key key, this.imageInfo, this.heroTag})
+  ///预加载质量类型
+  final PhotoPreviewQualityType qualityType;
+
+  const PhotoPreviewImageWidget(
+      {Key key,
+      this.imageInfo,
+      this.heroTag,
+      this.qualityType = PhotoPreviewQualityType.MIDDLE})
       : super(key: key);
 
   @override
@@ -77,6 +86,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         //可拖动下滑退出
         enableSlideOutPage: true,
         mode: ExtendedImageMode.gesture,
+        enableLoadState: true,
+//        loadStateChanged: (ExtendedImageState state) =>
+//            _toLoadStateChanged(state),
         onDoubleTap: (state) => _onDoubleTap(state),
         initGestureConfigHandler: (state) =>
             _initGestureConfigHandler(state, context),
@@ -97,9 +109,11 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         initGestureConfigHandler: (state) =>
             _initGestureConfigHandler(state, context),
         heroBuilderForSlidingPage: (Widget result) =>
-            _heroBuilderForSlidingPage(result, widget?.heroTag == null || widget.heroTag.isEmpty
-                ? widget?.imageInfo?.url
-                : widget?.heroTag),
+            _heroBuilderForSlidingPage(
+                result,
+                widget?.heroTag == null || widget.heroTag.isEmpty
+                    ? widget?.imageInfo?.url
+                    : widget?.heroTag),
       );
     }
   }
@@ -108,9 +122,13 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
   final SlidePageBackgroundHandler _slidePageBackgroundHandler =
       (Offset offset, Size pageSize) {
     double opacity = 0.0;
-    opacity = offset.distance /
-        (Offset(pageSize.width, pageSize.height).distance / 2.0);
-
+    //向上滑动不改变透明度
+    if(offset.dy >0) {
+      opacity = offset.distance /
+          (Offset(pageSize.width, pageSize.height).distance / 2.0);
+    }else{
+      opacity = 0;
+    }
     return PhotoPreviewConstant.DEFAULT_BACK_GROUND_COLOR
         .withOpacity(min(1.0, max(1.0 - opacity, 0.0)));
   };
@@ -149,11 +167,15 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
             PhotoPreviewConstant.DEFAULT_INIT_SCALE)) {
       return false;
     }
+    //向上滑回弹
+    if(offset.dy <= 0){
+      return false;
+    }
     return offset.distance >
         Offset(state?.context?.size?.width ?? 0,
                     state?.context?.size?.height ?? 0)
                 .distance /
-            3.5;
+            6;
   };
 
   ///图片双击回调
@@ -247,6 +269,57 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
       },
     );
   };
+
+  ///加载状态
+  Widget _toLoadStateChanged(ExtendedImageState state) {
+    switch (state.extendedImageLoadState) {
+      case LoadState.loading:
+        return _toPrelLoadingImageWidget();
+        break;
+      case LoadState.completed:
+        return state.completedWidget;
+        break;
+      case LoadState.failed:
+        return _toPrelLoadingImageWidget();
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            state?.reLoadImage();
+          },
+          child: Container(
+            alignment: Alignment.center,
+            child: Text(
+              "图片加载失败",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+        break;
+    }
+    return Container();
+  }
+
+  ///预加载已缓存的类型
+  Widget _toPrelLoadingImageWidget() {
+    return ExtendedImage.network(
+      PhotoPreviewToolUtils.getAppendQualityTypeUrl(
+              widget?.imageInfo?.url, widget?.qualityType) ??
+          "",
+      //可拖动下滑退出
+      enableSlideOutPage: false,
+      mode: ExtendedImageMode.gesture,
+//      loadStateChanged: (ExtendedImageState state) =>
+//          _toLoadStateChanged(state),
+      onDoubleTap: (state) => _onDoubleTap(state),
+      initGestureConfigHandler: (state) =>
+          _initGestureConfigHandler(state, context),
+//      heroBuilderForSlidingPage: (Widget result) => _heroBuilderForSlidingPage(
+//          result,
+//          widget?.heroTag == null || widget.heroTag.isEmpty
+//              ? widget?.imageInfo?.url
+//              : widget?.heroTag),
+    );
+  }
 
   @override
   void dispose() {
