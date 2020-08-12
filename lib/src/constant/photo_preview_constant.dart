@@ -26,4 +26,7 @@ class PhotoPreviewConstant{
     ///默认最大缩放大小
     static const double DEFAULT_MAX_SCALE = 5.0;
 
+    ///双击缩放时间
+    static const int DOUBLE_CLICK_SCAL_TIME_MILL = 150;
+
 }

@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -21,11 +22,14 @@ class PhotoPreviewImageWidget extends StatefulWidget {
   ///预加载质量类型
   final PhotoPreviewQualityType qualityType;
 
+  final VoidCallback popCallBack;
+
   const PhotoPreviewImageWidget(
       {Key key,
       this.imageInfo,
       this.heroTag,
-      this.qualityType = PhotoPreviewQualityType.MIDDLE})
+      this.qualityType = PhotoPreviewQualityType.MIDDLE,
+      this.popCallBack})
       : super(key: key);
 
   @override
@@ -35,19 +39,21 @@ class PhotoPreviewImageWidget extends StatefulWidget {
 
 class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     with TickerProviderStateMixin {
-  ///记录是否正在滑动
-  bool _isSlidingStatus = false;
 
   ///双击缩放控制器
   AnimationController _doubleClickAnimationController;
   Function _doubleClickAnimationListener;
   Animation<double> _doubleClickAnimation;
 
+  ///手势key
+  GlobalKey<ExtendedImageGestureState> _gestureGlobalKey;
+
   @override
   void initState() {
     super.initState();
+    _gestureGlobalKey = GlobalKey();
     _doubleClickAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 150), vsync: this);
+        duration: const Duration(milliseconds: PhotoPreviewConstant.DOUBLE_CLICK_SCAL_TIME_MILL), vsync: this);
   }
 
   @override
@@ -57,22 +63,17 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         widget.imageInfo.type != PhotoPreviewType.image) {
       return Container();
     }
-    return ExtendedImageSlidePage(
-      slideAxis: SlideAxis.both,
-      slideType: SlideType.onlyImage,
-      //滑动背景变化
-      slidePageBackgroundHandler: _slidePageBackgroundHandler,
-      //滑动缩放
-      slideScaleHandler: _slideScaleHandler,
-      //滑动结束
-      slideEndHandler: _slideEndHandler,
-      //滑动监听
-      onSlidingPage: (state) => _onSlidingPage(state),
-      //重置时间
-      resetPageDuration:
-          Duration(milliseconds: PhotoPreviewConstant.DEFAULT_RESET_MILL),
-      child: _toImageWidget(),
-    );
+    return _toGestureWidget();
+  }
+
+  ///注册点击
+  Widget _toGestureWidget() {
+    return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          _onClickPop();
+        },
+        child: _toImageWidget());
   }
 
   ///图片组件
@@ -87,8 +88,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         enableSlideOutPage: true,
         mode: ExtendedImageMode.gesture,
         enableLoadState: true,
-//        loadStateChanged: (ExtendedImageState state) =>
-//            _toLoadStateChanged(state),
+        extendedImageGestureKey: _gestureGlobalKey,
+        loadStateChanged: (ExtendedImageState state) =>
+            _toLoadStateChanged(state),
         onDoubleTap: (state) => _onDoubleTap(state),
         initGestureConfigHandler: (state) =>
             _initGestureConfigHandler(state, context),
@@ -106,6 +108,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         enableSlideOutPage: true,
         mode: ExtendedImageMode.gesture,
         onDoubleTap: (state) => _onDoubleTap(state),
+        extendedImageGestureKey: _gestureGlobalKey,
         initGestureConfigHandler: (state) =>
             _initGestureConfigHandler(state, context),
         heroBuilderForSlidingPage: (Widget result) =>
@@ -118,65 +121,6 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     }
   }
 
-  ///滑动背景变化回调
-  final SlidePageBackgroundHandler _slidePageBackgroundHandler =
-      (Offset offset, Size pageSize) {
-    double opacity = 0.0;
-    //向上滑动不改变透明度
-    if(offset.dy >0) {
-      opacity = offset.distance /
-          (Offset(pageSize.width, pageSize.height).distance / 2.0);
-    }else{
-      opacity = 0;
-    }
-    return PhotoPreviewConstant.DEFAULT_BACK_GROUND_COLOR
-        .withOpacity(min(1.0, max(1.0 - opacity, 0.0)));
-  };
-
-  ///滑动状态回调
-  void _onSlidingPage(state) {
-    _isSlidingStatus = (state?.isSliding ?? false);
-    var showSwiper = state.isSliding;
-    if (_isSlidingStatus != showSwiper) {
-      _isSlidingStatus = showSwiper;
-    }
-  }
-
-  ///滑动缩放回调
-  final SlideScaleHandler _slideScaleHandler = (
-    Offset offset, {
-    ExtendedImageSlidePageState state,
-  }) {
-    double scale = 0.0;
-    scale = offset.distance /
-        Offset(state?.context?.size?.width, state?.context?.size?.height)
-            .distance;
-    return max(1.0 - scale, 0.2);
-  };
-
-  ///滑动结束回调
-  final SlideEndHandler _slideEndHandler = (
-    Offset offset, {
-    ExtendedImageSlidePageState state,
-    ScaleEndDetails details,
-  }) {
-    //如果放大
-    if ((state?.imageGestureState?.gestureDetails?.totalScale ??
-            PhotoPreviewConstant.DEFAULT_TOTAL_SCALE) >
-        (state?.imageGestureState?.imageGestureConfig?.initialScale ??
-            PhotoPreviewConstant.DEFAULT_INIT_SCALE)) {
-      return false;
-    }
-    //向上滑回弹
-    if(offset.dy <= 0){
-      return false;
-    }
-    return offset.distance >
-        Offset(state?.context?.size?.width ?? 0,
-                    state?.context?.size?.height ?? 0)
-                .distance /
-            6;
-  };
 
   ///图片双击回调
   void _onDoubleTap(ExtendedImageGestureState state) {
@@ -306,7 +250,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
               widget?.imageInfo?.url, widget?.qualityType) ??
           "",
       //可拖动下滑退出
-      enableSlideOutPage: false,
+      enableSlideOutPage: true,
       mode: ExtendedImageMode.gesture,
 //      loadStateChanged: (ExtendedImageState state) =>
 //          _toLoadStateChanged(state),
@@ -321,10 +265,71 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     );
   }
 
+  ///单击退出
+  _onClickPop() {
+    if (_gestureGlobalKey == null) {
+      return;
+    }
+    ExtendedImageGestureState state = _gestureGlobalKey?.currentState;
+    if (state == null) {
+      return;
+    }
+    double initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
+
+    if (state?.imageGestureConfig?.initialScale != null &&
+        state.imageGestureConfig.initialScale >=
+            PhotoPreviewConstant.DEFAULT_INIT_SCALE) {
+      initialScale = state?.imageGestureConfig?.initialScale;
+    }
+    final Offset pointerDownPosition = state.pointerDownPosition;
+    final double begin = state.gestureDetails.totalScale;
+    double end;
+
+    //remove old
+    _doubleClickAnimation?.removeListener(_doubleClickAnimationListener);
+
+    //stop pre
+    _doubleClickAnimationController.stop();
+
+    //reset to use
+    _doubleClickAnimationController.reset();
+
+    if (begin ==
+        PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[0] * initialScale) {
+      if (widget?.popCallBack != null) {
+        widget?.popCallBack();
+      }
+      return;
+//      end = PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[1] * initialScale;
+    } else {
+      end = PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[0] * initialScale;
+    }
+
+    _doubleClickAnimationListener = () {
+      //print(_animation.value);
+      state.handleDoubleTap(
+          scale: _doubleClickAnimation.value,
+          doubleTapPosition: pointerDownPosition);
+    };
+    _doubleClickAnimation = _doubleClickAnimationController
+        .drive(Tween<double>(begin: begin, end: end));
+
+    _doubleClickAnimation.addListener(_doubleClickAnimationListener);
+
+    _doubleClickAnimationController.forward();
+
+    if (widget?.popCallBack != null) {
+      Future.delayed(Duration(milliseconds: PhotoPreviewConstant.DOUBLE_CLICK_SCAL_TIME_MILL), () {
+        widget?.popCallBack();
+      });
+    }
+  }
+
   @override
   void dispose() {
     _doubleClickAnimationListener = null;
     _doubleClickAnimationController.dispose();
+    _gestureGlobalKey = null;
     super.dispose();
   }
 }
