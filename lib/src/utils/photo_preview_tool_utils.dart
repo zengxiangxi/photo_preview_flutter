@@ -2,36 +2,27 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/constant/photo_preview_quality_type_constant.dart';
-import 'package:photo_preview/src/vo/photo_preview_list_item_vo.dart';
 import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
+
+import '../../photo_preview_export.dart';
 
 ///图片工具类
 class PhotoPreviewToolUtils {
   ///转化数据源
-  static List<PhotoPreviewListItemVo> transDataToPhotoPreviewList(
+  static List<PhotoPreviewInfoVo> transDataToPhotoPreviewList(
       List<String> dataSourceList) {
     if (dataSourceList == null || dataSourceList.isEmpty) {
       return null;
     }
-    List<PhotoPreviewListItemVo> _photoPreviewList = List();
+    List<PhotoPreviewInfoVo> _photoPreviewList = List();
     dataSourceList.forEach((element) {
       if (element == null || element.isEmpty) {
         return;
       }
       _photoPreviewList
-          ?.add(PhotoPreviewListItemVo(url: element, type: _getType(element)));
+          ?.add(PhotoPreviewInfoVo(url: element));
     });
-    return _photoPreviewList;
-  }
-
-  ///测试数据
-  static List<PhotoPreviewListItemVo> getTestList(){
-    List<PhotoPreviewListItemVo> _photoPreviewList = List();
-    for(int i = 0; i < 4;i++){
-      _photoPreviewList?.add(PhotoPreviewListItemVo(url: "https://zts-tx.oss-cn-beijing.aliyuncs.com/picture/splash_ad/3.png",type: PhotoPreviewType.image));
-      _photoPreviewList?.add(PhotoPreviewListItemVo(url: "https://s3.jpg.cm/2020/08/10/b4bhG.jpg",type: PhotoPreviewType.image));
-    }
     return _photoPreviewList;
   }
 
@@ -71,7 +62,7 @@ class PhotoPreviewToolUtils {
   }
 
   ///路径类型
-  static PhotoPreviewType _getType(String url) {
+  static PhotoPreviewType getType(String url) {
     if (url == null || url.isEmpty) {
       return PhotoPreviewType.unknow;
     }

@@ -1,13 +1,25 @@
 
+import 'package:flutter/foundation.dart';
+import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
 
-class PhotoPreviewListItemVo {
+class PhotoPreviewInfoVo {
   ///路径
   final String url;
   ///类型（通过路径尾缀判断）
-  final PhotoPreviewType type;
+  PhotoPreviewType _type;
+  ///每一项hero
+  final Object heroTag;
+  ///视频封面路径(与加载使用)
+  final String vCoverUrl;
+  ///图片预加载路径
+  final String pLoadingUrl;
 
-  PhotoPreviewListItemVo({this.url, this.type});
+  PhotoPreviewType get type  => _type;
+
+  PhotoPreviewInfoVo({@required this.url,this.heroTag,this.vCoverUrl,this.pLoadingUrl}){
+    _type = PhotoPreviewToolUtils.getType(url);
+  }
 
 
 //  static PhotoPreviewListItemVo fromMap(Map<String, dynamic> map) {
@@ -19,20 +31,20 @@ class PhotoPreviewListItemVo {
 //  Map toJson() => {
 //  };
   bool isImageType(){
-    if(type == null){
+    if(_type == null){
       return false;
     }
-    if(type == PhotoPreviewType.image){
+    if(_type == PhotoPreviewType.image){
       return true;
     }
     return false;
   }
 
   bool isVideoType(){
-    if(type == null){
+    if(_type == null){
       return false;
     }
-    if(type == PhotoPreviewType.video){
+    if(_type == PhotoPreviewType.video){
       return true;
     }
     return false;
@@ -43,7 +55,7 @@ class PhotoPreviewListItemVo {
     if(other == null){
       return false;
     }
-    if(!(other is PhotoPreviewListItemVo)){
+    if(!(other is PhotoPreviewInfoVo)){
       return false;
     }
 

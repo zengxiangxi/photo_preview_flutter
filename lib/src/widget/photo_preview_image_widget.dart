@@ -8,27 +8,20 @@ import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
-import 'package:photo_preview/src/vo/photo_preview_list_item_vo.dart';
 import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
 
+import '../../photo_preview_export.dart';
+
 class PhotoPreviewImageWidget extends StatefulWidget {
   ///图片详情
-  final PhotoPreviewListItemVo imageInfo;
-
-  ///飞行标记
-  final String heroTag;
-
-  ///预加载质量类型
-  final PhotoPreviewQualityType qualityType;
+  final PhotoPreviewInfoVo imageInfo;
 
   final VoidCallback popCallBack;
 
   const PhotoPreviewImageWidget(
       {Key key,
       this.imageInfo,
-      this.heroTag,
-      this.qualityType = PhotoPreviewQualityType.MIDDLE,
       this.popCallBack})
       : super(key: key);
 
@@ -96,10 +89,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
             _initGestureConfigHandler(state, context),
         heroBuilderForSlidingPage: (Widget result) =>
             _heroBuilderForSlidingPage(
-                result,
-                widget?.heroTag == null || widget.heroTag.isEmpty
-                    ? widget?.imageInfo?.url
-                    : widget?.heroTag),
+                result,widget?.imageInfo?.heroTag),
       );
     } else {
       return ExtendedImage.file(
@@ -114,9 +104,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         heroBuilderForSlidingPage: (Widget result) =>
             _heroBuilderForSlidingPage(
                 result,
-                widget?.heroTag == null || widget.heroTag.isEmpty
-                    ? widget?.imageInfo?.url
-                    : widget?.heroTag),
+                widget?.imageInfo?.heroTag),
       );
     }
   }
@@ -197,8 +185,11 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
 
   ///飞行动效
   final Function _heroBuilderForSlidingPage = (Widget result, String heroTag) {
+    if(heroTag == null){
+      return result;
+    }
     return Hero(
-      tag: heroTag ?? "",
+      tag: heroTag,
       child: result,
       transitionOnUserGestures: true,
       flightShuttleBuilder: (BuildContext flightContext,
@@ -216,6 +207,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
 
   ///加载状态
   Widget _toLoadStateChanged(ExtendedImageState state) {
+    if(widget?.imageInfo?.pLoadingUrl == null || widget.imageInfo.pLoadingUrl.isEmpty){
+      return null;
+    }
     switch (state.extendedImageLoadState) {
       case LoadState.loading:
         return _toPrelLoadingImageWidget();
@@ -246,9 +240,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
   ///预加载已缓存的类型
   Widget _toPrelLoadingImageWidget() {
     return ExtendedImage.network(
-      PhotoPreviewToolUtils.getAppendQualityTypeUrl(
-              widget?.imageInfo?.url, widget?.qualityType) ??
-          "",
+     widget?.imageInfo?.pLoadingUrl ?? "",
       //可拖动下滑退出
       enableSlideOutPage: true,
       mode: ExtendedImageMode.gesture,
