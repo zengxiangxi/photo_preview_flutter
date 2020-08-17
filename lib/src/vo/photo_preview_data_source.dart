@@ -7,20 +7,14 @@ import '../../photo_preview_export.dart';
 class PhotoPreviewDataSource {
 
 
-  ///完整数据源（优先级高）
-  List<PhotoPreviewInfoVo> imgVideoFullList;
-
-  ///最终初始化页码数
-  int _lastInitPageNum;
-  int get lastInitPageNum => _lastInitPageNum;
-
-//  ///初始页（默认为0）
-//  final int initialPage;
-//
-//  ///初始页url (优先级大于initialPage)
-//  final String initialUrl;
-
-
+  /// (1) 数据源路径
+  ///     params: List<PhotoPreViewInfoVo> imgVideoFullList => 完整数据原路径（优先级高） 包括url(资源路径)、heroTag(平行标记)、vCover(视频封面图)、pLoadingUrl(图片预载图)
+  ///     or
+  ///     params: List<String> imgVideoUrlList => 仅有资源路径（优先级di）
+  ///
+  /// (2) params: String inititalUrl => 需要跳转到为资源路径（优先级高） 根据路径计算出跳转位置
+  ///     or
+  ///     parms: int intitialPage => 直接跳转的位置（优先级低）
   PhotoPreviewDataSource({List<String> imgVideoUrlList, this.imgVideoFullList,String initialUrl,int initialPage}) {
 
     ///路径有值，完整数据无值 进行赋值操作
@@ -32,6 +26,13 @@ class PhotoPreviewDataSource {
   }
 
 
+
+  ///完整数据源 带有预载图 herotag等信息（优先级高）
+  List<PhotoPreviewInfoVo> imgVideoFullList;
+
+  ///最终初始化页码数
+  int _lastInitPageNum;
+  int get lastInitPageNum => _lastInitPageNum;
 
 
   ///得到初始化页

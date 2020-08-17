@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:extended_image/extended_image.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 import 'package:photo_preview/src/photo_preview_page/photo_preview_page.dart';
 import 'package:photo_preview/src/widget/photo_preview_image_widget.dart';
+import 'package:photo_preview/src/widget/photo_preview_video_widget.dart';
 
 import '../../photo_preview_export.dart';
 
@@ -16,6 +18,9 @@ class PhotoPreviewState extends State<PhotoPreviewPage>{
 
   ///记录是否正在滑动
   bool _isSlidingStatus = false;
+
+  ///是否滑动streamController
+  StreamController<bool> _isSlidingStreamController = StreamController.broadcast();
 
   @override
   void initState() {
@@ -64,16 +69,30 @@ class PhotoPreviewState extends State<PhotoPreviewPage>{
       controller: _pageController,
       physics: BouncingScrollPhysics(),
       itemBuilder: (BuildContext ctx,int index){
-        final PhotoPreviewInfoVo itemVo = widget?.dataSource?.imgVideoFullList?.elementAt(index);
-        if(itemVo?.isImageType() ?? false){
-          return PhotoPreviewImageWidget(
-            imageInfo: itemVo,
-            popCallBack: () => Navigator.of(context).maybePop(),
-          );
-        }
-        return Container();
+        return _toListItemWidget(ctx, index);
       },
     );
+  }
+
+  ///图片或照片组件
+  Widget _toListItemWidget(BuildContext ctx , int index){
+    final PhotoPreviewInfoVo itemVo = widget?.dataSource?.imgVideoFullList?.elementAt(index);
+    //图片
+    if(itemVo?.isImageType() ?? false){
+      return PhotoPreviewImageWidget(
+        imageInfo: itemVo,
+        isSlidingController:_isSlidingStreamController,
+        popCallBack: () => Navigator.of(context).maybePop(),
+      );
+    }
+    //视频
+    if(itemVo?.isVideoType() ?? false){
+      return PhotoPreviewVideoWidget(
+        videoInfo: itemVo,
+        isSlidingController:_isSlidingStreamController,
+      );
+    }
+    return Container();
   }
 
 
@@ -95,10 +114,11 @@ class PhotoPreviewState extends State<PhotoPreviewPage>{
 
   ///滑动状态回调
   void _onSlidingPage(state) {
-    _isSlidingStatus = (state?.isSliding ?? false);
-    var showSwiper = state.isSliding;
-    if (_isSlidingStatus != showSwiper) {
+    var showSwiper = state.isSliding ?? false;
+    if(_isSlidingStatus != showSwiper){
       _isSlidingStatus = showSwiper;
+      _isSlidingStreamController.add(showSwiper);
+      print("滑动状态-----${showSwiper}");
     }
   }
 
@@ -142,6 +162,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage>{
   @override
   void dispose() {
     _pageController?.dispose();
+    _isSlidingStreamController?.close();
     super.dispose();
   }
 }

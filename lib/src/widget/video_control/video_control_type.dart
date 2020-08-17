@@ -1,0 +1,4 @@
+enum VideoControlType{
+  play,
+  pause,
+}

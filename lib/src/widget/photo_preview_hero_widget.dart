@@ -38,35 +38,38 @@ class PhotoPreviewHeroWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: (){
-       if(onClickForTag != null){
-         onClickForTag(tag ?? _uniqueTag);
-       }
-      },
-      child: isUserHero == null || isUserHero == false || (isUserHero == true && tag == null && isCreateUniqueTag != true)
-          ? child ?? Container()
-          : Hero(
-              tag: tag ?? _uniqueTag,
-              child: child ?? Container(),
-              transitionOnUserGestures: transitionOnUserGestures ?? true,
-              flightShuttleBuilder: (BuildContext flightContext,
-                  Animation<double> animation,
-                  HeroFlightDirection flightDirection,
-                  BuildContext fromHeroContext,
-                  BuildContext toHeroContext) {
-                return Material(
-                    type: MaterialType.transparency,
-                    child: toHeroContext?.widget ?? Container());
-              },
-              placeholderBuilder: isShowPlaceHolderBuilder == null ||
-                      isShowPlaceHolderBuilder == false
-                  ? null
-                  : (BuildContext ctx, Size size, Widget result) {
-                      return result;
-                    },
-            ),
+    return AbsorbPointer(
+      absorbing: onClickForTag== null ? true: false,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+         if(onClickForTag != null){
+           onClickForTag(tag ?? _uniqueTag);
+         }
+        },
+        child: isUserHero == null || isUserHero == false || (isUserHero == true && tag == null && isCreateUniqueTag != true)
+            ? child ?? Container()
+            : Hero(
+                tag: tag ?? _uniqueTag,
+                child: child ?? Container(),
+                transitionOnUserGestures: transitionOnUserGestures ?? true,
+                flightShuttleBuilder: (BuildContext flightContext,
+                    Animation<double> animation,
+                    HeroFlightDirection flightDirection,
+                    BuildContext fromHeroContext,
+                    BuildContext toHeroContext) {
+                  return Material(
+                      type: MaterialType.transparency,
+                      child: toHeroContext?.widget ?? Container());
+                },
+                placeholderBuilder: isShowPlaceHolderBuilder == null ||
+                        isShowPlaceHolderBuilder == false
+                    ? null
+                    : (BuildContext ctx, Size size, Widget result) {
+                        return result;
+                      },
+              ),
+      ),
     );
   }
 }

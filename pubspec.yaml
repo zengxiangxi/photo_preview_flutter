@@ -12,7 +12,12 @@ dependencies:
     sdk: flutter
     # 多属性图片
   extended_image: ^1.1.0
+  # UUID
   uuid: ^2.2.0
+  # 视频播放器
+  chewie: 0.9.10
+  # 官方视频播放器
+  video_player: 0.10.11+1
 
 dev_dependencies:
   flutter_test:

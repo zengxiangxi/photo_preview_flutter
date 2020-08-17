@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
@@ -19,10 +20,12 @@ class PhotoPreviewImageWidget extends StatefulWidget {
 
   final VoidCallback popCallBack;
 
+  final StreamController isSlidingController;
+
   const PhotoPreviewImageWidget(
       {Key key,
       this.imageInfo,
-      this.popCallBack})
+      this.popCallBack, this.isSlidingController})
       : super(key: key);
 
   @override
