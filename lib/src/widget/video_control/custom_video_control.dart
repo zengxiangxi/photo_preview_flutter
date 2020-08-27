@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
+import 'package:photo_preview/src/utils/screen_util.dart';
+import 'package:photo_preview/src/widget/custom_chewie/custom_chewie_widget.dart';
 import 'package:video_player/video_player.dart';
 
 import 'custom_video_utils.dart';
@@ -10,9 +12,8 @@ import 'chewie_progress_colors.dart';
 
 class CustomControls extends StatefulWidget {
   final VideoPlayerController controller;
-  final ChewieController chewieController;
-  final StreamController isSlidingController;
-  CustomControls({Key key,@required this.controller,@required this.chewieController, this.isSlidingController}) : super(key: key);
+  final CustomChewieController chewieController;
+  CustomControls({Key key,@required this.controller,@required this.chewieController,}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +35,7 @@ class _CustomControlsState extends State<CustomControls> {
   final marginSize = 5.0;
 
   VideoPlayerController controller;
-  ChewieController chewieController;
+  CustomChewieController chewieController;
 
 
   @override
@@ -63,7 +64,7 @@ class _CustomControlsState extends State<CustomControls> {
 
     return StreamBuilder<bool>(
       initialData: false,
-      stream: widget?.isSlidingController?.stream,
+      stream: PhotoPreviewValueSingleton.getInstance().isSlidingController?.stream,
       builder: (context, snapshot) {
         return snapshot.data == true
         ?Container()
@@ -131,7 +132,7 @@ class _CustomControlsState extends State<CustomControls> {
   @override
   void didChangeDependencies() {
     final _oldController = chewieController;
-    chewieController = ChewieController.of(context);
+    chewieController = CustomChewieController.of(context);
     controller = chewieController.videoPlayerController;
 
     if (_oldController != chewieController) {
@@ -146,24 +147,24 @@ class _CustomControlsState extends State<CustomControls> {
       BuildContext context,
       ) {
     final iconColor = Theme.of(context).textTheme.button.color;
-
+    final bottomStatus = ScreenUtils.getBottomBarH(context);
     return AnimatedOpacity(
       opacity: _hideStuff ? 0.0 : 1.0,
       duration: Duration(milliseconds: 300),
       child: Container(
         ///背景透明
-        height: barHeight,
-//        padding: const EdgeInsets.only(top: 24),
+        height: barHeight + bottomStatus,
+        padding: EdgeInsets.only(bottom: bottomStatus),
         decoration: BoxDecoration(
-          color: Colors.transparent,
-//          gradient: LinearGradient(
-//            begin: Alignment.topCenter,
-//            end: Alignment.bottomCenter,
-//            colors: [
-//              Color(0xFF000000).withOpacity(0),
-//              Color(0xFF000000).withOpacity(0.5)
-//            ]
-//          )
+//          color: Colors.transparent,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF000000).withOpacity(0),
+              Color(0xFF000000).withOpacity(0.5)
+            ]
+          )
         ),
         child: Row(
           children: <Widget>[
@@ -235,7 +236,7 @@ class _CustomControlsState extends State<CustomControls> {
           child: Center(
             child: AnimatedOpacity(
               opacity:
-              _latestValue != null && !_latestValue.isPlaying && !_dragging && !(_latestValue.position >=_latestValue.duration)
+              _latestValue != null && !_latestValue.isPlaying && !_dragging
                   ? 1.0
                   : 0.0,
               duration: Duration(milliseconds: 300),
@@ -246,7 +247,7 @@ class _CustomControlsState extends State<CustomControls> {
                   color: Colors.transparent,
                     borderRadius: BorderRadius.circular(48.0),
                   ),
-                  child: Image.asset("images/play_list_home.png", width: 60,),
+                  child: Image.asset("images/play_list_home.png", width: 60,package: "photo_preview",),
                 ),
               ),
             ),

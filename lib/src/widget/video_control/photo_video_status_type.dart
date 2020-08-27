@@ -1,0 +1,4 @@
+enum PhotoVideoStatusType{
+  playing,
+  pause
+}

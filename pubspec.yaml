@@ -11,7 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
     # 多属性图片
-  extended_image: ^1.1.0
+  extended_image:
+    git:
+      url: https://gitee.com/zengxiangxi315/extended_image.git
+      ref: latest
   # UUID
   uuid: ^2.2.0
   # 视频播放器
@@ -28,6 +31,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - images/
 
   # To add assets to your package, add an assets section, like this:
   # assets:

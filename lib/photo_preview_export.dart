@@ -4,4 +4,6 @@ export 'package:photo_preview/src/extended_custom/extended_custom_widget.dart';
 export 'package:photo_preview/src/vo/photo_preview_data_source.dart';
 export 'package:photo_preview/src/widget/photo_preview_hero_widget.dart';
 export 'package:photo_preview/src/vo/photo_preview_info_vo.dart';
+export 'package:photo_preview/src/delegate/extended_slide_delegate.dart';
+export 'package:photo_preview/src/delegate/default/default_extended_slide_delegate.dart';
 
