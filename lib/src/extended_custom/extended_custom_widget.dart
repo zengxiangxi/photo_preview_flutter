@@ -7,7 +7,7 @@ import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 
 ///自定义组件可下拉
-class ExtendsCustomWidget extends StatefulWidget {
+class ExtendedCustomWidget extends StatefulWidget {
   ///组件模式（编辑，手势，无）
   final ExtendedCustomMode mode;
 
@@ -23,7 +23,7 @@ class ExtendsCustomWidget extends StatefulWidget {
   ///展示内容
   final Widget child;
 
-  const ExtendsCustomWidget({Key key,
+  const ExtendedCustomWidget({Key key,
     this.mode,
     this.enableSlideOutPage = true,
     this.initGestureConfigHandler,
@@ -32,10 +32,10 @@ class ExtendsCustomWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ExtendsCustomWidgetState createState() => _ExtendsCustomWidgetState();
+  _ExtendedCustomWidgetState createState() => _ExtendedCustomWidgetState();
 }
 
-class _ExtendsCustomWidgetState extends State<ExtendsCustomWidget>
+class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
     with ExtendedImageState, WidgetsBindingObserver {
   ExtendedImageSlidePageState _slidePageState;
 
@@ -105,7 +105,7 @@ class _ExtendsCustomWidgetState extends State<ExtendsCustomWidget>
   }
 
   @override
-  void didUpdateWidget(ExtendsCustomWidget oldWidget) {
+  void didUpdateWidget(ExtendedCustomWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.enableSlideOutPage != oldWidget.enableSlideOutPage) {
       _slidePageState = null;

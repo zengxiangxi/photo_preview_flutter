@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/photo_preview_export.dart';
+import 'package:photo_preview/src/delegate/default/default_photo_preview_video_delegate.dart';
+import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/widget/custom_chewie/custom_chewie_widget.dart';
@@ -13,7 +15,6 @@ import 'package:video_player/video_player.dart';
 
 ///视频播放器
 class PhotoPreviewVideoWidget extends StatefulWidget {
-
   ///视频详情
   final PhotoPreviewInfoVo videoInfo;
 
@@ -22,7 +23,14 @@ class PhotoPreviewVideoWidget extends StatefulWidget {
 
   final EdgeInsetsGeometry videoMargin;
 
-  const PhotoPreviewVideoWidget({Key key, this.videoInfo, this.currentPostion,this.videoMargin})
+  final PhotoPreviewVideoDelegate videoDelegate;
+
+  const PhotoPreviewVideoWidget(
+      {Key key,
+      this.videoInfo,
+      this.currentPostion,
+      this.videoMargin,
+      this.videoDelegate})
       : super(key: key);
 
   @override
@@ -44,8 +52,8 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   ///是否加载完成
   bool isLoadComplete = false;
 
-//  ///是否加载完成controller
-//  StreamController<bool> isLoadCompleteController = StreamController.broadcast();
+  ///视频配置
+  PhotoPreviewVideoDelegate _videoDelegate;
 
   @override
   void initState() {
@@ -60,6 +68,13 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     } else {
       videoPlayerController =
           VideoPlayerController.file(File(widget?.videoInfo?.url));
+    }
+
+    ///初始化图片配置
+    if (widget?.videoDelegate != null) {
+      _videoDelegate = widget?.videoDelegate;
+    } else {
+      _videoDelegate = DefaultPhotoPreviewVideoDelegate();
     }
 
     _initListener();
@@ -83,13 +98,12 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
                 : PhotoVideoStatusType.pause;
             videoPlayerController?.pause();
           }
-
-        }else if(position == widget?.currentPostion){
+        } else if (position == widget?.currentPostion) {
           ///释放记录类型状态
-          if(recordType != null){
-            if(recordType == PhotoVideoStatusType.playing){
+          if (recordType != null) {
+            if (recordType == PhotoVideoStatusType.playing) {
               videoPlayerController?.play();
-            }else{
+            } else {
               videoPlayerController?.pause();
             }
             recordType = null;
@@ -99,10 +113,11 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     }
   }
 
-  _initVideoControllerListener(){
-      ///初始化完成
-    if(!isLoadComplete) {
-      if ((videoPlayerController?.value?.initialized ?? false) && (videoPlayerController?.value?.position?.inMilliseconds ?? 0)> 200) {
+  _initVideoControllerListener() {
+    ///初始化完成
+    if (!isLoadComplete) {
+      if ((videoPlayerController?.value?.initialized ?? false) &&
+          (videoPlayerController?.value?.position?.inMilliseconds ?? 0) > 200) {
         //完成标志
         isLoadComplete = true;
         if (recordType != null) {
@@ -135,18 +150,23 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _toMainWidget();
+    return Container(
+        padding: widget?.videoMargin,
+        child: _videoDelegate?.videoWidget(widget?.videoInfo,
+                result: _toMainWidget()) ??
+            _toMainWidget());
   }
 
   Widget _toMainWidget() {
     if (widget?.videoInfo?.url == null || widget.videoInfo.url.isEmpty) {
       return Container();
     }
-    return ExtendsCustomWidget(
+    return ExtendedCustomWidget(
+      enableSlideOutPage: _videoDelegate?.enableSlideOutPage ?? true,
       child: Container(
-           padding: widget?.videoMargin,
           child: CustomChewie(
-            vCoverUrl:widget?.videoInfo?.vCoverUrl,
+        vCoverUrl: widget?.videoInfo?.vCoverUrl,
+        videoDelegate: _videoDelegate,
         controller: chewieController,
       )),
     );

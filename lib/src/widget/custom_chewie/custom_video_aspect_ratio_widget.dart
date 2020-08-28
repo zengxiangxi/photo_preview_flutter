@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
+import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 import 'package:photo_preview/src/widget/custom_chewie/custom_chewie_widget.dart';
@@ -12,8 +13,10 @@ import 'package:video_player/video_player.dart';
 
 class CustomVideoAspectRatioWidget extends StatefulWidget {
   final String vCoverUrl;
+  final PhotoPreviewVideoDelegate videoDelegate;
 
-  const CustomVideoAspectRatioWidget({Key key, this.vCoverUrl})
+  const CustomVideoAspectRatioWidget(
+      {Key key, this.vCoverUrl, this.videoDelegate})
       : super(key: key);
 
   @override
@@ -22,7 +25,8 @@ class CustomVideoAspectRatioWidget extends StatefulWidget {
 }
 
 class _CustomVideoAspectRatioWidgetState
-    extends State<CustomVideoAspectRatioWidget> with WidgetsBindingObserver,AutomaticKeepAliveClientMixin{
+    extends State<CustomVideoAspectRatioWidget>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   CustomChewieController chewieController;
 
   double _aspectRatio;
@@ -53,12 +57,18 @@ class _CustomVideoAspectRatioWidgetState
             child: VideoPlayer(chewieController?.videoPlayerController),
           ),
           Container(
+              child: Offstage(
+            offstage: !(widget?.videoDelegate?.enableLoadState ?? true),
             child: AnimatedOpacity(
-              opacity: widget?.vCoverUrl == null || widget.vCoverUrl.isEmpty || isCompleteFlag == true? 0: 1,
+              opacity: widget?.vCoverUrl == null ||
+                      widget.vCoverUrl.isEmpty ||
+                      isCompleteFlag == true
+                  ? 0
+                  : 1,
               duration: Duration(milliseconds: 250),
               child: _toPlaceHolderWidget(),
             ),
-          ),
+          )),
         ],
       ),
     ));
@@ -73,12 +83,14 @@ class _CustomVideoAspectRatioWidgetState
         widget.vCoverUrl,
         loadStateChanged: (state) => _loadStateChangedImage(state),
         initGestureConfigHandler: (state) =>
+            widget?.videoDelegate?.initGestureConfigHandler(state, context) ??
             _initGestureConfigHandler(state, context),
       );
     } else {
       return ExtendedImage.file(
         File(widget.vCoverUrl),
         initGestureConfigHandler: (state) =>
+            widget?.videoDelegate?.initGestureConfigHandler(state, context) ??
             _initGestureConfigHandler(state, context),
       );
     }
@@ -133,6 +145,7 @@ class _CustomVideoAspectRatioWidgetState
       chewieController.videoPlayerController.addListener(_updateState);
       _updateState();
     }
+
     super.didChangeDependencies();
   }
 
@@ -156,11 +169,11 @@ class _CustomVideoAspectRatioWidgetState
     if (value != null) {
       double newAspectRatio = value.size != null ? value.aspectRatio : null;
       if (newAspectRatio != null && newAspectRatio != _aspectRatio) {
-        if(mounted) {
+        if (mounted) {
           setState(() {
             isCompleteFlag = true;
-            _videoAspectRatio = _aspectRatio =
-                _getLastedAspectRatio(value?.size);
+            _videoAspectRatio =
+                _aspectRatio = _getLastedAspectRatio(value?.size);
           });
         }
       }

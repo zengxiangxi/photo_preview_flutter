@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/photo_preview_export.dart';
 import 'package:photo_preview/src/delegate/photo_preview_image_delegate.dart';
+import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/photo_preview_page/photo_preview_state.dart';
 import 'package:photo_preview/src/utils/photo_callback.dart';
 import 'package:photo_preview/src/vo/photo_preview_data_source.dart';
@@ -15,8 +16,9 @@ class PhotoPreviewPage extends StatefulWidget {
   final PhotoPreviewDataSource dataSource;
   final ExtendedSlideDelegate extendedSlideDelegate;
   final PhotoPreviewImageDelegate imageDelegate;
+  final PhotoPreviewVideoDelegate videoDelegate;
 
-  const PhotoPreviewPage({Key key, this.dataSource, this.extendedSlideDelegate,this.imageDelegate}) : super(key: key);
+  const PhotoPreviewPage({Key key, this.dataSource, this.extendedSlideDelegate,this.imageDelegate, this.videoDelegate}) : super(key: key);
 
   @override
   PhotoPreviewState createState() => PhotoPreviewState();
@@ -24,7 +26,7 @@ class PhotoPreviewPage extends StatefulWidget {
   ///跳转到
   static navigatorPush(BuildContext context,
       PhotoPreviewDataSource dataSource,
-      {PhotoPreviewCallback callback,ExtendedSlideDelegate extendedSlideDelegate,PhotoPreviewImageDelegate imageDelegate}) {
+      {PhotoPreviewCallback callback,ExtendedSlideDelegate extendedSlideDelegate,PhotoPreviewImageDelegate imageDelegate,PhotoPreviewVideoDelegate videoDelegate}) {
     if (dataSource == null || dataSource.imgVideoFullList == null || dataSource.imgVideoFullList.isEmpty) {
       callback?.onError("数据为空");
       return;
@@ -35,6 +37,7 @@ class PhotoPreviewPage extends StatefulWidget {
             dataSource: dataSource,
             extendedSlideDelegate: extendedSlideDelegate,
             imageDelegate: imageDelegate,
+            videoDelegate: videoDelegate,
           ),
       opaque: false,
       transitionDuration:const Duration(milliseconds: 200),

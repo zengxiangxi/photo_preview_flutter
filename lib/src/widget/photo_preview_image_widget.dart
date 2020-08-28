@@ -95,7 +95,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         },
         child: Container(
                 padding: widget?.imgMargin,
-                child: _imageDelegate?.imageWidget(widget?.imageInfo) ?? _toImageWidget()));
+                child: _imageDelegate?.imageWidget(widget?.imageInfo,result: _toImageWidget()) ?? _toImageWidget()));
   }
 
   ///图片组件

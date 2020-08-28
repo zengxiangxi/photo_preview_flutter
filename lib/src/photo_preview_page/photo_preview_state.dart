@@ -152,6 +152,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
       return PhotoPreviewVideoWidget(
           videoInfo: itemVo,
           currentPostion: index,
+          videoDelegate: widget?.videoDelegate,
           videoMargin: _extendedSlideDelegate?.imgVideoMargin);
     }
     return PhotoPreviewErrorWidget();

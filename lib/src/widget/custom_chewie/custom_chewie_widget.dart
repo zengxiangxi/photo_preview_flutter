@@ -4,6 +4,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:video_player/video_player.dart';
 
 import 'custom_player_with_controls.dart';
@@ -23,7 +24,7 @@ typedef Widget ChewieRoutePageBuilder(
 class CustomChewie extends StatefulWidget {
   CustomChewie({
     Key key,
-    this.controller, this.vCoverUrl,
+    this.controller, this.vCoverUrl, this.videoDelegate,
   })  : assert(controller != null, 'You must provide a chewie controller'),
         super(key: key);
 
@@ -32,6 +33,8 @@ class CustomChewie extends StatefulWidget {
 
   ///预加载封面图
   final String vCoverUrl;
+
+  final PhotoPreviewVideoDelegate videoDelegate;
 
   @override
   CustomChewieState createState() {
@@ -76,7 +79,7 @@ class CustomChewieState extends State<CustomChewie> {
   Widget build(BuildContext context) {
     return _ChewieControllerProvider(
       controller: widget.controller,
-      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,),
+      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,videoDelegate: widget?.videoDelegate,),
     );
   }
 
@@ -114,7 +117,7 @@ class CustomChewieState extends State<CustomChewie> {
       ) {
     var controllerProvider = _ChewieControllerProvider(
       controller: widget.controller,
-      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,),
+      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,videoDelegate: widget?.videoDelegate,),
     );
 
     if (widget.controller.routePageBuilder == null) {
