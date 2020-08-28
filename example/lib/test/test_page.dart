@@ -26,15 +26,15 @@ class _TestPageState extends State<TestPage> {
         PhotoPreviewPage.navigatorPush(
             context,
             PhotoPreviewDataSource(imgVideoFullList: [
-
               PhotoPreviewInfoVo(
-                  url: "https://zts-tx.oss-cn-beijing.aliyuncs.com/picture/splash_ad/3.png",
-                  vCoverUrl: "https://zts-tx.oss-cn-beijing.aliyuncs.com/picture/splash_ad/3.png",
+                url: "https://p.pstatp.com/origin/1379a000109aa279a2bd8.jpg",),
+              PhotoPreviewInfoVo(
+                  url: "https://v-cdn.zjol.com.cn/277001.mp4",
                   heroTag: "a"),
               PhotoPreviewInfoVo(
                   url: "https://zts-tx.oss-cn-beijing.aliyuncs.com/picture/splash_ad/3.png",
-                  vCoverUrl: "https://zts-tx.oss-cn-beijing.aliyuncs.com/picture/splash_ad/3.png",
                   heroTag: "test"),
+
             ]));
       },
       child: Text("跳转到图片浏览器"),

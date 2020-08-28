@@ -20,7 +20,9 @@ class PhotoPreviewVideoWidget extends StatefulWidget {
   ///当前位置
   final int currentPostion;
 
-  const PhotoPreviewVideoWidget({Key key, this.videoInfo, this.currentPostion})
+  final EdgeInsetsGeometry videoMargin;
+
+  const PhotoPreviewVideoWidget({Key key, this.videoInfo, this.currentPostion,this.videoMargin})
       : super(key: key);
 
   @override
@@ -142,6 +144,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     }
     return ExtendsCustomWidget(
       child: Container(
+           padding: widget?.videoMargin,
           child: CustomChewie(
             vCoverUrl:widget?.videoInfo?.vCoverUrl,
         controller: chewieController,

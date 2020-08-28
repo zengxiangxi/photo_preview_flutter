@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:extended_image/src/gesture/extended_image_slide_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:photo_preview/photo_preview_export.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 
@@ -31,6 +32,22 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
   @override
   SlideScaleHandler get slideScaleHandler => _slideScaleHandler;
 
+  @override
+  Widget topWidget(bool isSlideStatus) => null;
+
+  @override
+  Widget bottomWidget(bool isSlideStatus) => null;
+
+  @override
+  Widget wholeWidget(Widget result) => null;
+
+  @override
+  EdgeInsetsGeometry get imgVideoMargin => null;
+
+  @override
+  ValueChanged<int> get pageChangeStatus => null;
+
+
   ///滑动背景变化回调
   final SlidePageBackgroundHandler _slidePageBackgroundHandler =
       (Offset offset, Size pageSize) {
@@ -48,9 +65,9 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
 
   ///滑动缩放回调
   final SlideScaleHandler _slideScaleHandler = (
-    Offset offset, {
-    ExtendedImageSlidePageState state,
-  }) {
+      Offset offset, {
+        ExtendedImageSlidePageState state,
+      }) {
     double scale = 0.0;
     scale = offset.distance /
         Offset(state?.context?.size?.width, state?.context?.size?.height)
@@ -60,13 +77,13 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
 
   ///滑动结束回调
   final SlideEndHandler _slideEndHandler = (
-    Offset offset, {
-    ExtendedImageSlidePageState state,
-    ScaleEndDetails details,
-  }) {
+      Offset offset, {
+        ExtendedImageSlidePageState state,
+        ScaleEndDetails details,
+      }) {
     //如果放大
     if ((state?.imageGestureState?.gestureDetails?.totalScale ??
-            PhotoPreviewConstant.DEFAULT_TOTAL_SCALE) >
+        PhotoPreviewConstant.DEFAULT_TOTAL_SCALE) >
         (state?.imageGestureState?.imageGestureConfig?.initialScale ??
             PhotoPreviewConstant.DEFAULT_INIT_SCALE)) {
       return false;
@@ -77,4 +94,5 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
     }
     return offset.dy > 100;
   };
+
 }

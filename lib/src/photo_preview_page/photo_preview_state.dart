@@ -14,8 +14,7 @@ import 'package:photo_preview/src/widget/photo_preview_video_widget.dart';
 import '../../photo_preview_export.dart';
 import 'singleton/photo_preview_value_singleton.dart';
 
-class PhotoPreviewState extends State<PhotoPreviewPage>{
-
+class PhotoPreviewState extends State<PhotoPreviewPage> {
   ///page控制器
   PageController _pageController;
 
@@ -30,89 +29,133 @@ class PhotoPreviewState extends State<PhotoPreviewPage>{
     super.initState();
 
     ///页码控制器初始化
-    _pageController = PageController(initialPage: widget?.dataSource?.lastInitPageNum ?? PhotoPreviewConstant.DEFAULT_INIT_PAGE);
+    _pageController = PageController(
+        initialPage: widget?.dataSource?.lastInitPageNum ??
+            PhotoPreviewConstant.DEFAULT_INIT_PAGE);
 
     ///初始化滑动配置
-    if(widget?.extendedSlideDelegate != null){
+    if (widget?.extendedSlideDelegate != null) {
       _extendedSlideDelegate = widget?.extendedSlideDelegate;
-    }else{
+    } else {
       _extendedSlideDelegate = DefaultExtendedSlideDelegate();
     }
+
     ///设置滑动监听
-    PhotoPreviewValueSingleton.getInstance().setSlidingCallBack(_extendedSlideDelegate?.isSlidingStatus);
+    PhotoPreviewValueSingleton.getInstance()
+        .setSlidingCallBack(_extendedSlideDelegate?.isSlidingStatus);
   }
 
   @override
   Widget build(BuildContext context) {
+    final Widget slideWidget = _toSlideWidget();
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        child: _toSlideWidget(),
+        child: _extendedSlideDelegate?.wholeWidget(slideWidget) ?? slideWidget
+
       ),
     );
   }
 
-  Widget _toSlideWidget(){
-    return ExtendedImageSlidePage(
-      slideAxis: _extendedSlideDelegate?.slideAxis ?? SlideAxis.both,
-      slideType: _extendedSlideDelegate?.slideType ?? SlideType.wholePage,
-      //滑动背景变化
-      slidePageBackgroundHandler: _extendedSlideDelegate?.slidePageBackgroundHandler ?? _slidePageBackgroundHandler,
-      //滑动缩放
-      slideScaleHandler: _extendedSlideDelegate?.slideScaleHandler ?? _slideScaleHandler,
-      //滑动结束
-      slideEndHandler: _extendedSlideDelegate?.slideEndHandler ?? _slideEndHandler,
-      //滑动监听
-      onSlidingPage: (state) => _onSlidingPage(state),
-      //重置时间
-      resetPageDuration:
-      _extendedSlideDelegate?.resetPageDuration ?? Duration(milliseconds: PhotoPreviewConstant.DEFAULT_RESET_MILL),
-      child: _toMainWidget(),
+  Widget _toSlideWidget() {
+    return Stack(
+      children: <Widget>[
+        ExtendedImageSlidePage(
+          slideAxis: _extendedSlideDelegate?.slideAxis ?? SlideAxis.both,
+          slideType: _extendedSlideDelegate?.slideType ?? SlideType.wholePage,
+          //滑动背景变化
+          slidePageBackgroundHandler:
+              _extendedSlideDelegate?.slidePageBackgroundHandler ??
+                  _slidePageBackgroundHandler,
+          //滑动缩放
+          slideScaleHandler:
+              _extendedSlideDelegate?.slideScaleHandler ?? _slideScaleHandler,
+          //滑动结束
+          slideEndHandler:
+              _extendedSlideDelegate?.slideEndHandler ?? _slideEndHandler,
+          //滑动监听
+          onSlidingPage: (state) => _onSlidingPage(state),
+          //重置时间
+          resetPageDuration: _extendedSlideDelegate?.resetPageDuration ??
+              Duration(milliseconds: PhotoPreviewConstant.DEFAULT_RESET_MILL),
+          child: _toMainWidget(),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: StreamBuilder<bool>(
+              initialData: false,
+              stream: PhotoPreviewValueSingleton.getInstance()
+                  ?.isSlidingController
+                  ?.stream,
+              builder: (context, snapshot) {
+                return _extendedSlideDelegate?.topWidget(snapshot?.data) ??
+                    Container();
+              }),
+        ),
+        Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: StreamBuilder<bool>(
+                initialData: false,
+                stream: PhotoPreviewValueSingleton.getInstance()
+                    ?.isSlidingController
+                    ?.stream,
+                builder: (context, snapshot) {
+                  return _extendedSlideDelegate?.bottomWidget(snapshot?.data) ??
+                      Container();
+                })),
+      ],
     );
   }
 
   ///主体
-  Widget _toMainWidget(){
+  Widget _toMainWidget() {
     ///空页面
-    if(widget?.dataSource?.imgVideoFullList == null || widget.dataSource.imgVideoFullList.isEmpty){
+    if (widget?.dataSource?.imgVideoFullList == null ||
+        widget.dataSource.imgVideoFullList.isEmpty) {
       return Container();
     }
     return ExtendedImageGesturePageView.builder(
       itemCount: widget.dataSource.imgVideoFullList?.length ?? 0,
       controller: _pageController,
       physics: BouncingScrollPhysics(),
-      onPageChanged: (int position){
-        PhotoPreviewValueSingleton.getInstance().pageIndexController?.add(position);
+      onPageChanged: (int position) {
+        PhotoPreviewValueSingleton.getInstance()
+            .pageIndexController
+            ?.add(position);
       },
-      itemBuilder: (BuildContext ctx,int index){
+      itemBuilder: (BuildContext ctx, int index) {
         return _toListItemWidget(ctx, index);
       },
     );
   }
 
   ///图片或照片组件
-  Widget _toListItemWidget(BuildContext ctx , int index){
-    final PhotoPreviewInfoVo itemVo = widget?.dataSource?.imgVideoFullList?.elementAt(index);
+  Widget _toListItemWidget(BuildContext ctx, int index) {
+    final PhotoPreviewInfoVo itemVo =
+        widget?.dataSource?.imgVideoFullList?.elementAt(index);
     //图片
-    if(itemVo?.isImageType() ?? false){
+    if (itemVo?.isImageType() ?? false) {
       return PhotoPreviewImageWidget(
         imageInfo: itemVo,
-        currentPostion:index,
+        currentPostion: index,
+        imgMargin: _extendedSlideDelegate?.imgVideoMargin,
         imageDelegate: widget?.imageDelegate,
         popCallBack: () => Navigator.of(context).maybePop(),
       );
     }
     //视频
-    if(itemVo?.isVideoType() ?? false){
+    if (itemVo?.isVideoType() ?? false) {
       return PhotoPreviewVideoWidget(
-        videoInfo: itemVo,
-        currentPostion:index,
-      );
+          videoInfo: itemVo,
+          currentPostion: index,
+          videoMargin: _extendedSlideDelegate?.imgVideoMargin);
     }
     return PhotoPreviewErrorWidget();
   }
-
-
 
   ///滑动背景变化回调
   final SlidePageBackgroundHandler _slidePageBackgroundHandler =
@@ -132,17 +175,19 @@ class PhotoPreviewState extends State<PhotoPreviewPage>{
   ///滑动状态回调
   void _onSlidingPage(state) {
     var showSwiper = state.isSliding ?? false;
-    if(_isSlidingStatus != showSwiper){
+    if (_isSlidingStatus != showSwiper) {
       _isSlidingStatus = showSwiper;
-      PhotoPreviewValueSingleton.getInstance().isSlidingController?.add(showSwiper);
+      PhotoPreviewValueSingleton.getInstance()
+          .isSlidingController
+          ?.add(showSwiper);
     }
   }
 
   ///滑动缩放回调
   final SlideScaleHandler _slideScaleHandler = (
-      Offset offset, {
-        ExtendedImageSlidePageState state,
-      }) {
+    Offset offset, {
+    ExtendedImageSlidePageState state,
+  }) {
     double scale = 0.0;
     scale = offset.distance /
         Offset(state?.context?.size?.width, state?.context?.size?.height)
@@ -152,13 +197,13 @@ class PhotoPreviewState extends State<PhotoPreviewPage>{
 
   ///滑动结束回调
   final SlideEndHandler _slideEndHandler = (
-      Offset offset, {
-        ExtendedImageSlidePageState state,
-        ScaleEndDetails details,
-      }) {
+    Offset offset, {
+    ExtendedImageSlidePageState state,
+    ScaleEndDetails details,
+  }) {
     //如果放大
     if ((state?.imageGestureState?.gestureDetails?.totalScale ??
-        PhotoPreviewConstant.DEFAULT_TOTAL_SCALE) >
+            PhotoPreviewConstant.DEFAULT_TOTAL_SCALE) >
         (state?.imageGestureState?.imageGestureConfig?.initialScale ??
             PhotoPreviewConstant.DEFAULT_INIT_SCALE)) {
       return false;

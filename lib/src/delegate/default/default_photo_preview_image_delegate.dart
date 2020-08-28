@@ -19,16 +19,16 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
   bool get enableSlideOutPage => true;
 
   @override
-  heroBuilderForSlidingPage(Widget result, PhotoPreviewInfoVo imageInfo) => _heroBuilderForSlidingPage(result,imageInfo?.heroTag);
+  heroBuilderForSlidingPage(Widget result, {PhotoPreviewInfoVo imageInfo}) => _heroBuilderForSlidingPage(result,imageInfo?.heroTag);
 
   @override
-  Widget imageWidget(PhotoPreviewInfoVo imageInfo) =>null;
+  Widget imageWidget(PhotoPreviewInfoVo imageInfo,{Widget result}) =>null;
 
   @override
-  initGestureConfigHandler(ExtendedImageState state, PhotoPreviewInfoVo imageInfo, BuildContext context) =>_initGestureConfigHandler(state,context);
+  initGestureConfigHandler(ExtendedImageState state,  BuildContext context,{PhotoPreviewInfoVo imageInfo}) =>_initGestureConfigHandler(state,context);
 
   @override
-  Widget loadStateChanged(ExtendedImageState state, PhotoPreviewInfoVo imageInfo) => null;
+  Widget loadStateChanged(ExtendedImageState state, {PhotoPreviewInfoVo imageInfo}) => null;
 
   @override
   ExtendedImageMode get mode => ExtendedImageMode.gesture;

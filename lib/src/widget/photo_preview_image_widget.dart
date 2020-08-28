@@ -26,12 +26,14 @@ class PhotoPreviewImageWidget extends StatefulWidget {
 
   final PhotoPreviewImageDelegate imageDelegate;
 
+  final EdgeInsetsGeometry imgMargin;
+
   const PhotoPreviewImageWidget(
       {Key key,
       this.imageInfo,
       this.popCallBack,
       this.currentPostion,
-      this.imageDelegate})
+      this.imageDelegate, this.imgMargin})
       : super(key: key);
 
   @override
@@ -91,8 +93,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
           }
           _onClickPop();
         },
-        child:
-            _imageDelegate?.imageWidget(widget?.imageInfo) ?? _toImageWidget());
+        child: Container(
+                padding: widget?.imgMargin,
+                child: _imageDelegate?.imageWidget(widget?.imageInfo) ?? _toImageWidget()));
   }
 
   ///图片组件
@@ -109,7 +112,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         enableLoadState: _imageDelegate?.enableLoadState ?? true,
         extendedImageGestureKey: _gestureGlobalKey,
         loadStateChanged: (ExtendedImageState state) =>
-            _imageDelegate?.loadStateChanged(state, widget?.imageInfo) ??
+            _imageDelegate?.loadStateChanged(state,imageInfo: widget?.imageInfo) ??
             _toLoadStateChanged(state),
         onDoubleTap: (state) {
           if (_imageDelegate?.onDoubleTap != null) {
@@ -120,11 +123,11 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         },
         initGestureConfigHandler: (state) =>
             _imageDelegate?.initGestureConfigHandler(
-                state, widget?.imageInfo, context) ??
+                state, context,imageInfo: widget?.imageInfo) ??
             _initGestureConfigHandler(state, context),
         heroBuilderForSlidingPage: (Widget result) =>
             _imageDelegate?.heroBuilderForSlidingPage(
-                result, widget?.imageInfo) ??
+                result,imageInfo:  widget?.imageInfo) ??
             _heroBuilderForSlidingPage(result, widget?.imageInfo?.heroTag),
       );
     } else {
@@ -144,11 +147,11 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         extendedImageGestureKey: _gestureGlobalKey,
         initGestureConfigHandler: (state) =>
             _imageDelegate?.initGestureConfigHandler(
-                state, widget?.imageInfo, context) ??
+                state, context,imageInfo:  widget?.imageInfo) ??
             _initGestureConfigHandler(state, context),
         heroBuilderForSlidingPage: (Widget result) =>
             _imageDelegate?.heroBuilderForSlidingPage(
-                result, widget?.imageInfo) ??
+                result,imageInfo:  widget?.imageInfo) ??
             _heroBuilderForSlidingPage(result, widget?.imageInfo?.heroTag),
       );
     }
@@ -298,7 +301,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         }
         _onDoubleTap(state);
       },
-      initGestureConfigHandler: (state) => _imageDelegate?.initGestureConfigHandler(state, widget?.imageInfo, context) ??
+      initGestureConfigHandler: (state) => _imageDelegate?.initGestureConfigHandler(state, context, imageInfo: widget?.imageInfo) ??
           _initGestureConfigHandler(state, context),
 //      heroBuilderForSlidingPage: (Widget result) => _heroBuilderForSlidingPage(
 //          result,

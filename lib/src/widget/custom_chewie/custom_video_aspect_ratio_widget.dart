@@ -120,7 +120,6 @@ class _CustomVideoAspectRatioWidgetState
         setState(() {
           _videoAspectRatio = _aspectRatio = imageWidth / imageHeight;
         });
-        print("通过封面设置比例：${_videoAspectRatio}");
       }
     });
   }
@@ -163,7 +162,6 @@ class _CustomVideoAspectRatioWidgetState
             _videoAspectRatio = _aspectRatio =
                 _getLastedAspectRatio(value?.size);
           });
-          print("通过视频回调设置比例：${_videoAspectRatio}");
         }
       }
     }

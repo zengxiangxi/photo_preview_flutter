@@ -6,7 +6,7 @@ import 'package:photo_preview/src/vo/photo_preview_type.dart';
 ///图片组件配置
 abstract class PhotoPreviewImageDelegate {
   ///自定义图片组件
-  Widget imageWidget(PhotoPreviewInfoVo imageInfo);
+  Widget imageWidget(PhotoPreviewInfoVo imageInfo,{Widget result});
 
   ///开启拖动下滑退出
   bool get enableSlideOutPage;
@@ -19,7 +19,7 @@ abstract class PhotoPreviewImageDelegate {
 
   ///加载状态变化
   Widget loadStateChanged(
-      ExtendedImageState state, PhotoPreviewInfoVo imageInfo);
+      ExtendedImageState state,{ PhotoPreviewInfoVo imageInfo});
 
   ///单击
   onTapCallBack get onClick;
@@ -30,8 +30,8 @@ abstract class PhotoPreviewImageDelegate {
 
   ///初始化图片
   GestureConfig initGestureConfigHandler(ExtendedImageState state,
-      PhotoPreviewInfoVo imageInfo, BuildContext context);
+      BuildContext context,{PhotoPreviewInfoVo imageInfo});
 
   ///Hero配置
-  Widget heroBuilderForSlidingPage(Widget result,PhotoPreviewInfoVo imageInfo);
+  Widget heroBuilderForSlidingPage(Widget result,{PhotoPreviewInfoVo imageInfo});
 }
