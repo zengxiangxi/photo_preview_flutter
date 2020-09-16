@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -69,6 +68,8 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     } else {
       _imageDelegate = DefaultPhotoPreviewImageDelegate();
     }
+    ///设置context
+    _imageDelegate.context = context;
   }
 
   @override
@@ -123,12 +124,10 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         },
         initGestureConfigHandler: (state) =>
             _imageDelegate?.initGestureConfigHandler(
-                state, context,imageInfo: widget?.imageInfo) ??
-            _initGestureConfigHandler(state, context),
+                state,imageInfo: widget?.imageInfo),
         heroBuilderForSlidingPage: (Widget result) =>
             _imageDelegate?.heroBuilderForSlidingPage(
-                result,imageInfo:  widget?.imageInfo) ??
-            _heroBuilderForSlidingPage(result, widget?.imageInfo?.heroTag),
+                result,imageInfo:  widget?.imageInfo)
       );
     } else {
       return ExtendedImage.file(
@@ -147,12 +146,10 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         extendedImageGestureKey: _gestureGlobalKey,
         initGestureConfigHandler: (state) =>
             _imageDelegate?.initGestureConfigHandler(
-                state, context,imageInfo:  widget?.imageInfo) ??
-            _initGestureConfigHandler(state, context),
+                state, imageInfo:  widget?.imageInfo),
         heroBuilderForSlidingPage: (Widget result) =>
             _imageDelegate?.heroBuilderForSlidingPage(
-                result,imageInfo:  widget?.imageInfo) ??
-            _heroBuilderForSlidingPage(result, widget?.imageInfo?.heroTag),
+                result,imageInfo:  widget?.imageInfo)
       );
     }
   }
@@ -200,58 +197,6 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     _doubleClickAnimationController.forward();
   }
 
-  ///初始化缩放配置回调
-  final Function _initGestureConfigHandler =
-      (ExtendedImageState state, context) {
-    double initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
-
-    if (state?.extendedImageInfo != null &&
-        state.extendedImageInfo.image != null) {
-      initialScale = PhotoPreviewToolUtils.initScale(
-          size:
-              Size(ScreenUtils.screenW(context), ScreenUtils.screenH(context)),
-          initialScale: initialScale,
-          imageSize: Size(state.extendedImageInfo.image.width.toDouble(),
-              state.extendedImageInfo.image.height.toDouble()));
-    }
-    return GestureConfig(
-        inPageView: true,
-        initialScale: initialScale,
-        minScale: PhotoPreviewConstant.DEFAULT_MIX_SCALE * initialScale,
-        maxScale: max(initialScale,
-            PhotoPreviewConstant.DEFAULT_MAX_SCALE * initialScale),
-        animationMaxScale: max(initialScale,
-            PhotoPreviewConstant.DEFAULT_MAX_SCALE * initialScale),
-        animationMinScale: min(initialScale,
-            PhotoPreviewConstant.DEFAULT_MIX_SCALE * initialScale),
-        initialAlignment: InitialAlignment.topCenter,
-        //you can cache gesture state even though page view page change.
-        //remember call clearGestureDetailsCache() method at the right time.(for example,this page dispose)
-        cacheGesture: false);
-  };
-
-  ///飞行动效
-  final Function _heroBuilderForSlidingPage = (Widget result, String heroTag) {
-    if (heroTag == null) {
-      return result;
-    }
-    return Hero(
-      tag: heroTag,
-      child: result,
-      transitionOnUserGestures: true,
-      flightShuttleBuilder: (BuildContext flightContext,
-          Animation<double> animation,
-          HeroFlightDirection flightDirection,
-          BuildContext fromHeroContext,
-          BuildContext toHeroContext) {
-        final Hero hero = (flightDirection == HeroFlightDirection.pop
-            ? fromHeroContext.widget
-            : toHeroContext.widget) as Hero;
-        return hero.child;
-      },
-    );
-  };
-
   ///加载状态
   Widget _toLoadStateChanged(ExtendedImageState state) {
     if (widget?.imageInfo?.pLoadingUrl == null ||
@@ -267,19 +212,6 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         break;
       case LoadState.failed:
         return _toPrelLoadingImageWidget();
-        return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            state?.reLoadImage();
-          },
-          child: Container(
-            alignment: Alignment.center,
-            child: Text(
-              "图片加载失败",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
         break;
     }
     return Container();
@@ -301,13 +233,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         }
         _onDoubleTap(state);
       },
-      initGestureConfigHandler: (state) => _imageDelegate?.initGestureConfigHandler(state, context, imageInfo: widget?.imageInfo) ??
-          _initGestureConfigHandler(state, context),
-//      heroBuilderForSlidingPage: (Widget result) => _heroBuilderForSlidingPage(
-//          result,
-//          widget?.heroTag == null || widget.heroTag.isEmpty
-//              ? widget?.imageInfo?.url
-//              : widget?.heroTag),
+      initGestureConfigHandler: (state) => _imageDelegate?.initGestureConfigHandler(state,imageInfo: widget?.imageInfo)
     );
   }
 

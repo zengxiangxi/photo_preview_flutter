@@ -5,6 +5,8 @@ import 'package:photo_preview/src/vo/photo_preview_type.dart';
 
 ///图片组件配置
 abstract class PhotoPreviewImageDelegate {
+  BuildContext context;
+
   ///自定义图片组件
   Widget imageWidget(PhotoPreviewInfoVo imageInfo,{Widget result});
 
@@ -29,9 +31,10 @@ abstract class PhotoPreviewImageDelegate {
   onDoubleTapCallBack get onDoubleTap;
 
   ///初始化图片
-  GestureConfig initGestureConfigHandler(ExtendedImageState state,
-      BuildContext context,{PhotoPreviewInfoVo imageInfo});
+  GestureConfig initGestureConfigHandler(ExtendedImageState state,{PhotoPreviewInfoVo imageInfo});
 
   ///Hero配置
   Widget heroBuilderForSlidingPage(Widget result,{PhotoPreviewInfoVo imageInfo});
+
+
 }

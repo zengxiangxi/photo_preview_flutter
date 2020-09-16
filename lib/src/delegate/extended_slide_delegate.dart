@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 ///滑动配置
 abstract class ExtendedSlideDelegate{
 
+  BuildContext context;
+
   SlideAxis get slideAxis;
 
   SlideType get slideType;

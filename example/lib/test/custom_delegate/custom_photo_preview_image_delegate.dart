@@ -4,7 +4,6 @@ import 'package:photo_preview/photo_preview_export.dart';
 
 class CustomPhotoPreviewImageDelegate extends DefaultPhotoPreviewImageDelegate{
 
-
   @override
   bool get enableLoadState {
     return false;

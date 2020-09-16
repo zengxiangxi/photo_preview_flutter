@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PhotoPreviewValueSingleton{
   static PhotoPreviewValueSingleton _instance;
@@ -12,6 +14,15 @@ class PhotoPreviewValueSingleton{
       _instance = new PhotoPreviewValueSingleton._();
     }
     return _instance;
+  }
+
+  Directory _temporaryDirectory;
+  Directory get temporaryDirectory => _temporaryDirectory;
+
+  ///先获取缓存路径
+  Future<Directory> getTemporaryForder() async{
+    _temporaryDirectory = await getTemporaryDirectory();
+    return _temporaryDirectory;
   }
 
   ///滑动

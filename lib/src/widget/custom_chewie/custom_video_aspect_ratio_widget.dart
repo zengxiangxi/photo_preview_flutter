@@ -83,15 +83,13 @@ class _CustomVideoAspectRatioWidgetState
         widget.vCoverUrl,
         loadStateChanged: (state) => _loadStateChangedImage(state),
         initGestureConfigHandler: (state) =>
-            widget?.videoDelegate?.initGestureConfigHandler(state, context) ??
-            _initGestureConfigHandler(state, context),
+            widget?.videoDelegate?.initGestureConfigHandler(state, context)
       );
     } else {
       return ExtendedImage.file(
         File(widget.vCoverUrl),
         initGestureConfigHandler: (state) =>
-            widget?.videoDelegate?.initGestureConfigHandler(state, context) ??
-            _initGestureConfigHandler(state, context),
+            widget?.videoDelegate?.initGestureConfigHandler(state, context)
       );
     }
   }
@@ -191,35 +189,7 @@ class _CustomVideoAspectRatioWidgetState
     return videoSize.width / videoSize.height;
   }
 
-  ///初始化缩放配置回调
-  final Function _initGestureConfigHandler =
-      (ExtendedImageState state, context) {
-    double initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
 
-    if (state?.extendedImageInfo != null &&
-        state.extendedImageInfo.image != null) {
-      initialScale = PhotoPreviewToolUtils.initScale(
-          size:
-              Size(ScreenUtils.screenW(context), ScreenUtils.screenH(context)),
-          initialScale: initialScale,
-          imageSize: Size(state.extendedImageInfo.image.width.toDouble(),
-              state.extendedImageInfo.image.height.toDouble()));
-    }
-    return GestureConfig(
-        inPageView: true,
-        initialScale: initialScale,
-        minScale: PhotoPreviewConstant.DEFAULT_MIX_SCALE * initialScale,
-        maxScale: max(initialScale,
-            PhotoPreviewConstant.DEFAULT_MAX_SCALE * initialScale),
-        animationMaxScale: max(initialScale,
-            PhotoPreviewConstant.DEFAULT_MAX_SCALE * initialScale),
-        animationMinScale: min(initialScale,
-            PhotoPreviewConstant.DEFAULT_MIX_SCALE * initialScale),
-        initialAlignment: InitialAlignment.topCenter,
-        //you can cache gesture state even though page view page change.
-        //remember call clearGestureDetailsCache() method at the right time.(for example,this page dispose)
-        cacheGesture: false);
-  };
 
   @override
   bool get wantKeepAlive => true;

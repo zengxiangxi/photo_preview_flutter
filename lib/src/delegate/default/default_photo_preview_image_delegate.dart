@@ -11,7 +11,9 @@ import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 import 'package:photo_preview/src/vo/photo_preview_info_vo.dart';
 
+///默认图片配置
 class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
+
   @override
   bool get enableLoadState => true;
 
@@ -19,13 +21,13 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
   bool get enableSlideOutPage => true;
 
   @override
-  heroBuilderForSlidingPage(Widget result, {PhotoPreviewInfoVo imageInfo}) => _heroBuilderForSlidingPage(result,imageInfo?.heroTag);
+  heroBuilderForSlidingPage(Widget result, {PhotoPreviewInfoVo imageInfo}) => _heroBuilderForSlidingPage(result,imageInfo?.heroTag,imageInfo?.url);
 
   @override
   Widget imageWidget(PhotoPreviewInfoVo imageInfo,{Widget result}) =>null;
 
   @override
-  initGestureConfigHandler(ExtendedImageState state,  BuildContext context,{PhotoPreviewInfoVo imageInfo}) =>_initGestureConfigHandler(state,context);
+  initGestureConfigHandler(ExtendedImageState state,{PhotoPreviewInfoVo imageInfo}) =>_initGestureConfigHandler(state,context);
 
   @override
   Widget loadStateChanged(ExtendedImageState state, {PhotoPreviewInfoVo imageInfo}) => null;
@@ -41,8 +43,11 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
 
 
   ///飞行动效
-  final Function _heroBuilderForSlidingPage = (Widget result, String heroTag) {
+  final Function _heroBuilderForSlidingPage = (Widget result, String heroTag,String url){
     if (heroTag == null) {
+      return result;
+    }
+    if (!(PhotoPreviewToolUtils.isHasCacheNetImageUrl(url))){
       return result;
     }
     return Hero(
@@ -92,4 +97,5 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
         //remember call clearGestureDetailsCache() method at the right time.(for example,this page dispose)
         cacheGesture: false);
   };
+
 }

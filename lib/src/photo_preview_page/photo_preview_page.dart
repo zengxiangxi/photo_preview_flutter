@@ -5,9 +5,11 @@ import 'package:photo_preview/photo_preview_export.dart';
 import 'package:photo_preview/src/delegate/photo_preview_image_delegate.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/photo_preview_page/photo_preview_state.dart';
+import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/utils/photo_callback.dart';
 import 'package:photo_preview/src/vo/photo_preview_data_source.dart';
 import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
+import 'package:photo_preview/src/widget/route/custom_page_transitions_builder.dart';
 
 ///图片浏览器页面
 class PhotoPreviewPage extends StatefulWidget {
@@ -26,11 +28,13 @@ class PhotoPreviewPage extends StatefulWidget {
   ///跳转到
   static navigatorPush(BuildContext context,
       PhotoPreviewDataSource dataSource,
-      {PhotoPreviewCallback callback,ExtendedSlideDelegate extendedSlideDelegate,PhotoPreviewImageDelegate imageDelegate,PhotoPreviewVideoDelegate videoDelegate}) {
+      {PhotoPreviewCallback callback,ExtendedSlideDelegate extendedSlideDelegate,PhotoPreviewImageDelegate imageDelegate,PhotoPreviewVideoDelegate videoDelegate}) async{
     if (dataSource == null || dataSource.imgVideoFullList == null || dataSource.imgVideoFullList.isEmpty) {
       callback?.onError("数据为空");
       return;
     }
+    ///优先获取缓存路径
+    await PhotoPreviewValueSingleton.getInstance().getTemporaryForder();
     Route _route = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
           PhotoPreviewPage(
@@ -40,9 +44,9 @@ class PhotoPreviewPage extends StatefulWidget {
             videoDelegate: videoDelegate,
           ),
       opaque: false,
-      transitionDuration:const Duration(milliseconds: 200),
+      // transitionDuration:const Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeUpwardsPageTransitionsBuilder().buildTransitions<dynamic>(null,context,animation,secondaryAnimation,child);
+        return CustomFadePageTransitionsBuilder().buildTransitions<dynamic>(null,context,animation,secondaryAnimation,child);
       },
     );
     Navigator.push<dynamic>(

@@ -39,6 +39,8 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
     } else {
       _extendedSlideDelegate = DefaultExtendedSlideDelegate();
     }
+    ///设置context
+    _extendedSlideDelegate.context = context;
 
     ///设置滑动监听
     PhotoPreviewValueSingleton.getInstance()
@@ -65,14 +67,13 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
           slideType: _extendedSlideDelegate?.slideType ?? SlideType.wholePage,
           //滑动背景变化
           slidePageBackgroundHandler:
-              _extendedSlideDelegate?.slidePageBackgroundHandler ??
-                  _slidePageBackgroundHandler,
+              _extendedSlideDelegate?.slidePageBackgroundHandler,
           //滑动缩放
           slideScaleHandler:
-              _extendedSlideDelegate?.slideScaleHandler ?? _slideScaleHandler,
+              _extendedSlideDelegate?.slideScaleHandler,
           //滑动结束
           slideEndHandler:
-              _extendedSlideDelegate?.slideEndHandler ?? _slideEndHandler,
+              _extendedSlideDelegate?.slideEndHandler,
           //滑动监听
           onSlidingPage: (state) => _onSlidingPage(state),
           //重置时间
@@ -158,21 +159,6 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
     return PhotoPreviewErrorWidget();
   }
 
-  ///滑动背景变化回调
-  final SlidePageBackgroundHandler _slidePageBackgroundHandler =
-      (Offset offset, Size pageSize) {
-    double opacity = 0.0;
-    //向上滑动不改变透明度
-    if (offset.dy > 0) {
-      opacity = offset.distance /
-          (Offset(pageSize.width, pageSize.height).distance / 2.0);
-    } else {
-      opacity = 0;
-    }
-    return PhotoPreviewConstant.DEFAULT_BACK_GROUND_COLOR
-        .withOpacity(min(1.0, max(1.0 - opacity, 0.0)));
-  };
-
   ///滑动状态回调
   void _onSlidingPage(state) {
     var showSwiper = state.isSliding ?? false;
@@ -183,43 +169,6 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
           ?.add(showSwiper);
     }
   }
-
-  ///滑动缩放回调
-  final SlideScaleHandler _slideScaleHandler = (
-    Offset offset, {
-    ExtendedImageSlidePageState state,
-  }) {
-    double scale = 0.0;
-    scale = offset.distance /
-        Offset(state?.context?.size?.width, state?.context?.size?.height)
-            .distance;
-    return max(1.0 - scale, 0.2);
-  };
-
-  ///滑动结束回调
-  final SlideEndHandler _slideEndHandler = (
-    Offset offset, {
-    ExtendedImageSlidePageState state,
-    ScaleEndDetails details,
-  }) {
-    //如果放大
-    if ((state?.imageGestureState?.gestureDetails?.totalScale ??
-            PhotoPreviewConstant.DEFAULT_TOTAL_SCALE) >
-        (state?.imageGestureState?.imageGestureConfig?.initialScale ??
-            PhotoPreviewConstant.DEFAULT_INIT_SCALE)) {
-      return false;
-    }
-    //向上滑回弹
-    if (offset.dy <= 0) {
-      return false;
-    }
-//    return offset.distance >
-//        Offset(state?.context?.size?.width ?? 0,
-//                    state?.context?.size?.height ?? 0)
-//                .distance /
-//            12;
-    return offset.dy > 100;
-  };
 
   @override
   void dispose() {

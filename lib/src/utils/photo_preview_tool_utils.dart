@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_preview/src/constant/photo_preview_quality_type_constant.dart';
+import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
+import 'package:path/path.dart';
+
 
 import '../../photo_preview_export.dart';
 
@@ -130,5 +135,31 @@ class PhotoPreviewToolUtils {
     StringBuffer buffer = StringBuffer(url);
     buffer.write(PhotoPreviewQualityTypeConstant.getQualityTypeStr(qualityType) ?? "");
     return buffer.toString();
+  }
+
+  ///图片地址是否有缓存
+  static bool isHasCacheNetImageUrl(String url) {
+    if (url == null || url.isEmpty) {
+      return false;
+    }
+    if (!isNetUrl(url)) {
+      return false;
+    }
+    if(PhotoPreviewValueSingleton.getInstance().temporaryDirectory == null){
+      return false;
+    }
+    final String md5Key = keyToMd5(url);
+    final Directory _cacheImagesDirectory = Directory(
+        join(PhotoPreviewValueSingleton.getInstance().temporaryDirectory.path, cacheImageFolderName));
+    //exist, try to find cache image file
+    if (_cacheImagesDirectory.existsSync()) {
+      final File cacheFlie = File(join(_cacheImagesDirectory.path, md5Key));
+      if (cacheFlie.existsSync()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
   }
 }

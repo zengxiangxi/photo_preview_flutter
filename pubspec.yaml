@@ -21,6 +21,8 @@ dependencies:
   chewie: 0.9.10
   # 官方视频播放器
   video_player: 0.10.11+1
+  # 持久化
+  path_provider: 1.6.8
 
 dev_dependencies:
   flutter_test:
