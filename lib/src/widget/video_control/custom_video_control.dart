@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 import 'package:photo_preview/src/widget/custom_chewie/custom_chewie_widget.dart';
+import 'package:photo_preview/src/widget/inherit/photo_preview_data_inherited_widget.dart';
 import 'package:video_player/video_player.dart';
 
 import 'custom_video_utils.dart';
@@ -37,6 +39,7 @@ class _CustomControlsState extends State<CustomControls> {
   VideoPlayerController controller;
   CustomChewieController chewieController;
 
+  PhotoPreviewVideoDelegate _videoDelegate;
 
   @override
   void initState() {
@@ -93,7 +96,7 @@ class _CustomControlsState extends State<CustomControls> {
                   children: <Widget>[
                     ///目的：播放暂停键居中
                     Container(
-                      height: barHeight,
+                      height: barHeight + (_videoDelegate?.controllerBottomDistance ?? 0),
                     ),
                     _latestValue != null &&
                         !_latestValue.isPlaying &&
@@ -134,6 +137,7 @@ class _CustomControlsState extends State<CustomControls> {
     final _oldController = chewieController;
     chewieController = CustomChewieController.of(context);
     controller = chewieController.videoPlayerController;
+    _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
 
     if (_oldController != chewieController) {
       _dispose();
@@ -153,8 +157,8 @@ class _CustomControlsState extends State<CustomControls> {
       duration: Duration(milliseconds: 300),
       child: Container(
         ///背景透明
-        height: barHeight + bottomStatus,
-        padding: EdgeInsets.only(bottom: bottomStatus),
+        height: barHeight + bottomStatus + (_videoDelegate?.controllerBottomDistance ?? 0),
+        padding: EdgeInsets.only(bottom: bottomStatus+ (_videoDelegate?.controllerBottomDistance ?? 0)),
         decoration: BoxDecoration(
 //          color: Colors.transparent,
           gradient: LinearGradient(

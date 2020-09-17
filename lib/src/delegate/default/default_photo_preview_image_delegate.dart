@@ -41,6 +41,16 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
   @override
   get onDoubleTap => null;
 
+  @override
+  EdgeInsetsGeometry get imgMargin => null;
+
+
+  @override
+  void dispose() => null;
+
+  @override
+  void initState() => null;
+
 
   ///飞行动效
   final Function _heroBuilderForSlidingPage = (Widget result, String heroTag,String url){

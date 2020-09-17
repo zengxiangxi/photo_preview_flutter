@@ -13,6 +13,8 @@ import 'package:photo_preview/src/widget/video_control/custom_video_control.dart
 import 'package:photo_preview/src/widget/video_control/photo_video_status_type.dart';
 import 'package:video_player/video_player.dart';
 
+import 'inherit/photo_preview_data_inherited_widget.dart';
+
 ///视频播放器
 class PhotoPreviewVideoWidget extends StatefulWidget {
   ///视频详情
@@ -23,14 +25,11 @@ class PhotoPreviewVideoWidget extends StatefulWidget {
 
   final EdgeInsetsGeometry videoMargin;
 
-  final PhotoPreviewVideoDelegate videoDelegate;
-
   const PhotoPreviewVideoWidget(
       {Key key,
       this.videoInfo,
       this.currentPostion,
-      this.videoMargin,
-      this.videoDelegate})
+      this.videoMargin,})
       : super(key: key);
 
   @override
@@ -69,14 +68,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
       videoPlayerController =
           VideoPlayerController.file(File(widget?.videoInfo?.url));
     }
-
-    ///初始化图片配置
-    if (widget?.videoDelegate != null) {
-      _videoDelegate = widget?.videoDelegate;
-    } else {
-      _videoDelegate = DefaultPhotoPreviewVideoDelegate();
-    }
-
     _initListener();
     _initData();
   }
@@ -152,9 +143,12 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     super.build(context);
     return Container(
         padding: widget?.videoMargin,
-        child: _videoDelegate?.videoWidget(widget?.videoInfo,
-                result: _toMainWidget()) ??
-            _toMainWidget());
+        child: Container(
+          padding: _videoDelegate?.videoMargin,
+          child: _videoDelegate?.videoWidget(widget?.videoInfo,
+                  result: _toMainWidget()) ??
+              _toMainWidget(),
+        ));
   }
 
   Widget _toMainWidget() {
@@ -166,7 +160,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
       child: Container(
           child: CustomChewie(
         vCoverUrl: widget?.videoInfo?.vCoverUrl,
-        videoDelegate: _videoDelegate,
         controller: chewieController,
       )),
     );
@@ -191,14 +184,36 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
 //    );
 //  }
 
+
+
+
   @override
   void dispose() {
     isDisposed = true;
     videoPlayerController.dispose();
     chewieController.dispose();
+    _videoDelegate?.dispose();
+    _videoDelegate = null;
 //    isLoadCompleteController.close();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    bool isNeedInit = false;
+    if(_videoDelegate == null){
+      isNeedInit = true;
+    }
+    _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
+    ///如果未初始化过，跳转到初始页
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if(isNeedInit) {
+        _videoDelegate?.initState();
+      }
+    });
+    super.didChangeDependencies();
   }
 
   @override

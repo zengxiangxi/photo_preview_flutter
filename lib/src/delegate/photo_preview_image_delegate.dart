@@ -36,5 +36,13 @@ abstract class PhotoPreviewImageDelegate {
   ///Hero配置
   Widget heroBuilderForSlidingPage(Widget result,{PhotoPreviewInfoVo imageInfo});
 
+  ///图片边距
+  EdgeInsetsGeometry get imgMargin;
+
+  ///初始化
+  void initState();
+
+  ///销毁
+  void dispose();
 
 }

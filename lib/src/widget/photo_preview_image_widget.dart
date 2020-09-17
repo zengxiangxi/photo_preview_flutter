@@ -14,6 +14,7 @@ import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
 
 import '../../photo_preview_export.dart';
+import 'inherit/photo_preview_data_inherited_widget.dart';
 
 class PhotoPreviewImageWidget extends StatefulWidget {
   ///图片详情
@@ -23,8 +24,6 @@ class PhotoPreviewImageWidget extends StatefulWidget {
 
   final int currentPostion;
 
-  final PhotoPreviewImageDelegate imageDelegate;
-
   final EdgeInsetsGeometry imgMargin;
 
   const PhotoPreviewImageWidget(
@@ -32,7 +31,7 @@ class PhotoPreviewImageWidget extends StatefulWidget {
       this.imageInfo,
       this.popCallBack,
       this.currentPostion,
-      this.imageDelegate, this.imgMargin})
+      this.imgMargin})
       : super(key: key);
 
   @override
@@ -61,15 +60,6 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         duration: const Duration(
             milliseconds: PhotoPreviewConstant.DOUBLE_CLICK_SCAL_TIME_MILL),
         vsync: this);
-
-    ///初始化图片配置
-    if (widget?.imageDelegate != null) {
-      _imageDelegate = widget?.imageDelegate;
-    } else {
-      _imageDelegate = DefaultPhotoPreviewImageDelegate();
-    }
-    ///设置context
-    _imageDelegate.context = context;
   }
 
   @override
@@ -96,7 +86,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         },
         child: Container(
                 padding: widget?.imgMargin,
-                child: _imageDelegate?.imageWidget(widget?.imageInfo,result: _toImageWidget()) ?? _toImageWidget()));
+                child: Container(
+                    padding: _imageDelegate?.imgMargin,
+                    child: _imageDelegate?.imageWidget(widget?.imageInfo,result: _toImageWidget()) ?? _toImageWidget())));
   }
 
   ///图片组件
@@ -300,11 +292,30 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     }
   }
 
+
+  @override
+  void didChangeDependencies() {
+    bool isNeedInit = false;
+    if(_imageDelegate == null){
+      isNeedInit = true;
+    }
+    _imageDelegate = PhotoPreviewDataInherited.of(context)?.imageDelegate;
+    ///如果未初始化过，跳转到初始页
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if(isNeedInit) {
+        _imageDelegate?.initState();
+      }
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   void dispose() {
     _doubleClickAnimationListener = null;
     _doubleClickAnimationController.dispose();
     _gestureGlobalKey = null;
+    _imageDelegate?.dispose();
+    _imageDelegate = null;
     super.dispose();
   }
 }

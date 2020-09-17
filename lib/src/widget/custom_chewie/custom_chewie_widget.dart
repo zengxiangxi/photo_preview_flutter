@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
+import 'package:photo_preview/src/widget/inherit/photo_preview_data_inherited_widget.dart';
 import 'package:video_player/video_player.dart';
 
 import 'custom_player_with_controls.dart';
@@ -24,17 +25,15 @@ typedef Widget ChewieRoutePageBuilder(
 class CustomChewie extends StatefulWidget {
   CustomChewie({
     Key key,
-    this.controller, this.vCoverUrl, this.videoDelegate,
+    this.controller,
+    this.vCoverUrl
   })  : assert(controller != null, 'You must provide a chewie controller'),
         super(key: key);
 
   /// The [CustomChewieController]
   final CustomChewieController controller;
 
-  ///预加载封面图
   final String vCoverUrl;
-
-  final PhotoPreviewVideoDelegate videoDelegate;
 
   @override
   CustomChewieState createState() {
@@ -44,6 +43,8 @@ class CustomChewie extends StatefulWidget {
 
 class CustomChewieState extends State<CustomChewie> {
   bool _isFullScreen = false;
+
+  PhotoPreviewVideoDelegate _videoDelegate;
 
   @override
   void initState() {
@@ -79,7 +80,7 @@ class CustomChewieState extends State<CustomChewie> {
   Widget build(BuildContext context) {
     return _ChewieControllerProvider(
       controller: widget.controller,
-      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,videoDelegate: widget?.videoDelegate,),
+      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,),
     );
   }
 
@@ -117,7 +118,7 @@ class CustomChewieState extends State<CustomChewie> {
       ) {
     var controllerProvider = _ChewieControllerProvider(
       controller: widget.controller,
-      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,videoDelegate: widget?.videoDelegate,),
+      child: CustomPlayerWithControls(vCoverUrl: widget?.vCoverUrl,),
     );
 
     if (widget.controller.routePageBuilder == null) {
@@ -158,6 +159,12 @@ class CustomChewieState extends State<CustomChewie> {
         widget.controller.systemOverlaysAfterFullScreen);
     SystemChrome.setPreferredOrientations(
         widget.controller.deviceOrientationsAfterFullScreen);
+  }
+
+  @override
+  void didChangeDependencies() {
+    _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
+    super.didChangeDependencies();
   }
 }
 

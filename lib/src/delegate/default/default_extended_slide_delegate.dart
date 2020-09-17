@@ -47,6 +47,12 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
   @override
   ValueChanged<int> get pageChangeStatus => null;
 
+  @override
+  void dispose() => null;
+
+  @override
+  void initState() => null;
+
 
   ///滑动背景变化回调
   final SlidePageBackgroundHandler _slidePageBackgroundHandler =
@@ -94,5 +100,4 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
     }
     return offset.dy > 100;
   };
-
 }

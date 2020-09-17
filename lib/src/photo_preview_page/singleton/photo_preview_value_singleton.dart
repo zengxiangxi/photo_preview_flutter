@@ -48,4 +48,15 @@ class PhotoPreviewValueSingleton{
     });
   }
 
+  ///设置页面切换状态回调
+  void setPageChangedCallBack(ValueChanged<int> callBack){
+    if(callBack == null){
+      return;
+    }
+    pageIndexController?.stream?.listen((page) {
+      callBack(page);
+    });
+  }
+
+
 }

@@ -14,10 +14,11 @@ class PhotoPreviewInfoVo {
   final String vCoverUrl;
   ///图片预加载路径
   final String pLoadingUrl;
+  final dynamic extra;
 
   PhotoPreviewType get type  => _type;
 
-  PhotoPreviewInfoVo({@required this.url,this.heroTag,this.vCoverUrl,this.pLoadingUrl}){
+  PhotoPreviewInfoVo({@required this.url,this.heroTag,this.vCoverUrl,this.pLoadingUrl,this.extra}){
     _type = PhotoPreviewToolUtils.getType(url);
   }
 

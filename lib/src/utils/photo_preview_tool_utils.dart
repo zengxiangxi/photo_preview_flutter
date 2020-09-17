@@ -36,8 +36,13 @@ class PhotoPreviewToolUtils {
     final double n1 = imageSize.height / imageSize.width;
     final double n2 = size.height / size.width;
     //todo：强制宽
-    final FittedSizes fittedSizes = applyBoxFit(BoxFit.contain, imageSize, size);
-    //final Size sourceSize = fittedSizes.source;
+    FittedSizes fittedSizes;
+    if(n1 > 1){
+      fittedSizes = applyBoxFit(BoxFit.contain, imageSize, size);
+    }else{
+      fittedSizes = applyBoxFit(BoxFit.none, imageSize, size);
+    }
+    // final Size sourceSize = fittedSizes.source;
     final Size destinationSize = fittedSizes.destination;
     return size.width / destinationSize.width;
     if (n1 > n2) {

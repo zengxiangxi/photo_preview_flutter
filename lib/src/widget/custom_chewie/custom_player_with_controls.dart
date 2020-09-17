@@ -7,18 +7,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/widget/custom_chewie/custom_video_aspect_ratio_widget.dart';
+import 'package:photo_preview/src/widget/inherit/photo_preview_data_inherited_widget.dart';
 import 'package:video_player/video_player.dart';
 
 import 'custom_chewie_widget.dart';
 
 class CustomPlayerWithControls extends StatelessWidget {
   final String vCoverUrl;
-  final PhotoPreviewVideoDelegate videoDelegate;
 
-  const CustomPlayerWithControls({Key key, this.vCoverUrl, this.videoDelegate}) : super(key: key);
+  const CustomPlayerWithControls({Key key, this.vCoverUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final PhotoPreviewVideoDelegate _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
+
     final CustomChewieController chewieController = CustomChewieController.of(context);
 
     return Stack(
@@ -26,7 +28,7 @@ class CustomPlayerWithControls extends StatelessWidget {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          child: _buildPlayerWithControls(chewieController, context),
+          child: _buildPlayerWithControls(chewieController, context,_videoDelegate),
         ),
         Container(
             child: _buildControls(context, chewieController))
@@ -35,7 +37,7 @@ class CustomPlayerWithControls extends StatelessWidget {
   }
 
   Container _buildPlayerWithControls(
-      CustomChewieController chewieController, BuildContext context) {
+      CustomChewieController chewieController, BuildContext context,PhotoPreviewVideoDelegate videoDelegate) {
     return Container(
       child: Stack(
         children: <Widget>[
@@ -73,4 +75,6 @@ class CustomPlayerWithControls extends StatelessWidget {
     return width > height ? width / height : height / width;
 //  return width / height;
   }
+
+
 }
