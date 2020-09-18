@@ -300,12 +300,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
       isNeedInit = true;
     }
     _imageDelegate = PhotoPreviewDataInherited.of(context)?.imageDelegate;
-    ///如果未初始化过，跳转到初始页
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if(isNeedInit) {
-        _imageDelegate?.initState();
-      }
-    });
+
     super.didChangeDependencies();
   }
 
@@ -314,8 +309,6 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     _doubleClickAnimationListener = null;
     _doubleClickAnimationController.dispose();
     _gestureGlobalKey = null;
-    _imageDelegate?.dispose();
-    _imageDelegate = null;
     super.dispose();
   }
 }

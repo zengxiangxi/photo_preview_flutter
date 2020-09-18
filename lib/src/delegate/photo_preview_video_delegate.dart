@@ -24,6 +24,12 @@ abstract class PhotoPreviewVideoDelegate{
   ///视频的边距
   EdgeInsetsGeometry get videoMargin;
 
+  ///滑动状态
+  ValueChanged<bool> get isSlidingStatus;
+
+  ///页面切换
+  ValueChanged<int> get pageChangeStatus;
+
   ///初始化
   void initState();
 

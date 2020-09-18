@@ -39,6 +39,12 @@ abstract class PhotoPreviewImageDelegate {
   ///图片边距
   EdgeInsetsGeometry get imgMargin;
 
+  ///滑动状态
+  ValueChanged<bool> get isSlidingStatus;
+
+  ///页面切换
+  ValueChanged<int> get pageChangeStatus;
+
   ///初始化
   void initState();
 

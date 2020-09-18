@@ -81,10 +81,18 @@ class PhotoPreviewPage extends StatefulWidget {
     ///设置滑动监听
     PhotoPreviewValueSingleton.getInstance()
         .setSlidingCallBack(slideDelegate?.isSlidingStatus);
+    PhotoPreviewValueSingleton.getInstance()
+        .setSlidingCallBack(imageDelegate?.isSlidingStatus);
+    PhotoPreviewValueSingleton.getInstance()
+        .setSlidingCallBack(videoDelegate?.isSlidingStatus);
 
     ///设置页面切换监听
     PhotoPreviewValueSingleton.getInstance()
         .setPageChangedCallBack(slideDelegate?.pageChangeStatus);
+    PhotoPreviewValueSingleton.getInstance()
+        .setPageChangedCallBack(imageDelegate?.pageChangeStatus);
+    PhotoPreviewValueSingleton.getInstance()
+        .setPageChangedCallBack(videoDelegate?.pageChangeStatus);
 
     ///设置context
     imageDelegate.context = context;

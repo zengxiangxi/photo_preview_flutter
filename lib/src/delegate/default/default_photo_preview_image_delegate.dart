@@ -44,6 +44,11 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
   @override
   EdgeInsetsGeometry get imgMargin => null;
 
+  @override
+  ValueChanged<bool> get isSlidingStatus => null;
+
+  @override
+  ValueChanged<int> get pageChangeStatus => null;
 
   @override
   void dispose() => null;

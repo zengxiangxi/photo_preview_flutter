@@ -32,6 +32,12 @@ class DefaultPhotoPreviewVideoDelegate extends PhotoPreviewVideoDelegate{
 
 
   @override
+  ValueChanged<bool> get isSlidingStatus => null;
+
+  @override
+  ValueChanged<int> get pageChangeStatus => null;
+
+  @override
   void dispose() => null;
 
   @override
@@ -66,7 +72,5 @@ class DefaultPhotoPreviewVideoDelegate extends PhotoPreviewVideoDelegate{
         //remember call clearGestureDetailsCache() method at the right time.(for example,this page dispose)
         cacheGesture: false);
   };
-
-
 
 }

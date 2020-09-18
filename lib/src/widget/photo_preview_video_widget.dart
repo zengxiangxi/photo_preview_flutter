@@ -192,8 +192,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     isDisposed = true;
     videoPlayerController.dispose();
     chewieController.dispose();
-    _videoDelegate?.dispose();
-    _videoDelegate = null;
 //    isLoadCompleteController.close();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -207,12 +205,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
       isNeedInit = true;
     }
     _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
-    ///如果未初始化过，跳转到初始页
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if(isNeedInit) {
-        _videoDelegate?.initState();
-      }
-    });
+
     super.didChangeDependencies();
   }
 

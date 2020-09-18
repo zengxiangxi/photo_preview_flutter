@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 import 'package:photo_preview/src/delegate/default/default_extended_slide_delegate.dart';
+import 'package:photo_preview/src/delegate/photo_preview_image_delegate.dart';
+import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/photo_preview_page/photo_preview_page.dart';
 import 'package:photo_preview/src/widget/inherit/photo_preview_data_inherited_widget.dart';
 import 'package:photo_preview/src/widget/photo_preview_error_widget.dart';
@@ -24,6 +26,13 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
 
   ///滑动配置
   ExtendedSlideDelegate _extendedSlideDelegate;
+
+  PhotoPreviewImageDelegate _imageDelegate;
+
+  PhotoPreviewVideoDelegate _videoDelegate;
+
+  ///是否初始化完成
+  bool _isInitFinish = false;
 
   @override
   void initState() {
@@ -160,29 +169,33 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
 
   @override
   void didChangeDependencies() {
-    bool isNeedInit = false;
-    if(_extendedSlideDelegate == null){
-      isNeedInit = true;
-    }
+
     _extendedSlideDelegate = PhotoPreviewDataInherited.of(context)?.slideDelegate;
-    ///如果未初始化过，跳转到初始页
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if(isNeedInit) {
-        _extendedSlideDelegate?.initState();
-        _extendedSlideDelegate?.pageChangeStatus(
-            widget?.dataSource?.lastInitPageNum ??
-                PhotoPreviewConstant.DEFAULT_INIT_PAGE);
-      }
-    });
+    _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
+    _imageDelegate = PhotoPreviewDataInherited.of(context)?.imageDelegate;
+
+    if(_isInitFinish == false) {
+      _isInitFinish = true;
+      ///如果未初始化过，跳转到初始页
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          _extendedSlideDelegate?.initState();
+          _extendedSlideDelegate?.pageChangeStatus(
+              widget?.dataSource?.lastInitPageNum ??
+                  PhotoPreviewConstant.DEFAULT_INIT_PAGE);
+          _imageDelegate?.initState();
+          _videoDelegate?.initState();
+      });
+    }
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _pageController?.dispose();
-    _extendedSlideDelegate = null;
     PhotoPreviewValueSingleton.getInstance().dispose();
     _extendedSlideDelegate?.dispose();
+    _imageDelegate?.dispose();
+    _videoDelegate?.dispose();
     super.dispose();
   }
 }
