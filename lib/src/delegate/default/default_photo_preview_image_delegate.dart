@@ -65,6 +65,7 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
     if (!(PhotoPreviewToolUtils.isHasCacheNetImageUrl(url))){
       return result;
     }
+
     return Hero(
       tag: heroTag,
       child: result,

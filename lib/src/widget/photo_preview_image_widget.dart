@@ -12,6 +12,7 @@ import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
+import 'package:photo_preview/src/widget/photo_preview_error_widget.dart';
 
 import '../../photo_preview_export.dart';
 import 'inherit/photo_preview_data_inherited_widget.dart';
@@ -49,13 +50,19 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
   ///手势key
   GlobalKey<ExtendedImageGestureState> _gestureGlobalKey;
 
+  ///缓存的手势Key
+  GlobalKey<ExtendedImageGestureState> _loadGestureGlobalKey;
+
   ///图片配置
   PhotoPreviewImageDelegate _imageDelegate;
+
+  ExtendedImage _extendedImage;
 
   @override
   void initState() {
     super.initState();
     _gestureGlobalKey = GlobalKey();
+    _loadGestureGlobalKey = GlobalKey();
     _doubleClickAnimationController = AnimationController(
         duration: const Duration(
             milliseconds: PhotoPreviewConstant.DOUBLE_CLICK_SCAL_TIME_MILL),
@@ -85,65 +92,68 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
           _onClickPop();
         },
         child: Container(
-                padding: widget?.imgMargin,
-                child: Container(
-                    padding: _imageDelegate?.imgMargin,
-                    child: _imageDelegate?.imageWidget(widget?.imageInfo,result: _toImageWidget()) ?? _toImageWidget())));
+            padding: widget?.imgMargin,
+            child: Container(
+                padding: _imageDelegate?.imgMargin,
+                child: _imageDelegate?.imageWidget(widget?.imageInfo,
+                        result: _toImageWidget()) ??
+                    _toImageWidget())));
   }
 
   ///图片组件
   Widget _toImageWidget() {
     if (widget?.imageInfo?.url == null || widget.imageInfo.url.isEmpty) {
-      return Container();
+      return PhotoPreviewErrorWidget();
     }
+    if (_extendedImage != null) {
+      return _extendedImage;
+    }
+
     if (PhotoPreviewToolUtils.isNetUrl(widget?.imageInfo?.url)) {
-      return ExtendedImage.network(
-        widget?.imageInfo?.url ?? "",
-        //可拖动下滑退出
-        enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
-        mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
-        enableLoadState: _imageDelegate?.enableLoadState ?? true,
-        extendedImageGestureKey: _gestureGlobalKey,
-        loadStateChanged: (ExtendedImageState state) =>
-            _imageDelegate?.loadStateChanged(state,imageInfo: widget?.imageInfo) ??
-            _toLoadStateChanged(state),
-        onDoubleTap: (state) {
-          if (_imageDelegate?.onDoubleTap != null) {
-            _imageDelegate?.onDoubleTap(state, widget?.imageInfo, context);
-            return;
-          }
-          _onDoubleTap(state);
-        },
-        initGestureConfigHandler: (state) =>
-            _imageDelegate?.initGestureConfigHandler(
-                state,imageInfo: widget?.imageInfo),
-        heroBuilderForSlidingPage: (Widget result) =>
-            _imageDelegate?.heroBuilderForSlidingPage(
-                result,imageInfo:  widget?.imageInfo)
-      );
+      _extendedImage = ExtendedImage.network(widget?.imageInfo?.url ?? "",
+          //可拖动下滑退出
+          enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
+          mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
+          enableLoadState: _imageDelegate?.enableLoadState ?? true,
+          extendedImageGestureKey: _gestureGlobalKey,
+          loadStateChanged: (ExtendedImageState state) =>
+              _imageDelegate?.loadStateChanged(state,
+                  imageInfo: widget?.imageInfo) ??
+              _toLoadStateChanged(state),
+          onDoubleTap: (state) {
+            if (_imageDelegate?.onDoubleTap != null) {
+              _imageDelegate?.onDoubleTap(state, widget?.imageInfo, context);
+              return;
+            }
+            _onDoubleTap(state);
+          },
+          initGestureConfigHandler: (state) => _imageDelegate
+              ?.initGestureConfigHandler(state, imageInfo: widget?.imageInfo),
+          heroBuilderForSlidingPage: (Widget result) =>
+              _imageDelegate?.heroBuilderForSlidingPage(result,
+                  imageInfo: widget?.imageInfo));
     } else {
-      return ExtendedImage.file(
-        File(widget?.imageInfo?.url),
-        //可拖动下滑退出
-        enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
-        mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
-        onDoubleTap: (state) => (state) {
-          if (_imageDelegate?.onDoubleTap != null) {
-            _imageDelegate?.onDoubleTap(state, widget?.imageInfo, context);
-            return;
-          }
-          _onDoubleTap(state);
-        },
-        enableLoadState: _imageDelegate?.enableLoadState ?? true,
-        extendedImageGestureKey: _gestureGlobalKey,
-        initGestureConfigHandler: (state) =>
-            _imageDelegate?.initGestureConfigHandler(
-                state, imageInfo:  widget?.imageInfo),
-        heroBuilderForSlidingPage: (Widget result) =>
-            _imageDelegate?.heroBuilderForSlidingPage(
-                result,imageInfo:  widget?.imageInfo)
-      );
+      _extendedImage = ExtendedImage.file(File(widget?.imageInfo?.url),
+          //可拖动下滑退出
+          enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
+          mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
+          onDoubleTap: (state) => (state) {
+                if (_imageDelegate?.onDoubleTap != null) {
+                  _imageDelegate?.onDoubleTap(
+                      state, widget?.imageInfo, context);
+                  return;
+                }
+                _onDoubleTap(state);
+              },
+          enableLoadState: _imageDelegate?.enableLoadState ?? true,
+          extendedImageGestureKey: _gestureGlobalKey,
+          initGestureConfigHandler: (state) => _imageDelegate
+              ?.initGestureConfigHandler(state, imageInfo: widget?.imageInfo),
+          heroBuilderForSlidingPage: (Widget result) =>
+              _imageDelegate?.heroBuilderForSlidingPage(result,
+                  imageInfo: widget?.imageInfo));
     }
+    return _extendedImage;
   }
 
   ///图片双击回调
@@ -191,10 +201,6 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
 
   ///加载状态
   Widget _toLoadStateChanged(ExtendedImageState state) {
-    if (widget?.imageInfo?.pLoadingUrl == null ||
-        widget.imageInfo.pLoadingUrl.isEmpty) {
-      return null;
-    }
     switch (state.extendedImageLoadState) {
       case LoadState.loading:
         return _toPrelLoadingImageWidget();
@@ -211,30 +217,49 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
 
   ///预加载已缓存的类型
   Widget _toPrelLoadingImageWidget() {
-    return ExtendedImage.network(
-      widget?.imageInfo?.pLoadingUrl ?? "",
-      //可拖动下滑退出
-      enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
-      mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
-//      loadStateChanged: (ExtendedImageState state) =>
-//          _toLoadStateChanged(state),
-      onDoubleTap: (state) => (state) {
-        if (_imageDelegate?.onDoubleTap != null) {
-          _imageDelegate?.onDoubleTap(state, widget?.imageInfo, context);
-          return;
-        }
-        _onDoubleTap(state);
+    // if (widget?.imageInfo?.pLoadingUrl == null ||
+    //     widget.imageInfo.pLoadingUrl.isEmpty) {
+    //   return null;
+    // }
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: (){
+        _onClickPop(key: _loadGestureGlobalKey);
       },
-      initGestureConfigHandler: (state) => _imageDelegate?.initGestureConfigHandler(state,imageInfo: widget?.imageInfo)
+      child: ExtendedImage.network(widget?.imageInfo?.pLoadingUrl ?? "",
+          //可拖动下滑退出
+          enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
+          mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
+          loadStateChanged: (ExtendedImageState state) {
+            switch (state.extendedImageLoadState) {
+              case LoadState.failed:
+                return PhotoPreviewErrorWidget();
+                break;
+            }
+            return null;
+          },
+          extendedImageGestureKey: _loadGestureGlobalKey,
+          onDoubleTap: (state) => (state) {
+                if (_imageDelegate?.onDoubleTap != null) {
+                  _imageDelegate?.onDoubleTap(state, widget?.imageInfo, context);
+                  return;
+                }
+                _onDoubleTap(state);
+              },
+          initGestureConfigHandler: (state) => _imageDelegate
+              ?.initGestureConfigHandler(state, imageInfo: widget?.imageInfo)),
     );
   }
 
   ///单击退出
-  _onClickPop() {
-    if (_gestureGlobalKey == null) {
+  _onClickPop({GlobalKey key}) {
+    if(key == null){
+      key = _gestureGlobalKey;
+    }
+    if (key == null) {
       return;
     }
-    ExtendedImageGestureState state = _gestureGlobalKey?.currentState;
+    ExtendedImageGestureState state = key?.currentState;
     if (state == null) {
       return;
     }
@@ -292,11 +317,10 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     }
   }
 
-
   @override
   void didChangeDependencies() {
     bool isNeedInit = false;
-    if(_imageDelegate == null){
+    if (_imageDelegate == null) {
       isNeedInit = true;
     }
     _imageDelegate = PhotoPreviewDataInherited.of(context)?.imageDelegate;
@@ -309,6 +333,8 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     _doubleClickAnimationListener = null;
     _doubleClickAnimationController.dispose();
     _gestureGlobalKey = null;
+    _loadGestureGlobalKey = null;
+    _extendedImage = null;
     super.dispose();
   }
 }

@@ -179,9 +179,11 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
       ///如果未初始化过，跳转到初始页
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           _extendedSlideDelegate?.initState();
-          _extendedSlideDelegate?.pageChangeStatus(
-              widget?.dataSource?.lastInitPageNum ??
-                  PhotoPreviewConstant.DEFAULT_INIT_PAGE);
+          if(_extendedSlideDelegate?.pageChangeStatus != null) {
+            _extendedSlideDelegate?.pageChangeStatus(
+                widget?.dataSource?.lastInitPageNum ??
+                    PhotoPreviewConstant.DEFAULT_INIT_PAGE);
+          }
           _imageDelegate?.initState();
           _videoDelegate?.initState();
       });

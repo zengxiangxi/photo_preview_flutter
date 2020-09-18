@@ -12,3 +12,6 @@ export 'package:photo_preview/src/delegate/default/default_photo_preview_video_d
 
 export 'package:extended_image/extended_image.dart';
 
+export 'package:uuid/uuid.dart';
+export 'package:uuid/uuid_util.dart';
+
