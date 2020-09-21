@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_preview/src/constant/photo_preview_quality_type_constant.dart';
-import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
+import 'package:photo_preview/src/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
 import 'package:path/path.dart';

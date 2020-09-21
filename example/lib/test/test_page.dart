@@ -31,7 +31,7 @@ class _TestPageState extends State<TestPage> {
 
               PhotoPreviewInfoVo(
                   url: "https://v-cdn.zjol.com.cn/277001.mp4",
-                  vCoverUrl:
+                  loadingCoverUrl:
                       "https://zts-tx.oss-cn-beijing.aliyuncs.com/picture/splash_ad/3.png",
                   heroTag: "a"),
               PhotoPreviewInfoVo(

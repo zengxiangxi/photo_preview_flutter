@@ -226,7 +226,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
       onTap: (){
         _onClickPop(key: _loadGestureGlobalKey);
       },
-      child: ExtendedImage.network(widget?.imageInfo?.pLoadingUrl ?? "",
+      child: ExtendedImage.network(widget?.imageInfo?.loadingCoverUrl ?? "",
           //可拖动下滑退出
           enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
           mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,

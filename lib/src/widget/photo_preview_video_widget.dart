@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:photo_preview/photo_preview_export.dart';
 import 'package:photo_preview/src/delegate/default/default_photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
-import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
+import 'package:photo_preview/src/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/widget/custom_chewie/custom_chewie_widget.dart';
 import 'package:photo_preview/src/widget/video_control/custom_video_control.dart';
@@ -159,7 +159,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
       enableSlideOutPage: _videoDelegate?.enableSlideOutPage ?? true,
       child: Container(
           child: CustomChewie(
-        vCoverUrl: widget?.videoInfo?.vCoverUrl,
+        vCoverUrl: widget?.videoInfo?.loadingCoverUrl,
         controller: chewieController,
       )),
     );

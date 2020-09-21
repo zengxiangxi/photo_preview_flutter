@@ -20,7 +20,7 @@ class CommonWithClickHideSlideDelegate extends DefaultExtendedSlideDelegate{
   @override
   Widget topWidget(bool isSlideStatus) {
     return StreamBuilder<bool>(
-      initialData: false,
+      initialData: true,
       stream: clickController?.stream,
       builder: (context, snapshot) {
         _isShowWidget = !_isShowWidget;

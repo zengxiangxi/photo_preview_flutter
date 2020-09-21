@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
-import 'package:photo_preview/src/photo_preview_page/singleton/photo_preview_value_singleton.dart';
+import 'package:photo_preview/src/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 import 'package:photo_preview/src/widget/custom_chewie/custom_chewie_widget.dart';
 import 'package:photo_preview/src/widget/inherit/photo_preview_data_inherited_widget.dart';

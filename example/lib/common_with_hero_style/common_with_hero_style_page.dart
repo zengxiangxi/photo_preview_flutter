@@ -29,23 +29,23 @@ class _CommonWithHeroStylePageState extends State<CommonWithHeroStylePage> {
   [
     PhotoPreviewInfoVo(
       url: "https://s1.ax1x.com/2020/09/17/wR3WnI.jpg",
-      pLoadingUrl: "https://s1.ax1x.com/2020/09/17/wR3WnI.md.jpg",
+      loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR3WnI.md.jpg",
       heroTag: TEST_HERO_TAG
     ),
     PhotoPreviewInfoVo(
       url: "https://v-cdn.zjol.com.cn/277001.mp4",
-      vCoverUrl: "https://s1.ax1x.com/2020/09/17/wR8uCD.jpg",
+      loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR8uCD.jpg",
       heroTag: Uuid().v1()
 
     ),
     PhotoPreviewInfoVo(
       url: "https://s1.ax1x.com/2020/09/17/wR0NmF.jpg",
-      pLoadingUrl: "https://s1.ax1x.com/2020/09/17/wR0NmF.md.jpg", heroTag: Uuid().v1()
+      loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR0NmF.md.jpg", heroTag: Uuid().v1()
 
     ),
     PhotoPreviewInfoVo(
       url: "https://s1.ax1x.com/2020/09/17/wR3H3Q.jpg",
-      pLoadingUrl: "https://s1.ax1x.com/2020/09/17/wR3H3Q.md.jpg", heroTag: Uuid().v1()
+      loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR3H3Q.md.jpg", heroTag: Uuid().v1()
     ),
 
   ];
