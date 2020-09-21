@@ -60,6 +60,7 @@ class _CommonWithHeroStylePageState extends State<CommonWithHeroStylePage> {
             left: 20,
             child: GestureDetector(
               onTap: (){
+                ///todo 测试 清除硬盘缓存和内存缓存
                 clearDiskCachedImage("https://s1.ax1x.com/2020/09/17/wR3WnI.jpg");
                 clearMemoryImageCache();
                 Navigator.of(context).maybePop();
