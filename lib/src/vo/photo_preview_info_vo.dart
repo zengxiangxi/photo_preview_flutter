@@ -25,6 +25,8 @@ class PhotoPreviewInfoVo {
     //无类型默认通过尾缀判断
     if(type == null) {
       this.type = PhotoPreviewToolUtils.getType(url);
+    }else{
+      this.type = type;
     }
   }
 
