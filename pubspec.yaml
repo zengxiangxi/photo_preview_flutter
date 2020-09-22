@@ -1,6 +1,6 @@
 name: photo_preview
-description: A new Flutter package.
-version: 0.0.2
+description: A customizable general picture and video preview library.
+version: 0.0.3
 author:
 homepage:
 
@@ -18,11 +18,11 @@ dependencies:
   # UUID
   uuid: ^2.2.0
   # 视频播放器
-  chewie: 0.9.10
+  chewie: ^0.9.10
   # 官方视频播放器
-  video_player: 0.10.11+1
+  video_player: ^0.10.11+1
   # 持久化
-  path_provider: 1.6.8
+  path_provider: ^1.6.8
 
 dev_dependencies:
   flutter_test:

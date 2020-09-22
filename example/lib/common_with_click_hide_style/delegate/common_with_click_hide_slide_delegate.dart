@@ -10,7 +10,7 @@ class CommonWithClickHideSlideDelegate extends DefaultExtendedSlideDelegate{
 
   CommonWithClickHideSlideDelegate(this.clickController);
 
-  bool _isShowWidget = true;
+  bool _isShowWidget = false;
   @override
   void initState() {
     super.initState();

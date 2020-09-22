@@ -12,10 +12,12 @@ typedef ValueTransformFunc = dynamic Function(dynamic data);
 
 ///用户交互数据源数据
 class PhotoPreviewDataSource {
+
+
   /// (1) 数据源路径
   ///     params: List<PhotoPreViewInfoVo> imgVideoFullList => 完整数据原路径（优先级高） 包括url(资源路径)、heroTag(平行标记)、vCover(视频封面图)、pLoadingUrl(图片预载图)
   ///     or
-  ///     params: List<String> imgVideoUrlList => 仅有资源路径（优先级di）
+  ///     params: List<String> imgVideoUrlList => 仅有资源路径（优先级低）
   ///
   /// (2) params: String inititalUrl => 需要跳转到为资源路径（优先级高） 根据路径计算出跳转位置
   ///     or

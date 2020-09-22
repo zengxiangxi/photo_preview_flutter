@@ -200,10 +200,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
 
   @override
   void didChangeDependencies() {
-    bool isNeedInit = false;
-    if(_videoDelegate == null){
-      isNeedInit = true;
-    }
     _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
 
     super.didChangeDependencies();

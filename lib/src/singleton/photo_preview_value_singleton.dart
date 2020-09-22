@@ -31,10 +31,16 @@ class PhotoPreviewValueSingleton{
   ///page切换监听
   StreamController<int> pageIndexController = StreamController.broadcast();
 
+  ///自定义错误组件
+  Widget _customErrorWidget;
+  Widget get customErrorWidget => _customErrorWidget;
+
+
   //销毁
   void dispose(){
     isSlidingController?.close();
     pageIndexController?.close();
+    resetCustomErrorWidget();
     _instance = null;
   }
 
@@ -58,5 +64,17 @@ class PhotoPreviewValueSingleton{
     });
   }
 
+  ///设置自定义错误组件
+  void setCustomErrorWidget(Widget customErrorWidget){
+    if(customErrorWidget == null){
+      return;
+    }
+    _customErrorWidget = customErrorWidget;
+  }
+
+  ///重置自定义错误组件
+  void resetCustomErrorWidget(){
+    _customErrorWidget = null;
+  }
 
 }

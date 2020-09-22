@@ -103,7 +103,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
   ///图片组件
   Widget _toImageWidget() {
     if (widget?.imageInfo?.url == null || widget.imageInfo.url.isEmpty) {
-      return PhotoPreviewErrorWidget();
+      return PhotoPreviewErrorWidget(_imageDelegate?.enableSlideOutPage);
     }
     if (_extendedImage != null) {
       return _extendedImage;
@@ -233,7 +233,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
           loadStateChanged: (ExtendedImageState state) {
             switch (state.extendedImageLoadState) {
               case LoadState.failed:
-                return PhotoPreviewErrorWidget();
+                return PhotoPreviewErrorWidget(_imageDelegate?.enableSlideOutPage);
                 break;
             }
             return null;
@@ -319,10 +319,6 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
 
   @override
   void didChangeDependencies() {
-    bool isNeedInit = false;
-    if (_imageDelegate == null) {
-      isNeedInit = true;
-    }
     _imageDelegate = PhotoPreviewDataInherited.of(context)?.imageDelegate;
 
     super.didChangeDependencies();

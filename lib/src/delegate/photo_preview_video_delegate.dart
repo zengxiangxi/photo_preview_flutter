@@ -5,6 +5,9 @@ import 'package:photo_preview/src/vo/photo_preview_info_vo.dart';
 
 ///视频配置
 abstract class PhotoPreviewVideoDelegate{
+
+  BuildContext context;
+
   ///自定义图片组件（可直接自定义视频播放组件）
   Widget videoWidget(PhotoPreviewInfoVo videoInfo,{Widget result});
 

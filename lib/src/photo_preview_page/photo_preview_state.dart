@@ -9,6 +9,7 @@ import 'package:photo_preview/src/delegate/default/default_extended_slide_delega
 import 'package:photo_preview/src/delegate/photo_preview_image_delegate.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/photo_preview_page/photo_preview_page.dart';
+import 'package:photo_preview/src/singleton/photo_preview_common_class.dart';
 import 'package:photo_preview/src/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/widget/inherit/photo_preview_data_inherited_widget.dart';
 import 'package:photo_preview/src/widget/photo_preview_error_widget.dart';
@@ -30,6 +31,8 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
   PhotoPreviewImageDelegate _imageDelegate;
 
   PhotoPreviewVideoDelegate _videoDelegate;
+
+  PhotoPreviewCommonClass _customTransmit;
 
   ///是否初始化完成
   bool _isInitFinish = false;
@@ -152,7 +155,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
           currentPostion: index,
           videoMargin: _extendedSlideDelegate?.imgVideoMargin);
     }
-    return PhotoPreviewErrorWidget();
+    return PhotoPreviewErrorWidget(true);
   }
 
   ///滑动状态回调
@@ -173,11 +176,18 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
     _extendedSlideDelegate = PhotoPreviewDataInherited.of(context)?.slideDelegate;
     _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
     _imageDelegate = PhotoPreviewDataInherited.of(context)?.imageDelegate;
+    _customTransmit = PhotoPreviewCommonClass.of(context);
+
+    ///设置内部引用
+    _extendedSlideDelegate?.context = context;
+    _imageDelegate?.context = context;
+    _videoDelegate?.context = context;
 
     if(_isInitFinish == false) {
       _isInitFinish = true;
       ///如果未初始化过，跳转到初始页
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          _customTransmit?.initState();
           _extendedSlideDelegate?.initState();
           if(_extendedSlideDelegate?.pageChangeStatus != null) {
             _extendedSlideDelegate?.pageChangeStatus(
@@ -186,6 +196,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
           }
           _imageDelegate?.initState();
           _videoDelegate?.initState();
+
       });
     }
     super.didChangeDependencies();
@@ -198,6 +209,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
     _extendedSlideDelegate?.dispose();
     _imageDelegate?.dispose();
     _videoDelegate?.dispose();
+    _customTransmit?.dispose();
     super.dispose();
   }
 }
