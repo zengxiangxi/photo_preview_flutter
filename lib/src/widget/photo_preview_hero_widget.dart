@@ -24,7 +24,7 @@ class PhotoPreviewHeroWidget extends StatelessWidget {
       @required this.child,
       this.transitionOnUserGestures = true,
       this.isShowPlaceHolderBuilder = true,
-      this.isCreateUniqueTag = false,
+      this.isCreateUniqueTag = true,
       this.uniqueTagCallBack, this.onClickForTag})
       : assert(child != null),
         super(key: key) {

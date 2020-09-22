@@ -15,6 +15,8 @@ export 'package:photo_preview/src/singleton/photo_preview_common_class.dart';
 
 export 'package:extended_image/extended_image.dart';
 
+export 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
+
 export 'package:uuid/uuid.dart';
 export 'package:uuid/uuid_util.dart';
 

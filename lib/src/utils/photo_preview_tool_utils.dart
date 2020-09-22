@@ -168,10 +168,9 @@ class PhotoPreviewToolUtils {
     return false;
   }
 
-
+  ///内存上是否有缓存
   static bool isHasMemoryCacheImageUrl(ImageProvider imageProvider){
     if(imageProvider == null){
-      print("zxx:imageProvider空");
       return false;
     }
     if(imageProvider is! ExtendedNetworkImageProvider){
@@ -181,17 +180,13 @@ class PhotoPreviewToolUtils {
     if(imageCache == null){
       return false;
     }
-    ExtendedNetworkImageProvider newProvider = ExtendedNetworkImageProvider(
-        (imageProvider as ExtendedNetworkImageProvider)?.url,
-      scale: (imageProvider as ExtendedNetworkImageProvider)?.scale
-    );
-    print("缓存路径url:-- ${newProvider?.url}");
+    // ExtendedNetworkImageProvider newProvider = ExtendedNetworkImageProvider(
+    //     (imageProvider as ExtendedNetworkImageProvider)?.url,
+    //   scale: (imageProvider as ExtendedNetworkImageProvider)?.scale
+    // );
     if(imageCache.containsKey(imageProvider as ExtendedNetworkImageProvider)){
-      print("zxx:imageProvider有内存缓存");
       return true;
     }else{
-      print("zxx:imageProvider无内存缓存");
-
       return false;
     }
   }
