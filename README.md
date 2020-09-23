@@ -8,6 +8,7 @@
 
 ## 预览效果
 
+[预览图](https://img.vim-cn.com/91/15d405f199664f3a991693fea90583a9419ed9.gif)
 ![效果图](https://img.vim-cn.com/91/15d405f199664f3a991693fea90583a9419ed9.gif)
 
 
