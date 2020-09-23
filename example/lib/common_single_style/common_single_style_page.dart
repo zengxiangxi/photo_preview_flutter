@@ -8,17 +8,16 @@ class CommonSingleStylePage extends StatefulWidget {
 }
 
 class _CommonSingleStylePageState extends State<CommonSingleStylePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).padding.top+20,
+            top: MediaQuery.of(context).padding.top + 20,
             left: 20,
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).maybePop();
               },
               child: Text(
@@ -35,15 +34,19 @@ class _CommonSingleStylePageState extends State<CommonSingleStylePage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: PhotoPreviewHeroWidget(
-              onClickForTag: (tag){
-                PhotoPreviewPage.navigatorPush(context, PhotoPreviewDataSource.single(
-                    "https://s1.ax1x.com/2020/09/17/wR3WnI.jpg",
-                    loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR3WnI.md.jpg",
-                    heroTag: tag
-                ));
+              onClickForTag: (tag) {
+                PhotoPreviewPage.navigatorPush(
+                    context,
+                    PhotoPreviewDataSource.single(
+                        "https://s1.ax1x.com/2020/09/17/wR3WnI.jpg",
+                        loadingCoverUrl:
+                            "https://s1.ax1x.com/2020/09/17/wR3WnI.md.jpg",
+                        heroTag: tag));
               },
               child: ExtendedImage.network(
-                "https://s1.ax1x.com/2020/09/17/wR3WnI.md.jpg", width: 200,),
+                "https://s1.ax1x.com/2020/09/17/wR3WnI.md.jpg",
+                width: 200,
+              ),
             ),
           ),
         ],

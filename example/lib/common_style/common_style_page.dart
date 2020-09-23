@@ -25,7 +25,8 @@ class CommonStylePage{
           ),
           PhotoPreviewInfoVo(
             url: "https://s1.ax1x.com/2020/09/17/wR3H3Q.jpg",
-            loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR3H3Q.md.jpg", type: PhotoPreviewType.image
+            loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR3H3Q.md.jpg",
+              type: PhotoPreviewType.image
           )
         ]
     ));

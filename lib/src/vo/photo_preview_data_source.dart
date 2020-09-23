@@ -15,7 +15,7 @@ class PhotoPreviewDataSource {
 
 
   /// (1) 数据源路径
-  ///     params: List<PhotoPreViewInfoVo> imgVideoFullList => 完整数据原路径（优先级高） 包括url(资源路径)、heroTag(平行标记)、vCover(视频封面图)、pLoadingUrl(图片预载图)
+  ///     params: List<PhotoPreViewInfoVo> imgVideoFullList => 完整数据源路径（优先级高） 包括url(资源路径)、heroTag(平行标记)、vCover(视频封面图)、pLoadingUrl(图片预载图)
   ///     or
   ///     params: List<String> imgVideoUrlList => 仅有资源路径（优先级低）
   ///
