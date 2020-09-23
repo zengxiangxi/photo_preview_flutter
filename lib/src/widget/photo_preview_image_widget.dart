@@ -224,6 +224,11 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: (){
+        if (_imageDelegate?.onLoadingClick != null) {
+          _imageDelegate?.onLoadingClick(
+              _loadGestureGlobalKey?.currentState, widget?.imageInfo, context);
+          return;
+        }
         _onClickPop(key: _loadGestureGlobalKey);
       },
       child: ExtendedImage.network(widget?.imageInfo?.loadingCoverUrl ?? "",
@@ -240,8 +245,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
           },
           extendedImageGestureKey: _loadGestureGlobalKey,
           onDoubleTap: (state) => (state) {
-                if (_imageDelegate?.onDoubleTap != null) {
-                  _imageDelegate?.onDoubleTap(state, widget?.imageInfo, context);
+        ///todo: 无法接收到回调
+            if (_imageDelegate?.onLoadingDoubleTap != null) {
+                  _imageDelegate?.onLoadingDoubleTap(state, widget?.imageInfo, context);
                   return;
                 }
                 _onDoubleTap(state);

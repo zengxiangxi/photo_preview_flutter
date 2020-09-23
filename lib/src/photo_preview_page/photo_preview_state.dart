@@ -173,10 +173,10 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
   @override
   void didChangeDependencies() {
 
+    _customTransmit = PhotoPreviewCommonClass.of(context);
     _extendedSlideDelegate = PhotoPreviewDataInherited.of(context)?.slideDelegate;
     _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
     _imageDelegate = PhotoPreviewDataInherited.of(context)?.imageDelegate;
-    _customTransmit = PhotoPreviewCommonClass.of(context);
 
     ///设置内部引用
     _extendedSlideDelegate?.context = context;
@@ -185,18 +185,23 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
 
     if(_isInitFinish == false) {
       _isInitFinish = true;
-      ///如果未初始化过，跳转到初始页
+      ///优先初始化
+      _customTransmit?.initState();
+      _extendedSlideDelegate?.initState();
+      _imageDelegate?.initState();
+      _videoDelegate?.initState();
+      ///跳转到初始页
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          _customTransmit?.initState();
-          _extendedSlideDelegate?.initState();
           if(_extendedSlideDelegate?.pageChangeStatus != null) {
             _extendedSlideDelegate?.pageChangeStatus(
                 widget?.dataSource?.lastInitPageNum ??
                     PhotoPreviewConstant.DEFAULT_INIT_PAGE);
           }
-          _imageDelegate?.initState();
-          _videoDelegate?.initState();
 
+          // ///初始化完需刷新已构建组件（避免initState数据引用不到）
+          // setState(() {
+          //
+          // });
       });
     }
     super.didChangeDependencies();

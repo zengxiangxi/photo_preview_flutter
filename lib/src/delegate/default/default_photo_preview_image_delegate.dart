@@ -5,6 +5,7 @@ import 'package:extended_image/src/extended_image_utils.dart';
 import 'package:extended_image/src/gesture/extended_image_gesture.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
+import 'package:photo_preview/photo_preview_export.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 import 'package:photo_preview/src/delegate/photo_preview_image_delegate.dart';
 import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
@@ -36,10 +37,16 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
   ExtendedImageMode get mode => ExtendedImageMode.gesture;
 
   @override
-  get onClick => null;
+  onTapCallBack get onClick => null;
 
   @override
-  get onDoubleTap => null;
+  onTapCallBack get onLoadingClick => null;
+
+  @override
+  onDoubleTapCallBack get onDoubleTap => null;
+
+  @override
+  onDoubleTapCallBack get onLoadingDoubleTap => null;
 
   @override
   EdgeInsetsGeometry get imgMargin => null;
@@ -113,5 +120,6 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
         //remember call clearGestureDetailsCache() method at the right time.(for example,this page dispose)
         cacheGesture: false);
   };
+
 
 }

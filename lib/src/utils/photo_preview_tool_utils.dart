@@ -37,7 +37,7 @@ class PhotoPreviewToolUtils {
     final double n2 = size.height / size.width;
     //todo：强制宽
     FittedSizes fittedSizes;
-    if(n1 > 1){
+    if(n1 > 1 && imageSize.width > size.width){
       fittedSizes = applyBoxFit(BoxFit.contain, imageSize, size);
     }else{
       fittedSizes = applyBoxFit(BoxFit.none, imageSize, size);

@@ -26,9 +26,14 @@ abstract class PhotoPreviewImageDelegate {
   ///单击
   onTapCallBack get onClick;
 
+  ///加载图单击
+  onTapCallBack get onLoadingClick;
 
   ///双击图片
   onDoubleTapCallBack get onDoubleTap;
+
+  ///加载图双击（暂时无法收到回调）
+  onDoubleTapCallBack get onLoadingDoubleTap;
 
   ///初始化图片
   GestureConfig initGestureConfigHandler(ExtendedImageState state,{PhotoPreviewInfoVo imageInfo});
