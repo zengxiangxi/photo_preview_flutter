@@ -190,7 +190,8 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   @override
   void dispose() {
     isDisposed = true;
-    videoPlayerController.dispose();
+    videoPlayerController?.pause();
+    videoPlayerController?.dispose();
     chewieController.dispose();
 //    isLoadCompleteController.close();
     WidgetsBinding.instance.removeObserver(this);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
@@ -190,7 +191,11 @@ class _CustomControlsState extends State<CustomControls> {
     );
   }
 
-  GestureDetector _buildExpandButton() {
+  Widget _buildExpandButton() {
+    ///IOS隐藏全屏（无法退出）
+    if(Platform.isIOS){
+      return Container();
+    }
     return GestureDetector(
       onTap: _onExpandCollapse,
       child: AnimatedOpacity(
@@ -389,6 +394,9 @@ class _CustomControlsState extends State<CustomControls> {
   }
 
   void _playPause() {
+    if(_latestValue == null){
+      return;
+    }
     bool isFinished = _latestValue.position >= _latestValue.duration;
 
     setState(() {

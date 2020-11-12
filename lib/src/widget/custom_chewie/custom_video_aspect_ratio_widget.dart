@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
@@ -52,6 +53,7 @@ class _CustomVideoAspectRatioWidgetState
       aspectRatio: _videoAspectRatio ?? _aspectRatio,
       child: Stack(
         alignment: Alignment.center,
+        fit: StackFit.expand,
         children: [
           Container(
             child: VideoPlayer(chewieController?.videoPlayerController),
@@ -79,18 +81,16 @@ class _CustomVideoAspectRatioWidgetState
       return Container();
     }
     if (PhotoPreviewToolUtils.isNetUrl(widget?.vCoverUrl)) {
-      return ExtendedImage.network(
-        widget.vCoverUrl,
-        loadStateChanged: (state) => _loadStateChangedImage(state),
-        initGestureConfigHandler: (state) =>
-            widget?.videoDelegate?.initGestureConfigHandler(state, context)
-      );
+      return ExtendedImage.network(widget.vCoverUrl,
+          fit: BoxFit.fill,
+          loadStateChanged: (state) => _loadStateChangedImage(state),
+          initGestureConfigHandler: (state) =>
+              widget?.videoDelegate?.initGestureConfigHandler(state, context));
     } else {
-      return ExtendedImage.file(
-        File(widget.vCoverUrl),
-        initGestureConfigHandler: (state) =>
-            widget?.videoDelegate?.initGestureConfigHandler(state, context)
-      );
+      return ExtendedImage.file(File(widget.vCoverUrl),
+          fit: BoxFit.fill,
+          initGestureConfigHandler: (state) =>
+              widget?.videoDelegate?.initGestureConfigHandler(state, context));
     }
   }
 
@@ -166,7 +166,7 @@ class _CustomVideoAspectRatioWidgetState
 //    }
     if (value != null) {
       double newAspectRatio = value.size != null ? value.aspectRatio : null;
-      if (newAspectRatio != null && newAspectRatio != _aspectRatio) {
+      if (newAspectRatio != null && (!isCompleteFlag)) {
         if (mounted) {
           setState(() {
             isCompleteFlag = true;
@@ -188,8 +188,6 @@ class _CustomVideoAspectRatioWidgetState
     }
     return videoSize.width / videoSize.height;
   }
-
-
 
   @override
   bool get wantKeepAlive => true;
