@@ -196,6 +196,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
             _extendedSlideDelegate?.pageChangeStatus(
                 widget?.dataSource?.lastInitPageNum ??
                     PhotoPreviewConstant.DEFAULT_INIT_PAGE);
+            
           }
 
           // ///初始化完需刷新已构建组件（避免initState数据引用不到）

@@ -55,7 +55,8 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   PhotoPreviewVideoDelegate _videoDelegate;
 
   ///页面位置
-  int _pagePositon;
+  ///获取默认跳转的位置
+  int _pagePositon = PhotoPreviewValueSingleton.getInstance().currentPagePostion;
 
   @override
   void initState() {
@@ -79,7 +80,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     //监听初始化未完成时
     videoPlayerController?.addListener(() {
       //处理当前视频控制
-      if(_pagePositon == widget?.currentPostion){
+      if((_pagePositon) == widget?.currentPostion){
         _processWakeLock();
       }
       _initVideoControllerListener();

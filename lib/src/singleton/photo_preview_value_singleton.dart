@@ -35,6 +35,7 @@ class PhotoPreviewValueSingleton{
   Widget _customErrorWidget;
   Widget get customErrorWidget => _customErrorWidget;
 
+  int currentPagePostion = 0;
 
   //销毁
   void dispose(){
@@ -60,6 +61,7 @@ class PhotoPreviewValueSingleton{
       return;
     }
     pageIndexController?.stream?.listen((page) {
+      currentPagePostion = page ?? 0;
       callBack(page);
     });
   }
