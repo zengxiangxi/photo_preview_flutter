@@ -25,12 +25,12 @@ class PhotoPreviewVideoWidget extends StatefulWidget {
 
   final EdgeInsetsGeometry videoMargin;
 
-  const PhotoPreviewVideoWidget(
-      {Key key,
-      this.videoInfo,
-      this.currentPostion,
-      this.videoMargin,})
-      : super(key: key);
+  const PhotoPreviewVideoWidget({
+    Key key,
+    this.videoInfo,
+    this.currentPostion,
+    this.videoMargin,
+  }) : super(key: key);
 
   @override
   _PhotoPreviewVideoWidgetState createState() =>
@@ -54,6 +54,9 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   ///视频配置
   PhotoPreviewVideoDelegate _videoDelegate;
 
+  ///页面位置
+  int _pagePositon;
+
   @override
   void initState() {
     super.initState();
@@ -74,13 +77,20 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
 
   _initListener() {
     //监听初始化未完成时
-    videoPlayerController?.addListener(() => _initVideoControllerListener());
+    videoPlayerController?.addListener(() {
+      //处理当前视频控制
+      if(_pagePositon == widget?.currentPostion){
+        _processWakeLock();
+      }
+      _initVideoControllerListener();
+    });
 
     if (widget?.currentPostion != null && widget.currentPostion >= 0) {
       PhotoPreviewValueSingleton.getInstance()
           .pageIndexController
           ?.stream
           ?.listen((position) {
+        _pagePositon = position;
         if (position != widget?.currentPostion) {
           ///未记录
           if (recordType == null) {
@@ -88,6 +98,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
                 ? PhotoVideoStatusType.playing
                 : PhotoVideoStatusType.pause;
             videoPlayerController?.pause();
+            _processWakeLock();
           }
         } else if (position == widget?.currentPostion) {
           ///释放记录类型状态
@@ -98,9 +109,19 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
               videoPlayerController?.pause();
             }
             recordType = null;
+            _processWakeLock();
           }
         }
       });
+    }
+  }
+
+  ///处理唤醒锁
+  _processWakeLock(){
+    if(videoPlayerController.value.isPlaying){
+      PhotoPreviewToolUtils.wakeLockEnable();
+    }else{
+      PhotoPreviewToolUtils.wakeLockDisable();
     }
   }
 
@@ -184,9 +205,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
 //    );
 //  }
 
-
-
-
   @override
   void dispose() {
     isDisposed = true;
@@ -197,7 +215,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-
 
   @override
   void didChangeDependencies() {

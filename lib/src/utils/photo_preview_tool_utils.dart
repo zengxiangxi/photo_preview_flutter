@@ -8,6 +8,7 @@ import 'package:photo_preview/src/singleton/photo_preview_value_singleton.dart';
 import 'package:photo_preview/src/vo/photo_preview_quality_type.dart';
 import 'package:photo_preview/src/vo/photo_preview_type.dart';
 import 'package:path/path.dart';
+import 'package:wakelock/wakelock.dart';
 
 
 import '../../photo_preview_export.dart';
@@ -189,5 +190,25 @@ class PhotoPreviewToolUtils {
     }else{
       return false;
     }
+  }
+
+  ///开启常亮唤醒
+  static void wakeLockEnable() async{
+    bool enable = await Wakelock.isEnabled;
+    if(enable){
+      return;
+    }
+    print("开启常亮");
+    return await Wakelock.enable();
+  }
+
+  ///禁用常量唤醒
+  static void wakeLockDisable() async{
+    bool enable = await Wakelock.isEnabled;
+    if(!enable){
+      return;
+    }
+    print("关闭常亮");
+    return await Wakelock.disable();
   }
 }

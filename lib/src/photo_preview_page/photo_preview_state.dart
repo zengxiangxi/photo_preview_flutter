@@ -215,6 +215,8 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
     _imageDelegate?.dispose();
     _videoDelegate?.dispose();
     _customTransmit?.dispose();
+    //关闭唤醒锁
+    // PhotoPreviewToolUtils.wakeLockDisable();
     super.dispose();
   }
 }

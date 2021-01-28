@@ -23,6 +23,8 @@ dependencies:
   video_player: ^0.10.11+1
   # 持久化
   path_provider: ^1.6.8
+  # 唤醒控制
+  wakelock: ^0.1.4+2
 
 dev_dependencies:
   flutter_test:
