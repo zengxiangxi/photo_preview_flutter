@@ -14,7 +14,7 @@ class CustomPhotoPreviewVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
   }
 
   @override
-  Widget videoWidget(PhotoPreviewInfoVo videoInfo, {Widget result}) {
+  Widget videoWidget(PhotoPreviewInfoVo videoInfo, {Widget result,VideoPlayerController videoPlayerController,dynamic customVideoPlayerController}) {
     return null;
     // return ExtendedCustomWidget(
     //     child: Container(

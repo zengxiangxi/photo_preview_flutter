@@ -22,7 +22,7 @@ class CommonWithInfoVideoDelegate extends DefaultPhotoPreviewVideoDelegate{
   }
 
   @override
-  Widget videoWidget(PhotoPreviewInfoVo videoInfo,{Widget result}) {
+  Widget videoWidget(PhotoPreviewInfoVo videoInfo,{Widget result,VideoPlayerController videoPlayerController,dynamic customVideoPlayerController}) {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[

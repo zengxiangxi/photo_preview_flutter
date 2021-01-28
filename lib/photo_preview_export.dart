@@ -19,6 +19,11 @@ export 'package:photo_preview/src/constant/photo_preview_constant.dart';
 
 export 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 
+///uuid
 export 'package:uuid/uuid.dart';
 export 'package:uuid/uuid_util.dart';
+
+///控制器
+export 'package:video_player/video_player.dart';
+export 'package:chewie/chewie.dart';
 

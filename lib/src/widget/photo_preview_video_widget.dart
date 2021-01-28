@@ -42,9 +42,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   VideoPlayerController videoPlayerController;
   CustomChewieController chewieController;
 
-  ///是否销毁
-  bool isDisposed = false;
-
   ///记录状态类型
   PhotoVideoStatusType recordType;
 
@@ -56,7 +53,11 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
 
   ///页面位置
   ///获取默认跳转的位置
-  int _pagePositon = PhotoPreviewValueSingleton.getInstance().currentPagePostion;
+  int _pagePositon =
+      PhotoPreviewValueSingleton.getInstance().currentPagePostion;
+
+  ///缓存自定义视频控制器
+  dynamic _customVideoPlayer;
 
   @override
   void initState() {
@@ -80,7 +81,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
     //监听初始化未完成时
     videoPlayerController?.addListener(() {
       //处理当前视频控制
-      if((_pagePositon) == widget?.currentPostion){
+      if ((_pagePositon) == widget?.currentPostion) {
         _processWakeLock();
       }
       _initVideoControllerListener();
@@ -118,10 +119,10 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   }
 
   ///处理唤醒锁
-  _processWakeLock(){
-    if(videoPlayerController.value.isPlaying){
+  _processWakeLock() {
+    if (videoPlayerController.value.isPlaying) {
       PhotoPreviewToolUtils.wakeLockEnable();
-    }else{
+    } else {
       PhotoPreviewToolUtils.wakeLockDisable();
     }
   }
@@ -167,23 +168,31 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
         padding: widget?.videoMargin,
         child: Container(
           padding: _videoDelegate?.videoMargin,
-          child: _videoDelegate?.videoWidget(widget?.videoInfo,
-                  result: _toMainWidget()) ??
-              _toMainWidget(),
+          child: _toExtendedSlideWidget(),
         ));
   }
 
-  Widget _toMainWidget() {
-    if (widget?.videoInfo?.url == null || widget.videoInfo.url.isEmpty) {
-      return Container();
-    }
+  Widget _toExtendedSlideWidget() {
     return ExtendedCustomWidget(
       enableSlideOutPage: _videoDelegate?.enableSlideOutPage ?? true,
       child: Container(
-          child: CustomChewie(
-        vCoverUrl: widget?.videoInfo?.loadingCoverUrl,
-        controller: chewieController,
-      )),
+          child: _videoDelegate?.videoWidget(
+                widget?.videoInfo,
+                result: _toVideoPlayerWidget(),
+                videoPlayerController: videoPlayerController,
+                customVideoPlayerController: _customVideoPlayer,
+              ) ??
+              _toVideoPlayerWidget()),
+    );
+  }
+
+  Widget _toVideoPlayerWidget() {
+    if (widget?.videoInfo?.url == null || widget.videoInfo.url.isEmpty) {
+      return Container();
+    }
+    return CustomChewie(
+      vCoverUrl: widget?.videoInfo?.loadingCoverUrl,
+      controller: chewieController,
     );
   }
 
@@ -208,7 +217,6 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
 
   @override
   void dispose() {
-    isDisposed = true;
     videoPlayerController?.pause();
     videoPlayerController?.dispose();
     chewieController.dispose();
@@ -220,6 +228,10 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   @override
   void didChangeDependencies() {
     _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
+
+    ///执行自定义控制器获取
+    _customVideoPlayer ??= _videoDelegate?.initCustomVideoPlayerController(
+        widget?.videoInfo, videoPlayerController);
 
     super.didChangeDependencies();
   }

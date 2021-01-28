@@ -10,6 +10,7 @@ import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';
 import 'package:photo_preview/src/utils/photo_preview_tool_utils.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 import 'package:photo_preview/src/vo/photo_preview_info_vo.dart';
+import 'package:video_player/video_player.dart';
 
 class DefaultPhotoPreviewVideoDelegate extends PhotoPreviewVideoDelegate{
   @override
@@ -22,7 +23,7 @@ class DefaultPhotoPreviewVideoDelegate extends PhotoPreviewVideoDelegate{
   GestureConfig initGestureConfigHandler(ExtendedImageState state, BuildContext context, {PhotoPreviewInfoVo videoInfo}) =>_initGestureConfigHandler(state,context);
 
   @override
-  Widget videoWidget(PhotoPreviewInfoVo videoInfo, {Widget result}) => null;
+  Widget videoWidget(PhotoPreviewInfoVo videoInfo, {Widget result,VideoPlayerController videoPlayerController,dynamic customVideoPlayerController}) => null;
 
   @override
   double get controllerBottomDistance => 0.0;
@@ -72,5 +73,8 @@ class DefaultPhotoPreviewVideoDelegate extends PhotoPreviewVideoDelegate{
         //remember call clearGestureDetailsCache() method at the right time.(for example,this page dispose)
         cacheGesture: false);
   };
+
+  @override
+  dynamic initCustomVideoPlayerController(PhotoPreviewInfoVo videoInfo, VideoPlayerController videoPlayerController) => null;
 
 }

@@ -1,5 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/widgets.dart';
+import 'package:photo_preview/photo_preview_export.dart';
 import 'package:photo_preview/src/vo/photo_preview_info_vo.dart';
 
 
@@ -8,8 +9,13 @@ abstract class PhotoPreviewVideoDelegate{
 
   BuildContext context;
 
-  ///自定义图片组件（可直接自定义视频播放组件）
-  Widget videoWidget(PhotoPreviewInfoVo videoInfo,{Widget result});
+  ///初始化自定义视频控制器
+  ///（目的：储存自定义控制器，返回videoWidget）
+  ///tips: 可通过dispose销毁
+  dynamic initCustomVideoPlayerController(PhotoPreviewInfoVo videoInfo,VideoPlayerController videoPlayerController);
+
+  ///自定义视频组件（可直接自定义视频播放组件）
+  Widget videoWidget(PhotoPreviewInfoVo videoInfo,{Widget result,VideoPlayerController videoPlayerController,dynamic customVideoPlayerController});
 
   ///开启拖动下滑退出
   bool get enableSlideOutPage;

@@ -8,6 +8,7 @@ import 'package:example/common_with_info_style/common_with_info_style_page.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'common_custom_video/common_custom_video_page.dart';
 import 'common_query_list_style/common_query_list_style_page.dart';
 
 class ShowListPage extends StatefulWidget {
@@ -35,6 +36,7 @@ class _ShowListPageState extends State<ShowListPage> {
       getListViewItem("通用样式带有信息",()=> CommonWithInfoStylePage.navigatorPush(context)),
       getListViewItem("通用样式带有Hero动画",() => navigatorPush(CommonWithHeroStylePage())),
       getListViewItem("通用样式带点击隐藏",() => CommonWithClickHideStylePage.navigatorPush(context)),
+      getListViewItem("自定义视频demo", () => CommonCustomVideoPage.navigatorPush(context)),
 
     ];
   }
