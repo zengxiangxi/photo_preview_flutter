@@ -148,6 +148,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   }
 
   _initData() {
+
     chewieController = CustomChewieController(
         videoPlayerController: videoPlayerController,
         aspectRatio: null,

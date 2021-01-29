@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/photo_preview_export.dart';
+import 'package:photo_preview/src/utils/screen_util.dart';
 
 class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
   List<ChewieController> _list = List();
@@ -14,21 +18,22 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
     }
     //videoplayercontroller监听逻辑
     videoPlayerController?.addListener(() {
-      if(videoPlayerController?.value?.isPlaying ?? false){
-        print("播放");
-      }else{
-        print("暂停");
+      if (videoPlayerController?.value?.isPlaying ?? false) {
+        // print("播放");
+      } else {
+        // print("暂停");
       }
     });
     //自定义
     ChewieController controller = ChewieController(
-      videoPlayerController: videoPlayerController,
-      aspectRatio: null,
-      autoPlay: true,
-      looping: false,
-      startAt: null,
-//        placeholder: _toPlaceHolderWidget(),
-    );
+        videoPlayerController: videoPlayerController,
+        //避免报已经初始化错误
+        autoInitialize: false,
+        autoPlay: false,
+        aspectRatio: null,
+        looping: false,
+        startAt: null,
+        placeholder: _toCoverWidget(videoInfo));
     _list?.add(controller);
     return controller;
   }
@@ -76,15 +81,26 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
   Widget _toAnimWidget({Widget child}) {
     return ValueListenableBuilder(
       valueListenable: _isSlideValueNotifier,
-
       builder: (BuildContext context, bool isSlideStatus, Widget child) {
         return AnimatedOpacity(
-          opacity: isSlideStatus ? 0.1: 1,
+          opacity: isSlideStatus ? 0.1 : 1,
           duration: Duration(milliseconds: 200),
           child: child,
         );
       },
       child: child,
     );
+  }
+
+  Widget _toCoverWidget(PhotoPreviewInfoVo videoInfo) {
+    if (PhotoPreviewToolUtils.isNetUrl(videoInfo?.loadingCoverUrl)) {
+      return ExtendedImage.network(videoInfo?.loadingCoverUrl,
+          fit: BoxFit.cover,
+          loadStateChanged: (state) => null,
+          initGestureConfigHandler: (_) => null);
+    } else {
+      return ExtendedImage.file(File(videoInfo?.loadingCoverUrl),
+          fit: BoxFit.cover, initGestureConfigHandler: (state) => null);
+    }
   }
 }
