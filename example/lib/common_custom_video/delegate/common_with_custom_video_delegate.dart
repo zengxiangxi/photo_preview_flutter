@@ -12,6 +12,15 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
     if (videoPlayerController == null) {
       return null;
     }
+    //videoplayercontroller监听逻辑
+    videoPlayerController?.addListener(() {
+      if(videoPlayerController?.value?.isPlaying ?? false){
+        print("播放");
+      }else{
+        print("暂停");
+      }
+    });
+    //自定义
     ChewieController controller = ChewieController(
       videoPlayerController: videoPlayerController,
       aspectRatio: null,
