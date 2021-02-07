@@ -81,20 +81,20 @@ class PhotoPreviewDataSource {
   ///（1）imgVideoList 需重新toJson 否则无法格式化
   factory PhotoPreviewDataSource.customMap(List imgVideoList,
       {String initialUrl,
-      int initialPage,
-      ValueTransformFunc<dynamic> extraTransformFunc,
-      ValueTransformFunc<String> urlTrasformFunc,
-      ValueTransformFunc<PhotoPreviewType> typeTransformFunc,
-      ValueTransformFunc<String> loadingTransformFunc,
-      ValueTransformFunc<dynamic> heroTransformFunc}) {
+        int initialPage,
+        ValueTransformFunc<dynamic> extraTransformFunc,
+        ValueTransformFunc<String> urlTrasformFunc,
+        ValueTransformFunc<PhotoPreviewType> typeTransformFunc,
+        ValueTransformFunc<String> loadingTransformFunc,
+        ValueTransformFunc<dynamic> heroTransformFunc}) {
     // assert(imgVideoList != null && imgVideoList.isNotEmpty, "数据源不能为空");
     List<PhotoPreviewInfoVo> list = imgVideoList.map((itemBean) =>
         PhotoPreviewInfoVo(
-            url: urlTrasformFunc(itemBean),
-            loadingCoverUrl: loadingTransformFunc(itemBean),
-            type: typeTransformFunc(itemBean),
-            heroTag: heroTransformFunc(itemBean),
-            extra: extraTransformFunc(itemBean).toList(),)).toList();
+            url: urlTrasformFunc?.call(itemBean),
+            loadingCoverUrl: loadingTransformFunc?.call(itemBean),
+            type: typeTransformFunc?.call(itemBean),
+            heroTag: heroTransformFunc?.call(itemBean),
+            extra: extraTransformFunc?.call(itemBean))).toList();
     return PhotoPreviewDataSource(
         imgVideoFullList: list,
         initialUrl: initialUrl,
