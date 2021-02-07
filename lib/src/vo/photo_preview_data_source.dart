@@ -8,12 +8,10 @@ import 'package:photo_preview/src/vo/photo_preview_type.dart';
 import '../../photo_preview_export.dart';
 
 ///处理需要传值转化
-typedef ValueTransformFunc = dynamic Function(dynamic data);
+typedef ValueTransformFunc<T> = T Function(dynamic data);
 
 ///用户交互数据源数据
 class PhotoPreviewDataSource {
-
-
   /// (1) 数据源路径
   ///     params: List<PhotoPreViewInfoVo> imgVideoFullList => 完整数据源路径（优先级高） 包括url(资源路径)、heroTag(平行标记)、vCover(视频封面图)、pLoadingUrl(图片预载图)
   ///     or
@@ -60,7 +58,7 @@ class PhotoPreviewDataSource {
                 ? urlTrasformFunc(map[mapToUrlKey])
                 : map[mapToUrlKey],
             loadingCoverUrl: loadingTransformFunc != null
-                ? loadingTransformFunc(mapToLoadingCoverUrlKey)
+                ? loadingTransformFunc(map[mapToLoadingCoverUrlKey])
                 : map[mapToLoadingCoverUrlKey],
             type: typeTransformFunc != null
                 ? typeTransformFunc(map[mapToTypeKey])
@@ -73,6 +71,30 @@ class PhotoPreviewDataSource {
                 : map[mapToExtraKey]))
         .toList()
         .cast();
+    return PhotoPreviewDataSource(
+        imgVideoFullList: list,
+        initialUrl: initialUrl,
+        initialPage: initialPage);
+  }
+
+  ///传入imgVideoList通过json格式化获取PhotoPreviewDataSource
+  ///（1）imgVideoList 需重新toJson 否则无法格式化
+  factory PhotoPreviewDataSource.customMap(List imgVideoList,
+      {String initialUrl,
+      int initialPage,
+      ValueTransformFunc<dynamic> extraTransformFunc,
+      ValueTransformFunc<String> urlTrasformFunc,
+      ValueTransformFunc<PhotoPreviewType> typeTransformFunc,
+      ValueTransformFunc<String> loadingTransformFunc,
+      ValueTransformFunc<dynamic> heroTransformFunc}) {
+    // assert(imgVideoList != null && imgVideoList.isNotEmpty, "数据源不能为空");
+    List<PhotoPreviewInfoVo> list = imgVideoList.map((itemBean) =>
+        PhotoPreviewInfoVo(
+            url: urlTrasformFunc(itemBean),
+            loadingCoverUrl: loadingTransformFunc(itemBean),
+            type: typeTransformFunc(itemBean),
+            heroTag: heroTransformFunc(itemBean),
+            extra: extraTransformFunc(itemBean).toList(),));
     return PhotoPreviewDataSource(
         imgVideoFullList: list,
         initialUrl: initialUrl,
