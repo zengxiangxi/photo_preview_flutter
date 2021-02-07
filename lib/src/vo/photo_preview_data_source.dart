@@ -94,7 +94,7 @@ class PhotoPreviewDataSource {
             loadingCoverUrl: loadingTransformFunc(itemBean),
             type: typeTransformFunc(itemBean),
             heroTag: heroTransformFunc(itemBean),
-            extra: extraTransformFunc(itemBean).toList(),));
+            extra: extraTransformFunc(itemBean).toList(),)).toList();
     return PhotoPreviewDataSource(
         imgVideoFullList: list,
         initialUrl: initialUrl,
