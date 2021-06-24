@@ -46,8 +46,10 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
 
   ///嵌套监听
   Widget _toSlidePageHandler() {
-    return ExtendedImageSlidePageHandler(widget?.child ?? Container(),
-        _slidePageState, widget.heroBuilderForSlidingPage);
+    return ExtendedImageSlidePageHandler(
+        child: widget?.child ?? Container(),
+        extendedImageSlidePageState:_slidePageState,
+        heroBuilderForSlidingPage: widget.heroBuilderForSlidingPage);
   }
 
   ///根据模式嵌套最终组件
@@ -164,4 +166,12 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
   @override
   // TODO: implement wasSynchronouslyLoaded
   bool get wasSynchronouslyLoaded => throw UnimplementedError();
+
+  @override
+  // TODO: implement lastException
+  Object get lastException => throw UnimplementedError();
+
+  @override
+  // TODO: implement lastStack
+  StackTrace get lastStack => throw UnimplementedError();
 }

@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:chewie/chewie.dart';
-import 'package:chewie/src/cupertino_controls.dart';
-import 'package:chewie/src/material_controls.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_preview/src/delegate/photo_preview_video_delegate.dart';

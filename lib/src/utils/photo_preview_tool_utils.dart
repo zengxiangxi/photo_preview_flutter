@@ -194,21 +194,21 @@ class PhotoPreviewToolUtils {
 
   ///开启常亮唤醒
   static void wakeLockEnable() async{
-    bool enable = await Wakelock.isEnabled;
+    bool enable = await Wakelock.enabled;
     if(enable){
       return;
     }
-    print("开启常亮");
+    // print("开启常亮");
     return await Wakelock.enable();
   }
 
   ///禁用常量唤醒
   static void wakeLockDisable() async{
-    bool enable = await Wakelock.isEnabled;
+    bool enable = await Wakelock.enabled;
     if(!enable){
       return;
     }
-    print("关闭常亮");
+    // print("关闭常亮");
     return await Wakelock.disable();
   }
 }
