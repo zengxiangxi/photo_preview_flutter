@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   photo_preview:
-    path: ../../photo_preview
+    path: ../
 
 
   # The following adds the Cupertino Icons font to your application.
