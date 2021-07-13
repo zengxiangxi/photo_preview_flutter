@@ -10,7 +10,7 @@ import 'package:photo_preview/src/constant/photo_preview_constant.dart';
 ///默认滑动配置
 class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
   @override
-  SlideAxis get slideAxis => SlideAxis.horizontal;
+  SlideAxis get slideAxis => SlideAxis.vertical;
 
   @override
   SlideType get slideType => SlideType.wholePage;

@@ -21,7 +21,15 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
+
   Widget _toMainWidget() {
+    return ExtendedImageSlidePage(
+        slideAxis: SlideAxis.both,
+        slideType: SlideType.onlyImage,
+        child: ExtendedImageGesturePageView.builder(
+            itemCount: 100,
+            itemBuilder:(_,__)=> ExtendedImage.network("https://photo.tuchong.com/16709139/f/278778447.jpg",enableSlideOutPage: true,)));
+
     return PhotoPreviewHeroWidget(
       tag: "a",
       onClickForTag: (tag) {

@@ -126,11 +126,11 @@ class _CustomVideoAspectRatioWidgetState
       return;
     }
     Future.delayed(Duration(milliseconds: 0), () {
-      if (_videoAspectRatio == null) {
+      // if (_videoAspectRatio == null) {
         setState(() {
           _videoAspectRatio = _aspectRatio = imageWidth / imageHeight;
         });
-      }
+      // }
     });
   }
 
