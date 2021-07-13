@@ -33,7 +33,7 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
         aspectRatio: null,
         looping: false,
         startAt: null,
-        placeholder: _toCoverWidget(videoInfo));
+        placeholder: Center(child: _toCoverWidget(videoInfo)));
     _list?.add(controller);
     return controller;
   }

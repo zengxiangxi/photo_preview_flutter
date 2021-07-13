@@ -11,20 +11,17 @@ dependencies:
   flutter:
     sdk: flutter
     # 多属性图片
-  extended_image:
-    git:
-      url: https://gitee.com/zengxiangxi315/extended_image.git
-      ref: latest
+  extended_image: ^4.1.0
   # UUID
-  uuid: ^2.2.0
+  uuid: ^3.0.4
   # 视频播放器
-  chewie: ^0.9.10
+  chewie: ^1.2.2
   # 官方视频播放器
-  video_player: ^0.10.11+1
+  video_player: ^2.1.5
   # 持久化
-  path_provider: ^1.6.8
+  path_provider: ^2.0.2
   # 唤醒控制
-  wakelock: ^0.1.4+2
+  wakelock: ^0.5.2
 
 dev_dependencies:
   flutter_test:

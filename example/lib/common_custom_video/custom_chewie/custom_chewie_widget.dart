@@ -89,7 +89,7 @@ class CustomChewieState extends State<CustomChewie> {
       Animation<double> animation,
       _ChewieControllerProvider controllerProvider) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Container(
         alignment: Alignment.center,
         color: Colors.black,
@@ -288,7 +288,7 @@ class CustomChewieController extends ChangeNotifier {
 
   static CustomChewieController of(BuildContext context) {
     final chewieControllerProvider =
-    context.inheritFromWidgetOfExactType(_ChewieControllerProvider)
+    context.dependOnInheritedWidgetOfExactType<_ChewieControllerProvider>()
     as _ChewieControllerProvider;
 
     return chewieControllerProvider.controller;
@@ -302,7 +302,7 @@ class CustomChewieController extends ChangeNotifier {
     await videoPlayerController.setLooping(looping);
 
     if ((autoInitialize || autoPlay) &&
-        !videoPlayerController.value.initialized) {
+        !videoPlayerController.value.isInitialized) {
       await videoPlayerController.initialize();
     }
 

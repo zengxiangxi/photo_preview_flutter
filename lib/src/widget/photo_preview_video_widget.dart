@@ -130,7 +130,7 @@ class _PhotoPreviewVideoWidgetState extends State<PhotoPreviewVideoWidget>
   _initVideoControllerListener() {
     ///初始化完成
     if (!isLoadComplete) {
-      if ((videoPlayerController?.value?.initialized ?? false) &&
+      if ((videoPlayerController?.value?.isInitialized ?? false) &&
           (videoPlayerController?.value?.position?.inMilliseconds ?? 0) > 200) {
         //完成标志
         isLoadComplete = true;
