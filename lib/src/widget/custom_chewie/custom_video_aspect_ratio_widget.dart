@@ -68,7 +68,7 @@ class _CustomVideoAspectRatioWidgetState
                   ? 0
                   : 1,
               duration: Duration(milliseconds: 250),
-              child: _toPlaceHolderWidget(),
+              child: Center(child: _toPlaceHolderWidget()),
             ),
           )),
         ],
@@ -82,13 +82,11 @@ class _CustomVideoAspectRatioWidgetState
     }
     if (PhotoPreviewToolUtils.isNetUrl(widget?.vCoverUrl)) {
       return ExtendedImage.network(widget.vCoverUrl,
-          fit: BoxFit.fill,
           loadStateChanged: (state) => _loadStateChangedImage(state),
           initGestureConfigHandler: (state) =>
               widget?.videoDelegate?.initGestureConfigHandler(state, context));
     } else {
       return ExtendedImage.file(File(widget.vCoverUrl),
-          fit: BoxFit.fill,
           initGestureConfigHandler: (state) =>
               widget?.videoDelegate?.initGestureConfigHandler(state, context));
     }
@@ -155,16 +153,15 @@ class _CustomVideoAspectRatioWidgetState
   void dispose() {
     _videoAspectRatio = null;
     _aspectRatio = null;
+    _dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   void _updateState() {
     VideoPlayerValue value = chewieController?.videoPlayerController?.value;
-//    if ((value?.initialized ??false)&& (value?.position?.inMilliseconds ?? 0) > 0) {
-//      isCompleteFlag = true;
-//    }
-    if (value != null) {
+    //避免过快加载问题
+    if (value != null && value.isInitialized) {
       double newAspectRatio = value.size != null ? value.aspectRatio : null;
       if (newAspectRatio != null && (!isCompleteFlag)) {
         if (mounted) {
