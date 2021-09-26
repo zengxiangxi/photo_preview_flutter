@@ -1,31 +1,33 @@
 name: photo_preview
 description: A customizable general picture and video preview library.
-version: 0.0.7
+version: 1.0.0
 author:
 homepage:
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
     # 多属性图片
-  extended_image: ^4.1.0
+  extended_image: ^4.0.0
   # UUID
   uuid: ^3.0.4
   # 视频播放器
   chewie: ^1.2.2
   # 官方视频播放器
-  video_player: ^2.1.5
+  video_player: ^2.2.3
   # 持久化
-  path_provider: ^2.0.2
+  path_provider: ^2.0.4
   # 唤醒控制
-  wakelock: ^0.5.2
+  wakelock: 0.5.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

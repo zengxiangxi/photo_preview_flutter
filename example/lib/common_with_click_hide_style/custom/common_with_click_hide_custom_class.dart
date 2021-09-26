@@ -11,13 +11,13 @@ class CommonWithClickHideCustomClass extends PhotoPreviewCommonClass{
 
   @override
   void initState() {
-    clickController?.stream?.listen((event) {
+    clickController.stream.listen((event) {
       isShow = !isShow;
     });
   }
 
   @override
   void dispose() {
-    clickController?.close();
+    clickController.close();
   }
 }

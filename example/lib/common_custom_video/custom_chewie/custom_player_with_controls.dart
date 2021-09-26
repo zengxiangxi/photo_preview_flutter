@@ -11,13 +11,13 @@ import 'package:video_player/video_player.dart';
 import 'custom_chewie_widget.dart';
 
 class CustomPlayerWithControls extends StatelessWidget {
-  final String vCoverUrl;
+  final String? vCoverUrl;
 
-  const CustomPlayerWithControls({Key key, this.vCoverUrl}) : super(key: key);
+  const CustomPlayerWithControls({Key? key, this.vCoverUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final PhotoPreviewVideoDelegate _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
+    final PhotoPreviewVideoDelegate? _videoDelegate = PhotoPreviewDataInherited.of(context)?.videoDelegate;
 
     final CustomChewieController chewieController = CustomChewieController.of(context);
 
@@ -35,7 +35,7 @@ class CustomPlayerWithControls extends StatelessWidget {
   }
 
   Container _buildPlayerWithControls(
-      CustomChewieController chewieController, BuildContext context,PhotoPreviewVideoDelegate videoDelegate) {
+      CustomChewieController chewieController, BuildContext context,PhotoPreviewVideoDelegate? videoDelegate) {
     return Container(
       child: Stack(
         children: <Widget>[
@@ -48,7 +48,7 @@ class CustomPlayerWithControls extends StatelessWidget {
     );
   }
 
-  Widget _buildControls(
+  Widget? _buildControls(
       BuildContext context,
       CustomChewieController chewieController,
       ) {

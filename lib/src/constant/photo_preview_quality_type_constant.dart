@@ -20,7 +20,7 @@ class PhotoPreviewQualityTypeConstant{
   static final String LOWEST = "?x-oss-process=style/style100";
 
   ///得到质量类型串
-  static String getQualityTypeStr(PhotoPreviewQualityType type){
+  static String? getQualityTypeStr(PhotoPreviewQualityType type){
     if(type == null){
       return null;
     }

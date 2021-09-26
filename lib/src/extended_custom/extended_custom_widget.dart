@@ -9,21 +9,21 @@ import 'package:photo_preview/src/utils/screen_util.dart';
 ///自定义组件可下拉
 class ExtendedCustomWidget extends StatefulWidget {
   ///组件模式（编辑，手势，无）
-  final ExtendedCustomMode mode;
+  final ExtendedCustomMode? mode;
 
   ///是否开启下滑动画
   final bool enableSlideOutPage;
 
   ///初始化配置
-  final InitGestureConfigHandler initGestureConfigHandler;
+  final InitGestureConfigHandler? initGestureConfigHandler;
 
   ///hero配置
-  final HeroBuilderForSlidingPage heroBuilderForSlidingPage;
+  final HeroBuilderForSlidingPage? heroBuilderForSlidingPage;
 
   ///展示内容
-  final Widget child;
+  final Widget? child;
 
-  const ExtendedCustomWidget({Key key,
+  const ExtendedCustomWidget({Key? key,
     this.mode,
     this.enableSlideOutPage = true,
     this.initGestureConfigHandler,
@@ -37,7 +37,7 @@ class ExtendedCustomWidget extends StatefulWidget {
 
 class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
     with ExtendedImageState, WidgetsBindingObserver {
-  ExtendedImageSlidePageState _slidePageState;
+  ExtendedImageSlidePageState? _slidePageState;
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +47,14 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
   ///嵌套监听
   Widget _toSlidePageHandler() {
     return ExtendedImageSlidePageHandler(
-        child: widget?.child ?? Container(),
+        child: widget.child,
         extendedImageSlidePageState:_slidePageState,
         heroBuilderForSlidingPage: widget.heroBuilderForSlidingPage);
   }
 
   ///根据模式嵌套最终组件
-  Widget _getCompletedWidget() {
-    Widget current;
+  Widget? _getCompletedWidget() {
+    Widget? current;
     if (widget.mode == ExtendedCustomMode.gesture) {
       current = ExtendedImageGesture(
         this,
@@ -73,7 +73,7 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
 
   ///默认手势缩放参数
   GestureConfig _defaultInitGestureConfigHanlder(state, context) {
-    double initialScale = 1.0;
+    double? initialScale = 1.0;
 
     if (state.extendedImageInfo != null &&
         state.extendedImageInfo.image != null) {
@@ -86,7 +86,7 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
     }
     return GestureConfig(
         inPageView: true,
-        minScale: initialScale,
+        minScale: initialScale!,
         initialScale: initialScale,
         maxScale: max(initialScale, 5.0 * initialScale),
         animationMaxScale: max(initialScale, 5.0 * initialScale),
@@ -119,7 +119,7 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
   }
 
   @override
-  Widget get completedWidget => _getCompletedWidget ?? Container();
+  Widget get completedWidget => _getCompletedWidget as Widget? ?? Container();
 
   @override
   // TODO: implement extendedImageInfo
@@ -144,8 +144,8 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
   @override
   ExtendedImage get imageWidget =>
       ExtendedImage(
-          initGestureConfigHandler: widget?.initGestureConfigHandler ??
-                  (state) => _defaultInitGestureConfigHanlder(state, context));
+          initGestureConfigHandler: widget.initGestureConfigHandler ??
+                  (state) => _defaultInitGestureConfigHanlder(state, context), image: null!,);
 
   @override
   // TODO: implement invertColors
@@ -161,7 +161,7 @@ class _ExtendedCustomWidgetState extends State<ExtendedCustomWidget>
   }
 
   @override
-  ExtendedImageSlidePageState get slidePageState => _slidePageState;
+  ExtendedImageSlidePageState? get slidePageState => _slidePageState;
 
   @override
   // TODO: implement wasSynchronouslyLoaded

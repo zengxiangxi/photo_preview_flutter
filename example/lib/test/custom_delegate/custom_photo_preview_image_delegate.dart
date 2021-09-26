@@ -20,7 +20,7 @@ class CustomPhotoPreviewImageDelegate extends DefaultPhotoPreviewImageDelegate{
   }
 
   @override
-  Widget imageWidget(PhotoPreviewInfoVo imageInfo, {Widget result}) {
+  Widget? imageWidget(PhotoPreviewInfoVo? imageInfo, {Widget? result}) {
     return null;
     // return Container(
     //   padding: const EdgeInsets.only(top: 50,bottom: 50),

@@ -12,6 +12,6 @@ enum PhotoPreviewType{
   unknow,
 }
 
-typedef onDoubleTapCallBack = void Function(ExtendedImageGestureState state,PhotoPreviewInfoVo infoVo,BuildContext context);
+typedef onDoubleTapCallBack = void Function(ExtendedImageGestureState state,PhotoPreviewInfoVo? infoVo,BuildContext context);
 
-typedef onTapCallBack = void Function(ExtendedImageGestureState state,PhotoPreviewInfoVo infoVo,BuildContext context);
+typedef onTapCallBack = void Function(ExtendedImageGestureState? state,PhotoPreviewInfoVo? infoVo,BuildContext context);

@@ -5,19 +5,19 @@ import 'package:flutter/widgets.dart';
 import 'package:photo_preview/photo_preview_export.dart';
 
 class CommonWithClickHideImageDelegate extends DefaultPhotoPreviewImageDelegate{
-  CommonWithClickHideCustomClass _customClass;
+  CommonWithClickHideCustomClass? _customClass;
 
   CommonWithClickHideImageDelegate();
 
 
   @override
   void initState() {
-    _customClass = (PhotoPreviewCommonClass.of(context) as CommonWithClickHideCustomClass);
+    _customClass = (PhotoPreviewCommonClass.of(context!) as CommonWithClickHideCustomClass?);
   }
 
   @override
   get onClick {
-    return (ExtendedImageGestureState state,PhotoPreviewInfoVo infoVo,BuildContext context){
+    return (ExtendedImageGestureState? state,PhotoPreviewInfoVo? infoVo,BuildContext context){
       _customClass?.clickController?.add(null);
     };
   }
@@ -25,7 +25,7 @@ class CommonWithClickHideImageDelegate extends DefaultPhotoPreviewImageDelegate{
 
   @override
   onTapCallBack get onLoadingClick {
-    return (ExtendedImageGestureState state,PhotoPreviewInfoVo infoVo,BuildContext context){
+    return (ExtendedImageGestureState? state,PhotoPreviewInfoVo? infoVo,BuildContext context){
       _customClass?.clickController?.add(null);
 
     };

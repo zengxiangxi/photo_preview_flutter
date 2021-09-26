@@ -24,8 +24,8 @@ typedef Widget ChewieRoutePageBuilder(
 /// make it easy to use!
 class CustomChewie extends StatefulWidget {
   CustomChewie({
-    Key key,
-    this.controller,
+    Key? key,
+    required this.controller,
     this.vCoverUrl
   })  : assert(controller != null, 'You must provide a chewie controller'),
         super(key: key);
@@ -33,7 +33,7 @@ class CustomChewie extends StatefulWidget {
   /// The [CustomChewieController]
   final CustomChewieController controller;
 
-  final String vCoverUrl;
+  final String? vCoverUrl;
 
   @override
   CustomChewieState createState() {
@@ -44,7 +44,7 @@ class CustomChewie extends StatefulWidget {
 class CustomChewieState extends State<CustomChewie> {
   bool _isFullScreen = false;
 
-  PhotoPreviewVideoDelegate _videoDelegate;
+  PhotoPreviewVideoDelegate? _videoDelegate;
 
   @override
   void initState() {
@@ -105,7 +105,7 @@ class CustomChewieState extends State<CustomChewie> {
       _ChewieControllerProvider controllerProvider) {
     return AnimatedBuilder(
       animation: animation,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return _buildFullScreenVideo(context, animation, controllerProvider);
       },
     );
@@ -125,7 +125,7 @@ class CustomChewieState extends State<CustomChewie> {
       return _defaultRoutePageBuilder(
           context, animation, secondaryAnimation, controllerProvider);
     }
-    return widget.controller.routePageBuilder(
+    return widget.controller.routePageBuilder!(
         context, animation, secondaryAnimation, controllerProvider);
   }
 
@@ -180,7 +180,7 @@ class CustomChewieState extends State<CustomChewie> {
 /// `VideoPlayerController`.
 class CustomChewieController extends ChangeNotifier {
   CustomChewieController({
-    this.videoPlayerController,
+    required this.videoPlayerController,
     this.aspectRatio,
     this.autoInitialize = false,
     this.autoPlay = false,
@@ -222,7 +222,7 @@ class CustomChewieController extends ChangeNotifier {
   final bool autoPlay;
 
   /// Start video at a certain position
-  final Duration startAt;
+  final Duration? startAt;
 
   /// Whether or not the video should loop
   final bool looping;
@@ -235,32 +235,32 @@ class CustomChewieController extends ChangeNotifier {
 
   /// Defines customised controls. Check [MaterialControls] or
   /// [CupertinoControls] for reference.
-  final Widget customControls;
+  final Widget? customControls;
 
   /// When the video playback runs  into an error, you can build a custom
   /// error message.
-  final Widget Function(BuildContext context, String errorMessage) errorBuilder;
+  final Widget Function(BuildContext context, String errorMessage)? errorBuilder;
 
   /// The Aspect Ratio of the Video. Important to get the correct size of the
   /// video!
   ///
   /// Will fallback to fitting within the space allowed.
-  final double aspectRatio;
+  final double? aspectRatio;
 
   /// The colors to use for controls on iOS. By default, the iOS player uses
   /// colors sampled from the original iOS 11 designs.
-  final ChewieProgressColors cupertinoProgressColors;
+  final ChewieProgressColors? cupertinoProgressColors;
 
   /// The colors to use for the Material Progress Bar. By default, the Material
   /// player uses the colors from your Theme.
-  final ChewieProgressColors materialProgressColors;
+  final ChewieProgressColors? materialProgressColors;
 
   /// The placeholder is displayed underneath the Video before it is initialized
   /// or played.
-  final Widget placeholder;
+  final Widget? placeholder;
 
   /// A widget which is placed between the video and the controls
-  final Widget overlay;
+  final Widget? overlay;
 
   /// Defines if the player will start in fullscreen when play is pressed
   final bool fullScreenByDefault;
@@ -284,7 +284,7 @@ class CustomChewieController extends ChangeNotifier {
   final List<DeviceOrientation> deviceOrientationsAfterFullScreen;
 
   /// Defines a custom RoutePageBuilder for the fullscreen
-  final ChewieRoutePageBuilder routePageBuilder;
+  final ChewieRoutePageBuilder? routePageBuilder;
 
   static CustomChewieController of(BuildContext context) {
     final chewieControllerProvider =
@@ -315,7 +315,7 @@ class CustomChewieController extends ChangeNotifier {
     }
 
     if (startAt != null) {
-      await videoPlayerController.seekTo(startAt);
+      await videoPlayerController.seekTo(startAt!);
     }
 
     if (fullScreenByDefault) {
@@ -368,9 +368,9 @@ class CustomChewieController extends ChangeNotifier {
 
 class _ChewieControllerProvider extends InheritedWidget {
   const _ChewieControllerProvider({
-    Key key,
-    @required this.controller,
-    @required Widget child,
+    Key? key,
+    required this.controller,
+    required Widget child,
   })  : assert(controller != null),
         assert(child != null),
         super(key: key, child: child);

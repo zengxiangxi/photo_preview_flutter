@@ -13,11 +13,11 @@ import 'package:photo_preview/src/widget/custom_chewie/custom_chewie_widget.dart
 import 'package:video_player/video_player.dart';
 
 class CustomVideoAspectRatioWidget extends StatefulWidget {
-  final String vCoverUrl;
-  final PhotoPreviewVideoDelegate videoDelegate;
+  final String? vCoverUrl;
+  final PhotoPreviewVideoDelegate? videoDelegate;
 
   const CustomVideoAspectRatioWidget(
-      {Key key, this.vCoverUrl, this.videoDelegate})
+      {Key? key, this.vCoverUrl, this.videoDelegate})
       : super(key: key);
 
   @override
@@ -28,19 +28,19 @@ class CustomVideoAspectRatioWidget extends StatefulWidget {
 class _CustomVideoAspectRatioWidgetState
     extends State<CustomVideoAspectRatioWidget>
     with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
-  CustomChewieController chewieController;
+  CustomChewieController? chewieController;
 
-  double _aspectRatio;
+  double? _aspectRatio;
 
   ///视频比例
-  double _videoAspectRatio;
+  double? _videoAspectRatio;
 
   bool isCompleteFlag = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     _aspectRatio = ScreenUtils.getInstance().screenWidth /
         ScreenUtils.getInstance().screenHeight;
   }
@@ -50,20 +50,20 @@ class _CustomVideoAspectRatioWidgetState
     super.build(context);
     return Center(
         child: AspectRatio(
-      aspectRatio: _videoAspectRatio ?? _aspectRatio,
+      aspectRatio: _videoAspectRatio ?? _aspectRatio!,
       child: Stack(
         alignment: Alignment.center,
         fit: StackFit.expand,
         children: [
           Container(
-            child: VideoPlayer(chewieController?.videoPlayerController),
+            child: VideoPlayer(chewieController!.videoPlayerController),
           ),
           Container(
               child: Offstage(
-            offstage: !(widget?.videoDelegate?.enableLoadState ?? true),
+            offstage: !(widget.videoDelegate?.enableLoadState ?? true),
             child: AnimatedOpacity(
-              opacity: widget?.vCoverUrl == null ||
-                      widget.vCoverUrl.isEmpty ||
+              opacity: widget.vCoverUrl == null ||
+                      widget.vCoverUrl!.isEmpty ||
                       isCompleteFlag == true
                   ? 0
                   : 1,
@@ -77,18 +77,18 @@ class _CustomVideoAspectRatioWidgetState
   }
 
   Widget _toPlaceHolderWidget() {
-    if (widget?.vCoverUrl == null || widget.vCoverUrl.isEmpty) {
+    if (widget.vCoverUrl == null || widget.vCoverUrl!.isEmpty) {
       return Container();
     }
-    if (PhotoPreviewToolUtils.isNetUrl(widget?.vCoverUrl)) {
-      return ExtendedImage.network(widget.vCoverUrl,
+    if (PhotoPreviewToolUtils.isNetUrl(widget.vCoverUrl)) {
+      return ExtendedImage.network(widget.vCoverUrl!,
           loadStateChanged: (state) => _loadStateChangedImage(state),
           initGestureConfigHandler: (state) =>
-              widget?.videoDelegate?.initGestureConfigHandler(state, context));
+              widget.videoDelegate!.initGestureConfigHandler(state, context)!);
     } else {
-      return ExtendedImage.file(File(widget.vCoverUrl),
+      return ExtendedImage.file(File(widget.vCoverUrl!),
           initGestureConfigHandler: (state) =>
-              widget?.videoDelegate?.initGestureConfigHandler(state, context));
+              widget.videoDelegate!.initGestureConfigHandler(state, context)!);
     }
   }
 
@@ -112,11 +112,11 @@ class _CustomVideoAspectRatioWidgetState
 
   ///根据图片大小设置比例
   void _setAspectRatioByImageSize(ExtendedImageState state) {
-    if (state?.extendedImageInfo?.image == null) {
+    if (state.extendedImageInfo?.image == null) {
       return;
     }
-    int imageWidth = state?.extendedImageInfo?.image?.width;
-    int imageHeight = state?.extendedImageInfo?.image?.height;
+    int? imageWidth = state.extendedImageInfo?.image.width;
+    int? imageHeight = state.extendedImageInfo?.image.height;
     if (imageWidth == null ||
         imageWidth <= 0 ||
         imageHeight == null ||
@@ -138,7 +138,7 @@ class _CustomVideoAspectRatioWidgetState
     chewieController = CustomChewieController.of(context);
     if (_oldController != chewieController) {
       _dispose();
-      chewieController.videoPlayerController.addListener(_updateState);
+      chewieController!.videoPlayerController.addListener(_updateState);
       _updateState();
     }
 
@@ -146,7 +146,7 @@ class _CustomVideoAspectRatioWidgetState
   }
 
   void _dispose() {
-    chewieController.videoPlayerController.removeListener(_updateState);
+    chewieController!.videoPlayerController.removeListener(_updateState);
   }
 
   @override
@@ -154,28 +154,28 @@ class _CustomVideoAspectRatioWidgetState
     _videoAspectRatio = null;
     _aspectRatio = null;
     _dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
   void _updateState() {
-    VideoPlayerValue value = chewieController?.videoPlayerController?.value;
+    VideoPlayerValue? value = chewieController?.videoPlayerController?.value;
     //避免过快加载问题
     if (value != null && value.isInitialized) {
-      double newAspectRatio = value.size != null ? value.aspectRatio : null;
+      double newAspectRatio = value.aspectRatio;
       if (newAspectRatio != null && (!isCompleteFlag)) {
         if (mounted) {
           setState(() {
             isCompleteFlag = true;
             _videoAspectRatio =
-                _aspectRatio = _getLastedAspectRatio(value?.size);
+                _aspectRatio = _getLastedAspectRatio(value.size);
           });
         }
       }
     }
   }
 
-  double _getLastedAspectRatio(Size videoSize) {
+  double? _getLastedAspectRatio(Size videoSize) {
     if (videoSize == null ||
         videoSize.width == null ||
         videoSize.height == null ||

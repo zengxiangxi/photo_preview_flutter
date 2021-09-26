@@ -10,7 +10,7 @@ class CustomFadePageTransitionsBuilder extends PageTransitionsBuilder {
 
   @override
   Widget buildTransitions<T>(
-      PageRoute<T> route,
+      PageRoute<T>? route,
       BuildContext context,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
@@ -22,9 +22,9 @@ class CustomFadePageTransitionsBuilder extends PageTransitionsBuilder {
 
 class _CustomFadePageTransition extends StatelessWidget {
   _CustomFadePageTransition({
-    Key key,
-    @required Animation<double> routeAnimation, // The route's linear 0.0 - 1.0 animation.
-    @required this.child,
+    Key? key,
+    required Animation<double> routeAnimation, // The route's linear 0.0 - 1.0 animation.
+    required this.child,
   }) : 
         _opacityAnimation = routeAnimation.drive(_easeInTween),
         super(key: key);

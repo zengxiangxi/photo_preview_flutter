@@ -14,12 +14,12 @@ class CommonWithBottomStatusSlideDelegate extends DefaultExtendedSlideDelegate {
   CommonWithBottomStatusSlideDelegate({this.imgVideoCount = 0});
 
   @override
-  Widget bottomWidget(bool isSlideStatus) {
+  Widget bottomWidget(bool? isSlideStatus) {
     if(imgVideoCount <= 0){
       return Container();
     }
     return AnimatedOpacity(
-      opacity: isSlideStatus ? 0: 1,
+      opacity: isSlideStatus! ? 0: 1,
       duration: Duration(milliseconds: 80),
       child: Container(
         height: 50,
@@ -27,10 +27,10 @@ class CommonWithBottomStatusSlideDelegate extends DefaultExtendedSlideDelegate {
         child: Center(
           child: StreamBuilder<int>(
             initialData: 0,
-            stream: pageChangeStatusStream?.stream,
+            stream: pageChangeStatusStream.stream,
             builder: (context, snapshot) {
               return ListView.separated(
-                      itemCount: imgVideoCount ?? 0,
+                      itemCount: imgVideoCount,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.horizontal,
@@ -38,7 +38,7 @@ class CommonWithBottomStatusSlideDelegate extends DefaultExtendedSlideDelegate {
                       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                       itemBuilder: (BuildContext context, int index) {
                         return AnimatedContainer(
-                          width: (snapshot?.data ?? 0) == index ? 6:4,
+                          width: snapshot.data == index ? 6:4,
                           duration: Duration(milliseconds: 200),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -62,13 +62,13 @@ class CommonWithBottomStatusSlideDelegate extends DefaultExtendedSlideDelegate {
       if (page < 0 || page >= imgVideoCount) {
         return;
       }
-      pageChangeStatusStream?.add(page);
+      pageChangeStatusStream.add(page);
     };
   }
 
   @override
   void dispose() {
-    pageChangeStatusStream?.close();
+    pageChangeStatusStream.close();
     super.dispose();
   }
 

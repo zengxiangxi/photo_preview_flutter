@@ -2,13 +2,13 @@
 /// extra2 : "额外数据2"
 
 class CommonQueryExtraVo {
-  String extra1;
-  String extra2;
+  String? extra1;
+  String? extra2;
 
 
   CommonQueryExtraVo({this.extra1, this.extra2});
 
-  static CommonQueryExtraVo fromMap(Map<String, dynamic> map) {
+  static CommonQueryExtraVo? fromMap(Map<String, dynamic>? map) {
     if (map == null) return null;
     CommonQueryExtraVo commonQueryExtraVoBean = CommonQueryExtraVo();
     commonQueryExtraVoBean.extra1 = map['extra1'];

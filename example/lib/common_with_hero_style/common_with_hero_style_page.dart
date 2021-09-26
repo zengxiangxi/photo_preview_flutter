@@ -11,7 +11,7 @@ class CommonWithHeroStylePage extends StatefulWidget {
       context,
       PhotoPreviewDataSource(
           initialUrl: "https://s1.ax1x.com/2020/09/17/wR3WnI.jpg",
-          imgVideoFullList:fullList,),
+          imgVideoFullList:fullList as List<PhotoPreviewInfoVo>?,),
       imageDelegate: CommonWithHeroImageDelegate()
     );
   }

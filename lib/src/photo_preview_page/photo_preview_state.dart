@@ -20,19 +20,19 @@ import '../../photo_preview_export.dart';
 
 class PhotoPreviewState extends State<PhotoPreviewPage> {
   ///page控制器
-  PageController _pageController;
+  PageController? _pageController;
 
   ///记录是否正在滑动
   bool _isSlidingStatus = false;
 
   ///滑动配置
-  ExtendedSlideDelegate _extendedSlideDelegate;
+  ExtendedSlideDelegate? _extendedSlideDelegate;
 
-  PhotoPreviewImageDelegate _imageDelegate;
+  PhotoPreviewImageDelegate? _imageDelegate;
 
-  PhotoPreviewVideoDelegate _videoDelegate;
+  PhotoPreviewVideoDelegate? _videoDelegate;
 
-  PhotoPreviewCommonClass _customTransmit;
+  PhotoPreviewCommonClass? _customTransmit;
 
   ///是否初始化完成
   bool _isInitFinish = false;
@@ -43,7 +43,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
 
     ///页码控制器初始化
     _pageController = PageController(
-        initialPage: widget?.dataSource?.lastInitPageNum ??
+        initialPage: widget.dataSource?.lastInitPageNum ??
             PhotoPreviewConstant.DEFAULT_INIT_PAGE);
 
   }
@@ -90,9 +90,9 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
               initialData: false,
               stream: PhotoPreviewValueSingleton.getInstance()
                   ?.isSlidingController
-                  ?.stream,
+                  .stream,
               builder: (context, snapshot) {
-                return _extendedSlideDelegate?.topWidget(snapshot?.data) ??
+                return _extendedSlideDelegate?.topWidget(snapshot.data) ??
                     Container();
               }),
         ),
@@ -104,9 +104,9 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
                 initialData: false,
                 stream: PhotoPreviewValueSingleton.getInstance()
                     ?.isSlidingController
-                    ?.stream,
+                    .stream,
                 builder: (context, snapshot) {
-                  return _extendedSlideDelegate?.bottomWidget(snapshot?.data) ??
+                  return _extendedSlideDelegate?.bottomWidget(snapshot.data) ??
                       Container();
                 })),
       ],
@@ -116,18 +116,18 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
   ///主体
   Widget _toMainWidget() {
     ///空页面
-    if (widget?.dataSource?.imgVideoFullList == null ||
-        widget.dataSource.imgVideoFullList.isEmpty) {
+    if (widget.dataSource?.imgVideoFullList == null ||
+        widget.dataSource!.imgVideoFullList!.isEmpty) {
       return Container();
     }
     return ExtendedImageGesturePageView.builder(
-      itemCount: widget.dataSource.imgVideoFullList?.length ?? 0,
+      itemCount: widget.dataSource!.imgVideoFullList?.length ?? 0,
       controller: _pageController,
       physics: BouncingScrollPhysics(),
       onPageChanged: (int position) {
-        PhotoPreviewValueSingleton.getInstance()
+        PhotoPreviewValueSingleton.getInstance()!
             .pageIndexController
-            ?.add(position);
+            .add(position);
       },
       itemBuilder: (BuildContext ctx, int index) {
         return _toListItemWidget(ctx, index);
@@ -137,8 +137,8 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
 
   ///图片或照片组件
   Widget _toListItemWidget(BuildContext ctx, int index) {
-    final PhotoPreviewInfoVo itemVo =
-        widget?.dataSource?.imgVideoFullList?.elementAt(index);
+    final PhotoPreviewInfoVo? itemVo =
+        widget.dataSource?.imgVideoFullList?.elementAt(index);
     //图片
     if (itemVo?.isImageType() ?? false) {
       return PhotoPreviewImageWidget(
@@ -163,9 +163,9 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
     var showSwiper = state.isSliding ?? false;
     if (_isSlidingStatus != showSwiper) {
       _isSlidingStatus = showSwiper;
-      PhotoPreviewValueSingleton.getInstance()
+      PhotoPreviewValueSingleton.getInstance()!
           .isSlidingController
-          ?.add(showSwiper);
+          .add(showSwiper);
     }
   }
 
@@ -191,10 +191,10 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
       _imageDelegate?.initState();
       _videoDelegate?.initState();
       ///跳转到初始页
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
           if(_extendedSlideDelegate?.pageChangeStatus != null) {
-            _extendedSlideDelegate?.pageChangeStatus(
-                widget?.dataSource?.lastInitPageNum ??
+            _extendedSlideDelegate?.pageChangeStatus!(
+                widget.dataSource?.lastInitPageNum ??
                     PhotoPreviewConstant.DEFAULT_INIT_PAGE);
             
           }
@@ -211,7 +211,7 @@ class PhotoPreviewState extends State<PhotoPreviewPage> {
   @override
   void dispose() {
     _pageController?.dispose();
-    PhotoPreviewValueSingleton.getInstance().dispose();
+    PhotoPreviewValueSingleton.getInstance()!.dispose();
     _extendedSlideDelegate?.dispose();
     _imageDelegate?.dispose();
     _videoDelegate?.dispose();

@@ -16,24 +16,24 @@ import '../../photo_preview_export.dart';
 ///图片工具类
 class PhotoPreviewToolUtils {
   ///转化数据源
-  static List<PhotoPreviewInfoVo> transDataToPhotoPreviewList(
+  static List<PhotoPreviewInfoVo>? transDataToPhotoPreviewList(
       List<String> dataSourceList) {
     if (dataSourceList == null || dataSourceList.isEmpty) {
       return null;
     }
-    List<PhotoPreviewInfoVo> _photoPreviewList = List();
+    List<PhotoPreviewInfoVo> _photoPreviewList = [];
     dataSourceList.forEach((element) {
       if (element == null || element.isEmpty) {
         return;
       }
       _photoPreviewList
-          ?.add(PhotoPreviewInfoVo(url: element));
+          .add(PhotoPreviewInfoVo(url: element));
     });
     return _photoPreviewList;
   }
 
   ///初始化计算缩放
-  static double initScale({Size imageSize, Size size, double initialScale}) {
+  static double? initScale({required Size imageSize, required Size size, double? initialScale}) {
     final double n1 = imageSize.height / imageSize.width;
     final double n2 = size.height / size.width;
     //todo：强制宽
@@ -62,7 +62,7 @@ class PhotoPreviewToolUtils {
   }
 
   ///判断是否是网络路径
-  static bool isNetUrl(String url){
+  static bool isNetUrl(String? url){
     if(url == null || url.isEmpty){
       return false;
     }
@@ -73,7 +73,7 @@ class PhotoPreviewToolUtils {
   }
 
   ///路径类型
-  static PhotoPreviewType getType(String url) {
+  static PhotoPreviewType getType(String? url) {
     if (url == null || url.isEmpty) {
       return PhotoPreviewType.unknow;
     }
@@ -131,7 +131,7 @@ class PhotoPreviewToolUtils {
   }
 
   ///拼接质量类型路径
-  static String getAppendQualityTypeUrl(String url,PhotoPreviewQualityType qualityType){
+  static String? getAppendQualityTypeUrl(String url,PhotoPreviewQualityType qualityType){
     if(url == null || url.isEmpty){
       return null;
     }
@@ -151,12 +151,12 @@ class PhotoPreviewToolUtils {
     if (!isNetUrl(url)) {
       return false;
     }
-    if(PhotoPreviewValueSingleton.getInstance().temporaryDirectory == null){
+    if(PhotoPreviewValueSingleton.getInstance()!.temporaryDirectory == null){
       return false;
     }
     final String md5Key = keyToMd5(url);
     final Directory _cacheImagesDirectory = Directory(
-        join(PhotoPreviewValueSingleton.getInstance().temporaryDirectory.path, cacheImageFolderName));
+        join(PhotoPreviewValueSingleton.getInstance()!.temporaryDirectory!.path, cacheImageFolderName));
     //exist, try to find cache image file
     if (_cacheImagesDirectory.existsSync()) {
       final File cacheFlie = File(join(_cacheImagesDirectory.path, md5Key));
@@ -177,7 +177,7 @@ class PhotoPreviewToolUtils {
     if(imageProvider is! ExtendedNetworkImageProvider){
       return true;
     }
-    ImageCache imageCache = PaintingBinding.instance.imageCache;
+    ImageCache? imageCache = PaintingBinding.instance!.imageCache;
     if(imageCache == null){
       return false;
     }
@@ -185,7 +185,7 @@ class PhotoPreviewToolUtils {
     //     (imageProvider as ExtendedNetworkImageProvider)?.url,
     //   scale: (imageProvider as ExtendedNetworkImageProvider)?.scale
     // );
-    if(imageCache.containsKey(imageProvider as ExtendedNetworkImageProvider)){
+    if(imageCache.containsKey(imageProvider)){
       return true;
     }else{
       return false;

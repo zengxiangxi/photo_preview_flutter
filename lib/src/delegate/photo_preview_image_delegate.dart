@@ -5,10 +5,10 @@ import 'package:photo_preview/src/vo/photo_preview_type.dart';
 
 ///图片组件配置
 abstract class PhotoPreviewImageDelegate {
-  BuildContext context;
+  BuildContext? context;
 
   ///自定义图片组件
-  Widget imageWidget(PhotoPreviewInfoVo imageInfo,{Widget result});
+  Widget? imageWidget(PhotoPreviewInfoVo? imageInfo,{Widget? result});
 
   ///开启拖动下滑退出
   bool get enableSlideOutPage;
@@ -20,35 +20,35 @@ abstract class PhotoPreviewImageDelegate {
   bool get enableLoadState;
 
   ///加载状态变化
-  Widget loadStateChanged(
-      ExtendedImageState state,{ PhotoPreviewInfoVo imageInfo});
+  Widget? loadStateChanged(
+      ExtendedImageState state,{ PhotoPreviewInfoVo? imageInfo});
 
   ///单击
-  onTapCallBack get onClick;
+  onTapCallBack? get onClick;
 
   ///加载图单击
-  onTapCallBack get onLoadingClick;
+  onTapCallBack? get onLoadingClick;
 
   ///双击图片
-  onDoubleTapCallBack get onDoubleTap;
+  onDoubleTapCallBack? get onDoubleTap;
 
   ///加载图双击（暂时无法收到回调）
-  onDoubleTapCallBack get onLoadingDoubleTap;
+  onDoubleTapCallBack? get onLoadingDoubleTap;
 
   ///初始化图片
-  GestureConfig initGestureConfigHandler(ExtendedImageState state,{PhotoPreviewInfoVo imageInfo});
+  GestureConfig? initGestureConfigHandler(ExtendedImageState state,{PhotoPreviewInfoVo? imageInfo});
 
   ///Hero配置
-  Widget heroBuilderForSlidingPage(Widget result,{PhotoPreviewInfoVo imageInfo});
+  Widget? heroBuilderForSlidingPage(Widget result,{PhotoPreviewInfoVo? imageInfo});
 
   ///图片边距
-  EdgeInsetsGeometry get imgMargin;
+  EdgeInsetsGeometry? get imgMargin;
 
   ///滑动状态
-  ValueChanged<bool> get isSlidingStatus;
+  ValueChanged<bool>? get isSlidingStatus;
 
   ///页面切换
-  ValueChanged<int> get pageChangeStatus;
+  ValueChanged<int>? get pageChangeStatus;
 
   ///初始化
   void initState();

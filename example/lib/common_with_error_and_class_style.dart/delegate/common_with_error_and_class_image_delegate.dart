@@ -4,11 +4,11 @@ import 'package:photo_preview/photo_preview_export.dart';
 
 class CommonWithErrorAndClassImageDelegate extends DefaultPhotoPreviewImageDelegate {
 
-  CommonCustomTransmitClass _viewModel;
+  CommonCustomTransmitClass? _viewModel;
 
   @override
   void initState() {
-    _viewModel = PhotoPreviewCommonClass.of(context);
+    _viewModel = PhotoPreviewCommonClass.of(context!) as CommonCustomTransmitClass?;
     print("测试是否传值成功: ${_viewModel?.value ?? "-"}");
   }
 }

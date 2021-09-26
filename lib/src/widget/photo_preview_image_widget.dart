@@ -19,16 +19,16 @@ import 'inherit/photo_preview_data_inherited_widget.dart';
 
 class PhotoPreviewImageWidget extends StatefulWidget {
   ///图片详情
-  final PhotoPreviewInfoVo imageInfo;
+  final PhotoPreviewInfoVo? imageInfo;
 
-  final VoidCallback popCallBack;
+  final VoidCallback? popCallBack;
 
-  final int currentPostion;
+  final int? currentPostion;
 
-  final EdgeInsetsGeometry imgMargin;
+  final EdgeInsetsGeometry? imgMargin;
 
   const PhotoPreviewImageWidget(
-      {Key key,
+      {Key? key,
       this.imageInfo,
       this.popCallBack,
       this.currentPostion,
@@ -43,20 +43,20 @@ class PhotoPreviewImageWidget extends StatefulWidget {
 class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     with TickerProviderStateMixin {
   ///双击缩放控制器
-  AnimationController _doubleClickAnimationController;
-  Function _doubleClickAnimationListener;
-  Animation<double> _doubleClickAnimation;
+  late AnimationController _doubleClickAnimationController;
+  Function? _doubleClickAnimationListener;
+  Animation<double>? _doubleClickAnimation;
 
   ///手势key
-  GlobalKey<ExtendedImageGestureState> _gestureGlobalKey;
+  GlobalKey<ExtendedImageGestureState>? _gestureGlobalKey;
 
   ///缓存的手势Key
-  GlobalKey<ExtendedImageGestureState> _loadGestureGlobalKey;
+  GlobalKey<ExtendedImageGestureState>? _loadGestureGlobalKey;
 
   ///图片配置
-  PhotoPreviewImageDelegate _imageDelegate;
+  PhotoPreviewImageDelegate? _imageDelegate;
 
-  ExtendedImage _extendedImage;
+  ExtendedImage? _extendedImage;
 
   @override
   void initState() {
@@ -71,9 +71,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
 
   @override
   Widget build(BuildContext context) {
-    if (widget?.imageInfo == null ||
-        widget.imageInfo.type == null ||
-        widget.imageInfo.type != PhotoPreviewType.image) {
+    if (widget.imageInfo == null ||
+        widget.imageInfo!.type == null ||
+        widget.imageInfo!.type != PhotoPreviewType.image) {
       return Container();
     }
     return _toGestureWidget();
@@ -85,32 +85,32 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
         behavior: HitTestBehavior.translucent,
         onTap: () {
           if (_imageDelegate?.onClick != null) {
-            _imageDelegate?.onClick(
-                _gestureGlobalKey?.currentState, widget?.imageInfo, context);
+            _imageDelegate?.onClick!(
+                _gestureGlobalKey?.currentState, widget.imageInfo, context);
             return;
           }
           _onClickPop();
         },
         child: Container(
-            padding: widget?.imgMargin,
+            padding: widget.imgMargin,
             child: Container(
                 padding: _imageDelegate?.imgMargin,
-                child: _imageDelegate?.imageWidget(widget?.imageInfo,
+                child: _imageDelegate?.imageWidget(widget.imageInfo,
                         result: _toImageWidget()) ??
                     _toImageWidget())));
   }
 
   ///图片组件
-  Widget _toImageWidget() {
-    if (widget?.imageInfo?.url == null || widget.imageInfo.url.isEmpty) {
+  Widget? _toImageWidget() {
+    if (widget.imageInfo?.url == null || widget.imageInfo!.url!.isEmpty) {
       return PhotoPreviewErrorWidget(_imageDelegate?.enableSlideOutPage);
     }
     if (_extendedImage != null) {
       return _extendedImage;
     }
 
-    if (PhotoPreviewToolUtils.isNetUrl(widget?.imageInfo?.url)) {
-      _extendedImage = ExtendedImage.network(widget?.imageInfo?.url ?? "",
+    if (PhotoPreviewToolUtils.isNetUrl(widget.imageInfo?.url)) {
+      _extendedImage = ExtendedImage.network(widget.imageInfo?.url ?? "",
           //可拖动下滑退出
           enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
           mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
@@ -118,29 +118,29 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
           extendedImageGestureKey: _gestureGlobalKey,
           loadStateChanged: (ExtendedImageState state) =>
               _imageDelegate?.loadStateChanged(state,
-                  imageInfo: widget?.imageInfo) ??
+                  imageInfo: widget.imageInfo) ??
               _toLoadStateChanged(state),
           onDoubleTap: (state) {
             if (_imageDelegate?.onDoubleTap != null) {
-              _imageDelegate?.onDoubleTap(state, widget?.imageInfo, context);
+              _imageDelegate?.onDoubleTap!(state, widget.imageInfo, context);
               return;
             }
             _onDoubleTap(state);
           },
           initGestureConfigHandler: (state) => _imageDelegate
-              ?.initGestureConfigHandler(state, imageInfo: widget?.imageInfo),
+              !.initGestureConfigHandler(state, imageInfo: widget.imageInfo)!,
           heroBuilderForSlidingPage: (Widget result) =>
-              _imageDelegate?.heroBuilderForSlidingPage(result,
-                  imageInfo: widget?.imageInfo));
+              _imageDelegate!.heroBuilderForSlidingPage(result,
+                  imageInfo: widget.imageInfo)!);
     } else {
-      _extendedImage = ExtendedImage.file(File(widget?.imageInfo?.url),
+      _extendedImage = ExtendedImage.file(File(widget.imageInfo?.url ?? ""),
           //可拖动下滑退出
           enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
           mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
           onDoubleTap: (state) => (state) {
                 if (_imageDelegate?.onDoubleTap != null) {
-                  _imageDelegate?.onDoubleTap(
-                      state, widget?.imageInfo, context);
+                  _imageDelegate?.onDoubleTap!(
+                      state, widget.imageInfo, context);
                   return;
                 }
                 _onDoubleTap(state);
@@ -148,29 +148,29 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
           enableLoadState: _imageDelegate?.enableLoadState ?? true,
           extendedImageGestureKey: _gestureGlobalKey,
           initGestureConfigHandler: (state) => _imageDelegate
-              ?.initGestureConfigHandler(state, imageInfo: widget?.imageInfo),
+              !.initGestureConfigHandler(state, imageInfo: widget.imageInfo)!,
           heroBuilderForSlidingPage: (Widget result) =>
-              _imageDelegate?.heroBuilderForSlidingPage(result,
-                  imageInfo: widget?.imageInfo));
+              _imageDelegate!.heroBuilderForSlidingPage(result,
+                  imageInfo: widget.imageInfo)!);
     }
     return _extendedImage;
   }
 
   ///图片双击回调
   void _onDoubleTap(ExtendedImageGestureState state) {
-    double initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
+    double? initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
 
-    if (state?.imageGestureConfig?.initialScale != null &&
-        state.imageGestureConfig.initialScale >=
+    if (state.imageGestureConfig?.initialScale != null &&
+        state.imageGestureConfig!.initialScale >=
             PhotoPreviewConstant.DEFAULT_INIT_SCALE) {
-      initialScale = state?.imageGestureConfig?.initialScale;
+      initialScale = state.imageGestureConfig?.initialScale;
     }
-    final Offset pointerDownPosition = state.pointerDownPosition;
-    final double begin = state.gestureDetails.totalScale;
+    final Offset? pointerDownPosition = state.pointerDownPosition;
+    final double? begin = state.gestureDetails!.totalScale;
     double end;
 
     //remove old
-    _doubleClickAnimation?.removeListener(_doubleClickAnimationListener);
+    _doubleClickAnimation?.removeListener(_doubleClickAnimationListener as void Function());
 
     //stop pre
     _doubleClickAnimationController.stop();
@@ -179,7 +179,7 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     _doubleClickAnimationController.reset();
 
     if (begin ==
-        PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[0] * initialScale) {
+        PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[0] * initialScale!) {
       end = PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[1] * initialScale;
     } else {
       end = PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[0] * initialScale;
@@ -188,13 +188,13 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     _doubleClickAnimationListener = () {
       //print(_animation.value);
       state.handleDoubleTap(
-          scale: _doubleClickAnimation.value,
+          scale: _doubleClickAnimation!.value,
           doubleTapPosition: pointerDownPosition);
     };
     _doubleClickAnimation = _doubleClickAnimationController
         .drive(Tween<double>(begin: begin, end: end));
 
-    _doubleClickAnimation.addListener(_doubleClickAnimationListener);
+    _doubleClickAnimation!.addListener(_doubleClickAnimationListener as void Function());
 
     _doubleClickAnimationController.forward();
   }
@@ -225,13 +225,13 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
       behavior: HitTestBehavior.translucent,
       onTap: (){
         if (_imageDelegate?.onLoadingClick != null) {
-          _imageDelegate?.onLoadingClick(
-              _loadGestureGlobalKey?.currentState, widget?.imageInfo, context);
+          _imageDelegate?.onLoadingClick!(
+              _loadGestureGlobalKey?.currentState, widget.imageInfo, context);
           return;
         }
         _onClickPop(key: _loadGestureGlobalKey);
       },
-      child: ExtendedImage.network(widget?.imageInfo?.loadingCoverUrl ?? "",
+      child: ExtendedImage.network(widget.imageInfo?.loadingCoverUrl ?? "",
           //可拖动下滑退出
           enableSlideOutPage: _imageDelegate?.enableSlideOutPage ?? true,
           mode: _imageDelegate?.mode ?? ExtendedImageMode.gesture,
@@ -247,41 +247,41 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
           onDoubleTap: (state) => (state) {
         ///todo: 无法接收到回调
             if (_imageDelegate?.onLoadingDoubleTap != null) {
-                  _imageDelegate?.onLoadingDoubleTap(state, widget?.imageInfo, context);
+                  _imageDelegate?.onLoadingDoubleTap!(state, widget.imageInfo, context);
                   return;
                 }
                 _onDoubleTap(state);
               },
           initGestureConfigHandler: (state) => _imageDelegate
-              ?.initGestureConfigHandler(state, imageInfo: widget?.imageInfo)),
+              !.initGestureConfigHandler(state, imageInfo: widget.imageInfo)!),
     );
   }
 
   ///单击退出
-  _onClickPop({GlobalKey key}) {
+  _onClickPop({GlobalKey? key}) {
     if(key == null){
       key = _gestureGlobalKey;
     }
     if (key == null) {
       return;
     }
-    ExtendedImageGestureState state = key?.currentState;
+    ExtendedImageGestureState? state = key.currentState as ExtendedImageGestureState?;
     if (state == null) {
       return;
     }
-    double initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
+    double? initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
 
-    if (state?.imageGestureConfig?.initialScale != null &&
-        state.imageGestureConfig.initialScale >=
+    if (state.imageGestureConfig?.initialScale != null &&
+        state.imageGestureConfig!.initialScale >=
             PhotoPreviewConstant.DEFAULT_INIT_SCALE) {
-      initialScale = state?.imageGestureConfig?.initialScale;
+      initialScale = state.imageGestureConfig?.initialScale;
     }
-    final Offset pointerDownPosition = state.pointerDownPosition;
-    final double begin = state.gestureDetails.totalScale;
+    final Offset? pointerDownPosition = state.pointerDownPosition;
+    final double? begin = state.gestureDetails!.totalScale;
     double end;
 
     //remove old
-    _doubleClickAnimation?.removeListener(_doubleClickAnimationListener);
+    _doubleClickAnimation?.removeListener(_doubleClickAnimationListener as void Function());
 
     //stop pre
     _doubleClickAnimationController.stop();
@@ -290,9 +290,9 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     _doubleClickAnimationController.reset();
 
     if (begin ==
-        PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[0] * initialScale) {
-      if (widget?.popCallBack != null) {
-        widget?.popCallBack();
+        PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[0] * initialScale!) {
+      if (widget.popCallBack != null) {
+        widget.popCallBack!();
       }
       return;
 //      end = PhotoPreviewConstant.DEFAULT_DOUBLE_TAP_SCALE[1] * initialScale;
@@ -303,22 +303,22 @@ class _PhotoPreviewImageWidgetState extends State<PhotoPreviewImageWidget>
     _doubleClickAnimationListener = () {
       //print(_animation.value);
       state.handleDoubleTap(
-          scale: _doubleClickAnimation.value,
+          scale: _doubleClickAnimation!.value,
           doubleTapPosition: pointerDownPosition);
     };
     _doubleClickAnimation = _doubleClickAnimationController
         .drive(Tween<double>(begin: begin, end: end));
 
-    _doubleClickAnimation.addListener(_doubleClickAnimationListener);
+    _doubleClickAnimation!.addListener(_doubleClickAnimationListener as void Function());
 
     _doubleClickAnimationController.forward();
 
-    if (widget?.popCallBack != null) {
+    if (widget.popCallBack != null) {
       Future.delayed(
           Duration(
               milliseconds: PhotoPreviewConstant.DOUBLE_CLICK_SCAL_TIME_MILL),
           () {
-        widget?.popCallBack();
+        widget.popCallBack!();
       });
     }
   }

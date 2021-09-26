@@ -21,12 +21,12 @@ class PhotoPreviewDataSource {
   ///     or
   ///     parms: int intitialPage => 直接跳转的位置（优先级低）
   PhotoPreviewDataSource(
-      {List<String> imgVideoUrlList,
+      {List<String>? imgVideoUrlList,
       this.imgVideoFullList,
-      String initialUrl,
-      int initialPage}) {
+      String? initialUrl,
+      int? initialPage}) {
     ///路径有值，完整数据无值 进行赋值操作
-    if ((imgVideoFullList == null || imgVideoFullList.isEmpty) &&
+    if ((imgVideoFullList == null || imgVideoFullList!.isEmpty) &&
         (imgVideoUrlList != null && imgVideoUrlList.isNotEmpty)) {
       imgVideoFullList = _getPreviewListByUrlList(imgVideoUrlList);
     }
@@ -43,13 +43,13 @@ class PhotoPreviewDataSource {
       String mapToLoadingCoverUrlKey = "loadingCoverUrl",
       String mapToTypeKey = "type",
       String mapToExtraKey = "extra",
-      String initialUrl,
-      int initialPage,
-      ValueTransformFunc extraTransformFunc,
-      ValueTransformFunc urlTrasformFunc,
-      ValueTransformFunc typeTransformFunc,
-      ValueTransformFunc loadingTransformFunc,
-      ValueTransformFunc heroTransformFunc}) {
+      String? initialUrl,
+      int? initialPage,
+      ValueTransformFunc? extraTransformFunc,
+      ValueTransformFunc? urlTrasformFunc,
+      ValueTransformFunc? typeTransformFunc,
+      ValueTransformFunc? loadingTransformFunc,
+      ValueTransformFunc? heroTransformFunc}) {
     // assert(imgVideoList != null && imgVideoList.isNotEmpty, "数据源不能为空");
     List<PhotoPreviewInfoVo> list = (json.decode(json.encode(imgVideoList))
             as List)
@@ -80,13 +80,13 @@ class PhotoPreviewDataSource {
   ///传入imgVideoList通过json格式化获取PhotoPreviewDataSource
   ///（1）imgVideoList 需重新toJson 否则无法格式化
   factory PhotoPreviewDataSource.customMap(List imgVideoList,
-      {String initialUrl,
-        int initialPage,
-        ValueTransformFunc<dynamic> extraTransformFunc,
-        ValueTransformFunc<String> urlTrasformFunc,
-        ValueTransformFunc<PhotoPreviewType> typeTransformFunc,
-        ValueTransformFunc<String> loadingTransformFunc,
-        ValueTransformFunc<dynamic> heroTransformFunc}) {
+      {String? initialUrl,
+        int? initialPage,
+        ValueTransformFunc<dynamic>? extraTransformFunc,
+        ValueTransformFunc<String>? urlTrasformFunc,
+        ValueTransformFunc<PhotoPreviewType>? typeTransformFunc,
+        ValueTransformFunc<String>? loadingTransformFunc,
+        ValueTransformFunc<dynamic>? heroTransformFunc}) {
     // assert(imgVideoList != null && imgVideoList.isNotEmpty, "数据源不能为空");
     List<PhotoPreviewInfoVo> list = imgVideoList.map((itemBean) =>
         PhotoPreviewInfoVo(
@@ -103,13 +103,11 @@ class PhotoPreviewDataSource {
 
   ///单图/视频构造
   factory PhotoPreviewDataSource.single(String url,
-      {Object heroTag,
-      String loadingCoverUrl,
+      {Object? heroTag,
+      String? loadingCoverUrl,
       dynamic extra,
-      PhotoPreviewType type}) {
-    if (url == null || url.isEmpty) {
-      return null;
-    }
+      PhotoPreviewType? type}) {
+
     return PhotoPreviewDataSource(imgVideoFullList: [
       PhotoPreviewInfoVo(
           url: url,
@@ -121,20 +119,20 @@ class PhotoPreviewDataSource {
   }
 
   ///完整数据源 带有预载图 herotag等信息（优先级高）
-  List<PhotoPreviewInfoVo> imgVideoFullList;
+  List<PhotoPreviewInfoVo>? imgVideoFullList;
 
   ///最终初始化页码数
-  int _lastInitPageNum;
+  int? _lastInitPageNum;
 
-  int get lastInitPageNum => _lastInitPageNum;
+  int? get lastInitPageNum => _lastInitPageNum;
 
   ///得到初始化页
-  int _getInitialPage(String initialUrl, int initialPage) {
-    if (imgVideoFullList == null || imgVideoFullList.isEmpty) {
+  int _getInitialPage(String? initialUrl, int? initialPage) {
+    if (imgVideoFullList == null || imgVideoFullList!.isEmpty) {
       return PhotoPreviewConstant.DEFAULT_INIT_PAGE;
     }
     if (initialUrl != null && initialUrl.isNotEmpty) {
-      int index = imgVideoFullList.indexOf(PhotoPreviewInfoVo(url: initialUrl));
+      int index = imgVideoFullList!.indexOf(PhotoPreviewInfoVo(url: initialUrl));
       if (index != -1) {
         return index;
       }
@@ -142,19 +140,19 @@ class PhotoPreviewDataSource {
     if (initialPage == null || initialPage < 0) {
       return PhotoPreviewConstant.DEFAULT_INIT_PAGE;
     }
-    if (initialPage > (imgVideoFullList.length - 1)) {
-      return imgVideoFullList.length - 1;
+    if (initialPage > (imgVideoFullList!.length - 1)) {
+      return imgVideoFullList!.length - 1;
     }
-    return initialPage ?? PhotoPreviewConstant.DEFAULT_INIT_PAGE;
+    return initialPage;
   }
 
   ///根据url判断类型 无hero和loading
-  List<PhotoPreviewInfoVo> _getPreviewListByUrlList(
+  List<PhotoPreviewInfoVo>? _getPreviewListByUrlList(
       List<String> imgVideoUrlList) {
     if (imgVideoUrlList == null || imgVideoUrlList.isEmpty) {
       return null;
     }
-    List<PhotoPreviewInfoVo> imgVideoFullList = List();
+    List<PhotoPreviewInfoVo> imgVideoFullList = [];
     for (String url in imgVideoUrlList) {
       if (url == null || url.isEmpty) {
         continue;

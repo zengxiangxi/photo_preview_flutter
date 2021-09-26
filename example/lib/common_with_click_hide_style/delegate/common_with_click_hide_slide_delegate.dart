@@ -7,7 +7,7 @@ import 'package:photo_preview/photo_preview_export.dart';
 
 class CommonWithClickHideSlideDelegate extends DefaultExtendedSlideDelegate{
 
-  CommonWithClickHideCustomClass _customClass;
+  CommonWithClickHideCustomClass? _customClass;
 
   CommonWithClickHideSlideDelegate();
 
@@ -16,16 +16,16 @@ class CommonWithClickHideSlideDelegate extends DefaultExtendedSlideDelegate{
   @override
   void initState() {
     super.initState();
-    _customClass = (PhotoPreviewCommonClass.of(context) as CommonWithClickHideCustomClass);
+    _customClass = (PhotoPreviewCommonClass.of(context!) as CommonWithClickHideCustomClass?);
   }
 
   @override
-  Widget topWidget(bool isSlideStatus) {
+  Widget topWidget(bool? isSlideStatus) {
     return StreamBuilder<Null>(
       stream: _customClass?.clickController?.stream,
       builder: (context, snapshot) {
         return AnimatedOpacity(
-          opacity:  _customClass?.isShow == false || isSlideStatus ? 0: 1,
+          opacity:  _customClass?.isShow == false || isSlideStatus! ? 0: 1,
           duration: Duration(milliseconds: 200),
           child: Container(
             color: Colors.black.withOpacity(0.4),
@@ -47,7 +47,7 @@ class CommonWithClickHideSlideDelegate extends DefaultExtendedSlideDelegate{
   }
 
   @override
-  Widget bottomWidget(bool isSlideStatus) {
+  Widget? bottomWidget(bool? isSlideStatus) {
     return null;
   }
 

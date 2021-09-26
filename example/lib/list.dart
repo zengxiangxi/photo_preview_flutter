@@ -44,7 +44,7 @@ class _ShowListPageState extends State<ShowListPage> {
   Widget getListViewItem(String title, VoidCallback callback) {
     return ListTile(
       title: Text(
-        title ?? "",
+        title,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
@@ -59,7 +59,7 @@ class _ShowListPageState extends State<ShowListPage> {
   void navigatorPush(Widget widget){
     Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context){
-        return widget ?? Container();
+        return widget;
       }
     ));
   }

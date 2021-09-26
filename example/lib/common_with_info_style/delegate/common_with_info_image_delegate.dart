@@ -11,27 +11,27 @@ class CommonWithInfoImageDelegate extends DefaultPhotoPreviewImageDelegate{
   @override
   ValueChanged<bool> get isSlidingStatus {
     return (status){
-      _isSlideStream?.add(status);
+      _isSlideStream.add(status);
     };
   }
 
 
   @override
-  Widget imageWidget(PhotoPreviewInfoVo imageInfo, {Widget result}) {
+  Widget imageWidget(PhotoPreviewInfoVo? imageInfo, {Widget? result}) {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        result,
+        result!,
         Positioned(
           top: 0,
           left: 0,
           right: 0,
           child: StreamBuilder<bool>(
             initialData: false,
-            stream: _isSlideStream?.stream,
+            stream: _isSlideStream.stream,
             builder: (context, snapshot) {
               return AnimatedOpacity(
-                opacity: snapshot?.data == true ? 0: 1,
+                opacity: snapshot.data == true ? 0: 1,
                 duration: Duration(milliseconds: 50),
                 child: Container(
                   height: 70,
@@ -58,10 +58,10 @@ class CommonWithInfoImageDelegate extends DefaultPhotoPreviewImageDelegate{
           right: 0,
           child: StreamBuilder<bool>(
             initialData: false,
-            stream: _isSlideStream?.stream,
+            stream: _isSlideStream.stream,
             builder: (context, snapshot) {
               return AnimatedOpacity(
-                opacity: snapshot?.data == true ? 0: 1,
+                opacity: snapshot.data == true ? 0: 1,
                 duration: Duration(milliseconds: 50),
                 child: Container(
                   height: 100,
@@ -85,7 +85,7 @@ class CommonWithInfoImageDelegate extends DefaultPhotoPreviewImageDelegate{
 
   @override
   void dispose() {
-    _isSlideStream?.close();
+    _isSlideStream.close();
     super.dispose();
   }
 }

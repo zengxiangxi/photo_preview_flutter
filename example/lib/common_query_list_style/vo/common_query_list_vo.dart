@@ -6,16 +6,15 @@ import 'common_query_extra_vo.dart';
 /// data : "extra数据（json串）"
 
 class CommonQueryListVo {
-  String picurl;
-  String spicurl;
-  String id;
-  CommonQueryExtraVo data;
+  String? picurl;
+  String? spicurl;
+  String? id;
+  CommonQueryExtraVo? data;
 
 
   CommonQueryListVo({this.picurl, this.spicurl, this.id, this.data});
 
   static CommonQueryListVo fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
     CommonQueryListVo commonQueryListVoBean = CommonQueryListVo();
     commonQueryListVoBean.picurl = map['picurl'];
     commonQueryListVoBean.spicurl = map['spicurl'];

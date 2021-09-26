@@ -6,19 +6,19 @@ import 'package:photo_preview/photo_preview_export.dart';
 import 'package:photo_preview/src/utils/screen_util.dart';
 
 class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
-  List<ChewieController> _list = List();
+  List<ChewieController> _list = [];
 
-  ValueNotifier<bool> _isSlideValueNotifier;
+  ValueNotifier<bool>? _isSlideValueNotifier;
 
   @override
-  initCustomVideoPlayerController(PhotoPreviewInfoVo videoInfo,
-      VideoPlayerController videoPlayerController) {
+  initCustomVideoPlayerController(PhotoPreviewInfoVo? videoInfo,
+      VideoPlayerController? videoPlayerController) {
     if (videoPlayerController == null) {
       return null;
     }
     //videoplayercontroller监听逻辑
-    videoPlayerController?.addListener(() {
-      if (videoPlayerController?.value?.isPlaying ?? false) {
+    videoPlayerController.addListener(() {
+      if (videoPlayerController.value.isPlaying) {
         // print("播放");
       } else {
         // print("暂停");
@@ -34,7 +34,7 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
         looping: false,
         startAt: null,
         placeholder: Center(child: _toCoverWidget(videoInfo)));
-    _list?.add(controller);
+    _list.add(controller);
     return controller;
   }
 
@@ -47,17 +47,17 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
   @override
   void dispose() {
     ///及时销毁
-    _list?.forEach((element) {
-      element?.dispose();
+    _list.forEach((element) {
+      element.dispose();
     });
     _isSlideValueNotifier?.dispose();
     super.dispose();
   }
 
   @override
-  Widget videoWidget(PhotoPreviewInfoVo videoInfo,
-      {Widget result,
-      VideoPlayerController videoPlayerController,
+  Widget videoWidget(PhotoPreviewInfoVo? videoInfo,
+      {Widget? result,
+      VideoPlayerController? videoPlayerController,
       dynamic customVideoPlayerController}) {
     if (customVideoPlayerController is! ChewieController) {
       return Container();
@@ -78,10 +78,10 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
   }
 
   ///模拟滑动监听
-  Widget _toAnimWidget({Widget child}) {
+  Widget _toAnimWidget({Widget? child}) {
     return ValueListenableBuilder(
-      valueListenable: _isSlideValueNotifier,
-      builder: (BuildContext context, bool isSlideStatus, Widget child) {
+      valueListenable: _isSlideValueNotifier!,
+      builder: (BuildContext context, bool isSlideStatus, Widget? child) {
         return AnimatedOpacity(
           opacity: isSlideStatus ? 0.1 : 1,
           duration: Duration(milliseconds: 200),
@@ -92,15 +92,15 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
     );
   }
 
-  Widget _toCoverWidget(PhotoPreviewInfoVo videoInfo) {
+  Widget _toCoverWidget(PhotoPreviewInfoVo? videoInfo) {
     if (PhotoPreviewToolUtils.isNetUrl(videoInfo?.loadingCoverUrl)) {
-      return ExtendedImage.network(videoInfo?.loadingCoverUrl,
+      return ExtendedImage.network(videoInfo?.loadingCoverUrl ?? "",
           fit: BoxFit.cover,
           loadStateChanged: (state) => null,
-          initGestureConfigHandler: (_) => null);
+          initGestureConfigHandler: ((_) => null) as GestureConfig Function(ExtendedImageState)?);
     } else {
-      return ExtendedImage.file(File(videoInfo?.loadingCoverUrl),
-          fit: BoxFit.cover, initGestureConfigHandler: (state) => null);
+      return ExtendedImage.file(File(videoInfo?.loadingCoverUrl ?? ""),
+          fit: BoxFit.cover, initGestureConfigHandler: ((state) => null) as GestureConfig Function(ExtendedImageState)?);
     }
   }
 }

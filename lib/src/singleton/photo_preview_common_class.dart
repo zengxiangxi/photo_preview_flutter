@@ -5,7 +5,7 @@ import 'package:photo_preview/src/widget/inherit/photo_preview_custom_common_cla
 abstract class PhotoPreviewCommonClass{
 
   ///获取传入类引用
-  static PhotoPreviewCommonClass of(BuildContext context){
+  static PhotoPreviewCommonClass? of(BuildContext context){
     return PhotoPreviewCustomCommonClassInherited.of(context);
   }
 

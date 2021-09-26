@@ -6,12 +6,12 @@ import 'package:photo_preview/src/singleton/photo_preview_value_singleton.dart';
 
 class PhotoPreviewErrorWidget extends StatelessWidget {
 
-  Widget _customWidget;
+  Widget? _customWidget;
 
-  final bool enableSlideOutPage;
+  final bool? enableSlideOutPage;
 
   PhotoPreviewErrorWidget(this.enableSlideOutPage){
-    _customWidget = PhotoPreviewValueSingleton.getInstance().customErrorWidget;
+    _customWidget = PhotoPreviewValueSingleton.getInstance()!.customErrorWidget;
   }
 
   @override

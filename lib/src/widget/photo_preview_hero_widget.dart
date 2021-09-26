@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
-typedef UniqueTagBuilder = void Function(Object uniqueTag);
+typedef UniqueTagBuilder = void Function(Object? uniqueTag);
 
 ///hero封装
 // ignore: must_be_immutable
 class PhotoPreviewHeroWidget extends StatelessWidget {
   final Widget child;
-  final Object tag;
+  final Object? tag;
   final bool isUserHero;
   final bool transitionOnUserGestures;
   final bool isShowPlaceHolderBuilder;
   final bool isCreateUniqueTag; //优先tag tag为空才生效
-  final UniqueTagBuilder uniqueTagCallBack;
-  final UniqueTagBuilder onClickForTag;
-  Object _uniqueTag;
+  final UniqueTagBuilder? uniqueTagCallBack;
+  final UniqueTagBuilder? onClickForTag;
+  Object? _uniqueTag;
 
   PhotoPreviewHeroWidget(
-      {Key key,
+      {Key? key,
       this.tag,
       this.isUserHero = true,
-      @required this.child,
+      required this.child,
       this.transitionOnUserGestures = true,
       this.isShowPlaceHolderBuilder = true,
       this.isCreateUniqueTag = true,
@@ -31,7 +31,7 @@ class PhotoPreviewHeroWidget extends StatelessWidget {
     if (tag == null && isCreateUniqueTag == true) {
       _uniqueTag = Uuid().v1();
       if (uniqueTagCallBack != null) {
-        uniqueTagCallBack(_uniqueTag);
+        uniqueTagCallBack!(_uniqueTag);
       }
     }
   }
@@ -44,15 +44,15 @@ class PhotoPreviewHeroWidget extends StatelessWidget {
         behavior: HitTestBehavior.translucent,
         onTap: (){
          if(onClickForTag != null){
-           onClickForTag(tag ?? _uniqueTag);
+           onClickForTag!(tag ?? _uniqueTag);
          }
         },
         child: isUserHero == null || isUserHero == false || (isUserHero == true && tag == null && isCreateUniqueTag != true)
-            ? child ?? Container()
+            ? child
             : Hero(
-                tag: tag ?? _uniqueTag,
-                child: child ?? Container(),
-                transitionOnUserGestures: transitionOnUserGestures ?? true,
+                tag: tag ?? _uniqueTag!,
+                child: child,
+                transitionOnUserGestures: transitionOnUserGestures,
                 flightShuttleBuilder: (BuildContext flightContext,
                     Animation<double> animation,
                     HeroFlightDirection flightDirection,
@@ -60,7 +60,7 @@ class PhotoPreviewHeroWidget extends StatelessWidget {
                     BuildContext toHeroContext) {
                   return Material(
                       type: MaterialType.transparency,
-                      child: toHeroContext?.widget ?? Container());
+                      child: toHeroContext.widget);
                 },
                 placeholderBuilder: isShowPlaceHolderBuilder == null ||
                         isShowPlaceHolderBuilder == false

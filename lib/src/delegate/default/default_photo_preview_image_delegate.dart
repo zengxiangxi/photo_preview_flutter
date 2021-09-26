@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:extended_image/extended_image.dart';
-import 'package:extended_image/src/extended_image_utils.dart';
-import 'package:extended_image/src/gesture/extended_image_gesture.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:photo_preview/photo_preview_export.dart';
@@ -22,40 +20,40 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
   bool get enableSlideOutPage => true;
 
   @override
-  heroBuilderForSlidingPage(Widget result, {PhotoPreviewInfoVo imageInfo}) => _heroBuilderForSlidingPage(result,imageInfo?.heroTag,imageInfo?.url);
+  heroBuilderForSlidingPage(Widget result, {PhotoPreviewInfoVo? imageInfo}) => _heroBuilderForSlidingPage(result,imageInfo?.heroTag,imageInfo?.url);
 
   @override
-  Widget imageWidget(PhotoPreviewInfoVo imageInfo,{Widget result}) =>null;
+  Widget? imageWidget(PhotoPreviewInfoVo? imageInfo,{Widget? result}) =>null;
 
   @override
-  initGestureConfigHandler(ExtendedImageState state,{PhotoPreviewInfoVo imageInfo}) =>_initGestureConfigHandler(state,context);
+  initGestureConfigHandler(ExtendedImageState state,{PhotoPreviewInfoVo? imageInfo}) =>_initGestureConfigHandler(state,context);
 
   @override
-  Widget loadStateChanged(ExtendedImageState state, {PhotoPreviewInfoVo imageInfo}) => null;
+  Widget? loadStateChanged(ExtendedImageState state, {PhotoPreviewInfoVo? imageInfo}) => null;
 
   @override
   ExtendedImageMode get mode => ExtendedImageMode.gesture;
 
   @override
-  onTapCallBack get onClick => null;
+  onTapCallBack? get onClick => null;
 
   @override
-  onTapCallBack get onLoadingClick => null;
+  onTapCallBack? get onLoadingClick => null;
 
   @override
-  onDoubleTapCallBack get onDoubleTap => null;
+  onDoubleTapCallBack? get onDoubleTap => null;
 
   @override
-  onDoubleTapCallBack get onLoadingDoubleTap => null;
+  onDoubleTapCallBack? get onLoadingDoubleTap => null;
 
   @override
-  EdgeInsetsGeometry get imgMargin => null;
+  EdgeInsetsGeometry? get imgMargin => null;
 
   @override
-  ValueChanged<bool> get isSlidingStatus => null;
+  ValueChanged<bool>? get isSlidingStatus => null;
 
   @override
-  ValueChanged<int> get pageChangeStatus => null;
+  ValueChanged<int>? get pageChangeStatus => null;
 
   @override
   void dispose() => null;
@@ -94,20 +92,19 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
   ///初始化缩放配置回调
   final Function _initGestureConfigHandler =
       (ExtendedImageState state, context) {
-    double initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
+    double? initialScale = PhotoPreviewConstant.DEFAULT_INIT_SCALE;
 
-    if (state?.extendedImageInfo != null &&
-        state.extendedImageInfo.image != null) {
+    if (state.extendedImageInfo != null) {
       initialScale = PhotoPreviewToolUtils.initScale(
           size:
           Size(ScreenUtils.screenW(context), ScreenUtils.screenH(context)),
           initialScale: initialScale,
-          imageSize: Size(state.extendedImageInfo.image.width.toDouble(),
-              state.extendedImageInfo.image.height.toDouble()));
+          imageSize: Size(state.extendedImageInfo!.image.width.toDouble(),
+              state.extendedImageInfo!.image.height.toDouble()));
     }
     return GestureConfig(
         inPageView: true,
-        initialScale: initialScale,
+        initialScale: initialScale!,
         minScale: PhotoPreviewConstant.DEFAULT_MIX_SCALE * initialScale,
         maxScale: max(initialScale,
             PhotoPreviewConstant.DEFAULT_MAX_SCALE * initialScale),

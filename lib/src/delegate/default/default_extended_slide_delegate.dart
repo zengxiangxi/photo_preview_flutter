@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:extended_image/extended_image.dart';
-import 'package:extended_image/src/gesture/extended_image_slide_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_preview/photo_preview_export.dart';
@@ -20,7 +19,7 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
       _slidePageBackgroundHandler;
 
   @override
-  ValueChanged<bool> get isSlidingStatus => null;
+  ValueChanged<bool>? get isSlidingStatus => null;
 
   @override
   Duration get resetPageDuration =>
@@ -33,19 +32,19 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
   SlideScaleHandler get slideScaleHandler => _slideScaleHandler;
 
   @override
-  Widget topWidget(bool isSlideStatus) => null;
+  Widget? topWidget(bool? isSlideStatus) => null;
 
   @override
-  Widget bottomWidget(bool isSlideStatus) => null;
+  Widget? bottomWidget(bool? isSlideStatus) => null;
 
   @override
-  Widget wholeWidget(Widget result) => null;
+  Widget? wholeWidget(Widget result) => null;
 
   @override
-  EdgeInsetsGeometry get imgVideoMargin => null;
+  EdgeInsetsGeometry? get imgVideoMargin => null;
 
   @override
-  ValueChanged<int> get pageChangeStatus => null;
+  ValueChanged<int>? get pageChangeStatus => null;
 
   @override
   void dispose() => null;
@@ -72,11 +71,11 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
   ///滑动缩放回调
   final SlideScaleHandler _slideScaleHandler = (
       Offset offset, {
-        ExtendedImageSlidePageState state,
+        ExtendedImageSlidePageState? state,
       }) {
     double scale = 0.0;
     scale = offset.distance /
-        Offset(state?.context?.size?.width, state?.context?.size?.height)
+        Offset(state?.context?.size?.width ?? 0, state?.context?.size?.height ?? 0)
             .distance;
     return max(1.0 - scale, 0.2);
   };
@@ -84,8 +83,8 @@ class DefaultExtendedSlideDelegate extends ExtendedSlideDelegate {
   ///滑动结束回调
   final SlideEndHandler _slideEndHandler = (
       Offset offset, {
-        ExtendedImageSlidePageState state,
-        ScaleEndDetails details,
+        ExtendedImageSlidePageState? state,
+        ScaleEndDetails? details,
       }) {
     //如果放大
     if ((state?.imageGestureState?.gestureDetails?.totalScale ??

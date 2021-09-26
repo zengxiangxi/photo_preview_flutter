@@ -19,10 +19,10 @@ typedef CustomPageRoute = PageRoute Function(Widget mainWidget);
 ///图片浏览器页面
 class PhotoPreviewPage extends StatefulWidget {
   ///传入数据源
-  final PhotoPreviewDataSource dataSource;
+  final PhotoPreviewDataSource? dataSource;
 
   const PhotoPreviewPage._({
-    Key key,
+    Key? key,
     this.dataSource,
   }) : super(key: key);
 
@@ -44,23 +44,23 @@ class PhotoPreviewPage extends StatefulWidget {
   /// transitionDuration：Route加载时间
   /// customPageRoute：自定义转场
   static navigatorPush(BuildContext context, PhotoPreviewDataSource dataSource,
-      {PhotoPreviewCallback callback,
-      ExtendedSlideDelegate extendedSlideDelegate,
-      PhotoPreviewImageDelegate imageDelegate,
-      PhotoPreviewVideoDelegate videoDelegate,
-      PhotoPreviewCommonClass customClass,
-      Widget customErrorWidget,
-      Duration transitionDuration,
-      CustomPageRoute customPageRoute}) async {
+      {PhotoPreviewCallback? callback,
+      ExtendedSlideDelegate? extendedSlideDelegate,
+      PhotoPreviewImageDelegate? imageDelegate,
+      PhotoPreviewVideoDelegate? videoDelegate,
+      PhotoPreviewCommonClass? customClass,
+      Widget? customErrorWidget,
+      Duration? transitionDuration,
+      CustomPageRoute? customPageRoute}) async {
     if (dataSource == null ||
         dataSource.imgVideoFullList == null ||
-        dataSource.imgVideoFullList.isEmpty) {
-      callback?.onError("数据为空");
+        dataSource.imgVideoFullList!.isEmpty) {
+      callback?.onError!("数据为空");
       return;
     }
 
     ///优先获取缓存路径
-    await PhotoPreviewValueSingleton.getInstance().getTemporaryForder();
+    await PhotoPreviewValueSingleton.getInstance()!.getTemporaryForder();
 
     ///主要组件
     Widget _photoPreviewWidget = PhotoPreviewDataInherited(
@@ -81,7 +81,7 @@ class PhotoPreviewPage extends StatefulWidget {
     // }
     ///配置错误组件
     if(customErrorWidget != null){
-      PhotoPreviewValueSingleton.getInstance().setCustomErrorWidget(customErrorWidget);
+      PhotoPreviewValueSingleton.getInstance()!.setCustomErrorWidget(customErrorWidget);
     }
     ///获取路由
     Route _route = customPageRoute != null
@@ -100,15 +100,15 @@ class PhotoPreviewPage extends StatefulWidget {
             },
           );
     Navigator.push<dynamic>(context, _route).then((value) {
-      callback?.onSuccess(value);
+      callback?.onSuccess!(value);
     });
   }
 
   ///设置滑动/图片/视频配置
   static PhotoPreviewDelegatesVo _getDelegatesVo(BuildContext context,
-      {ExtendedSlideDelegate slideDelegate,
-      PhotoPreviewImageDelegate imageDelegate,
-      PhotoPreviewVideoDelegate videoDelegate}) {
+      {ExtendedSlideDelegate? slideDelegate,
+      PhotoPreviewImageDelegate? imageDelegate,
+      PhotoPreviewVideoDelegate? videoDelegate}) {
     ///设置默认配置
     if (slideDelegate == null) {
       slideDelegate = DefaultExtendedSlideDelegate();
@@ -121,20 +121,20 @@ class PhotoPreviewPage extends StatefulWidget {
     }
 
     ///设置滑动监听
-    PhotoPreviewValueSingleton.getInstance()
-        .setSlidingCallBack(slideDelegate?.isSlidingStatus);
-    PhotoPreviewValueSingleton.getInstance()
-        .setSlidingCallBack(imageDelegate?.isSlidingStatus);
-    PhotoPreviewValueSingleton.getInstance()
-        .setSlidingCallBack(videoDelegate?.isSlidingStatus);
+    PhotoPreviewValueSingleton.getInstance()!
+        .setSlidingCallBack(slideDelegate.isSlidingStatus);
+    PhotoPreviewValueSingleton.getInstance()!
+        .setSlidingCallBack(imageDelegate.isSlidingStatus);
+    PhotoPreviewValueSingleton.getInstance()!
+        .setSlidingCallBack(videoDelegate.isSlidingStatus);
 
     ///设置页面切换监听
-    PhotoPreviewValueSingleton.getInstance()
-        .setPageChangedCallBack(slideDelegate?.pageChangeStatus);
-    PhotoPreviewValueSingleton.getInstance()
-        .setPageChangedCallBack(imageDelegate?.pageChangeStatus);
-    PhotoPreviewValueSingleton.getInstance()
-        .setPageChangedCallBack(videoDelegate?.pageChangeStatus);
+    PhotoPreviewValueSingleton.getInstance()!
+        .setPageChangedCallBack(slideDelegate.pageChangeStatus);
+    PhotoPreviewValueSingleton.getInstance()!
+        .setPageChangedCallBack(imageDelegate.pageChangeStatus);
+    PhotoPreviewValueSingleton.getInstance()!
+        .setPageChangedCallBack(videoDelegate.pageChangeStatus);
 
     ///设置context
     imageDelegate.context = context;

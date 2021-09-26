@@ -5,22 +5,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PhotoPreviewValueSingleton{
-  static PhotoPreviewValueSingleton _instance;
+  static PhotoPreviewValueSingleton? _instance;
 
   PhotoPreviewValueSingleton._();
 
-  static PhotoPreviewValueSingleton getInstance() {
+  static PhotoPreviewValueSingleton? getInstance() {
     if (_instance == null) {
       _instance = new PhotoPreviewValueSingleton._();
     }
     return _instance;
   }
 
-  Directory _temporaryDirectory;
-  Directory get temporaryDirectory => _temporaryDirectory;
+  Directory? _temporaryDirectory;
+  Directory? get temporaryDirectory => _temporaryDirectory;
 
   ///先获取缓存路径
-  Future<Directory> getTemporaryForder() async{
+  Future<Directory?> getTemporaryForder() async{
     _temporaryDirectory = await getTemporaryDirectory();
     return _temporaryDirectory;
   }
@@ -32,34 +32,34 @@ class PhotoPreviewValueSingleton{
   StreamController<int> pageIndexController = StreamController.broadcast();
 
   ///自定义错误组件
-  Widget _customErrorWidget;
-  Widget get customErrorWidget => _customErrorWidget;
+  Widget? _customErrorWidget;
+  Widget? get customErrorWidget => _customErrorWidget;
 
   int currentPagePostion = 0;
 
   //销毁
   void dispose(){
-    isSlidingController?.close();
-    pageIndexController?.close();
+    isSlidingController.close();
+    pageIndexController.close();
     resetCustomErrorWidget();
     _instance = null;
   }
 
   ///设置滑动状态回调
-  void setSlidingCallBack(ValueChanged<bool> callBack){
+  void setSlidingCallBack(ValueChanged<bool>? callBack){
     if(callBack == null || isSlidingController.isClosed){
       return;
     }
-    isSlidingController?.stream?.listen((isSlidingStatus) {
+    isSlidingController.stream.listen((isSlidingStatus) {
       callBack(isSlidingStatus);
     });
   }
 
   ///设置页面切换状态回调
-  void setPageChangedCallBack(ValueChanged<int> callBack){
+  void setPageChangedCallBack(ValueChanged<int>? callBack){
 
-    pageIndexController?.stream?.listen((page) {
-      currentPagePostion = page ?? 0;
+    pageIndexController.stream.listen((page) {
+      currentPagePostion = page;
       if(callBack == null){
         return;
       }
