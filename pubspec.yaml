@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
     # 多属性图片
-  extended_image: ^4.0.0
+  extended_image: ^4.1.0
   # UUID
   uuid: ^3.0.4
   # 视频播放器
