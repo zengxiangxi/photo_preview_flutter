@@ -11,7 +11,7 @@ class CommonCustomVideoPage{
           initialPage: 0,
           imgVideoFullList: [
             PhotoPreviewInfoVo(
-                url: "https://v-cdn.zjol.com.cn/277001.mp4",
+                url: "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
                 loadingCoverUrl: "https://s1.ax1x.com/2020/09/17/wR3WnI.md.jpg"),
 
             PhotoPreviewInfoVo(

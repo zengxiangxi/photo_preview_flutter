@@ -97,7 +97,7 @@ class CommonWithCustomVideoDelegate extends DefaultPhotoPreviewVideoDelegate {
       return ExtendedImage.network(videoInfo?.loadingCoverUrl ?? "",
           fit: BoxFit.cover,
           loadStateChanged: (state) => null,
-          initGestureConfigHandler: ((_) => null) as GestureConfig Function(ExtendedImageState)?);
+          initGestureConfigHandler: null);
     } else {
       return ExtendedImage.file(File(videoInfo?.loadingCoverUrl ?? ""),
           fit: BoxFit.cover, initGestureConfigHandler: ((state) => null) as GestureConfig Function(ExtendedImageState)?);
