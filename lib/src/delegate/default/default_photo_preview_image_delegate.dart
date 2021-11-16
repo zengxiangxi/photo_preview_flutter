@@ -65,7 +65,7 @@ class DefaultPhotoPreviewImageDelegate extends PhotoPreviewImageDelegate{
 
 
   ///飞行动效
-  final Function _heroBuilderForSlidingPage = (Widget result, String heroTag,String url){
+  final Function _heroBuilderForSlidingPage = (Widget result, Object heroTag,String url){
     if (heroTag == null) {
       return result;
     }
