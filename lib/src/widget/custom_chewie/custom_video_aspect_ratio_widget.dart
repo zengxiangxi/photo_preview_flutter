@@ -124,11 +124,11 @@ class _CustomVideoAspectRatioWidgetState
       return;
     }
     Future.delayed(Duration(milliseconds: 0), () {
-      // if (_videoAspectRatio == null) {
+      if (_videoAspectRatio == null) {
         setState(() {
           _videoAspectRatio = _aspectRatio = imageWidth / imageHeight;
         });
-      // }
+      }
     });
   }
 
@@ -162,7 +162,7 @@ class _CustomVideoAspectRatioWidgetState
     VideoPlayerValue? value = chewieController?.videoPlayerController?.value;
     //避免过快加载问题
     if (value != null && value.isInitialized) {
-      double newAspectRatio = value.aspectRatio;
+      double newAspectRatio = value.size != null ? _getLastedAspectRatio(value?.size): null;
       if (newAspectRatio != null && (!isCompleteFlag)) {
         if (mounted) {
           setState(() {
