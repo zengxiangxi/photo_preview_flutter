@@ -162,7 +162,7 @@ class _CustomVideoAspectRatioWidgetState
     VideoPlayerValue? value = chewieController?.videoPlayerController?.value;
     //避免过快加载问题
     if (value != null && value.isInitialized) {
-      double newAspectRatio = value.size != null ? _getLastedAspectRatio(value?.size): null;
+      double? newAspectRatio = value.size != null ? _getLastedAspectRatio(value.size): null;
       if (newAspectRatio != null && (!isCompleteFlag)) {
         if (mounted) {
           setState(() {
